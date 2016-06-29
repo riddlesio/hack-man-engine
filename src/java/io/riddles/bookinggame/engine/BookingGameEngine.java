@@ -1,5 +1,7 @@
 package io.riddles.bookinggame.engine;
 
+import io.riddles.bookinggame.game.processor.BookingGameProcessor;
+import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.javainterface.engine.AbstractEngine;
 
 /**
