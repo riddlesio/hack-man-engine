@@ -127,10 +127,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
     @Override
     public double getScore() {
-        double score = this.getPlayers().get(0).getScore();
-        BigDecimal bdScore = new BigDecimal(score);
-
-        return bdScore.setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return 0;
     }
 
     public ArrayList<String> getCheckPointValues() {

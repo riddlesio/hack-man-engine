@@ -10,12 +10,13 @@ package io.riddles.bookinggame.game.data;
  *
  * @author Niko
  */
-public enum Direction {
+public enum MoveType {
     UP,
     DOWN,
     LEFT,
     RIGHT,
     FORWARD,
     BACKWARD,
-    PASS
+    PASS,
+    WEAPON
 }

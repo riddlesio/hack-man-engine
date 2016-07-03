@@ -1,6 +1,6 @@
 package io.riddles.bookinggame.game.processor;
 
-import io.riddles.bookinggame.game.data.Direction;
+import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 
 import io.riddles.bookinggame.game.move.BookingGameMove;
@@ -24,7 +24,7 @@ public class BookingGameLogic {
         Coordinate c = b.getPlayerCoordinate(pId);
         Coordinate newC = c;
 
-        switch(move.getDirection()) {
+        switch(move.getMoveType()) {
             case UP:
                 if (b.isEmpty(new Coordinate(c.getX(), c.getY()-1))) {
                     newC = new Coordinate(c.getX(), c.getY()-1);
@@ -45,8 +45,25 @@ public class BookingGameLogic {
                     newC = new Coordinate(c.getX()-1, c.getY());
                 }
                 break;
+            case WEAPON:
+                if (b.isEmpty(new Coordinate(c.getX()-1, c.getY()))) {
+                    newC = new Coordinate(c.getX()-1, c.getY());
+                }
+                break;
         }
 
+        switch (b.getFieldAt(newC)) {
+            case "B": /* A bug */
+                p.updateSnippets(-3);
+                break;
+            case "C": /* Code snippet */
+                p.updateSnippets(+1);
+                break;
+            case "W": /* A Weapon */
+                p.updateWeapons(1);
+                break;
+
+        }
         b.setFieldAt(c, ".");
         b.setFieldAt(newC, String.valueOf(pId));
 

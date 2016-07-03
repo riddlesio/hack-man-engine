@@ -51,7 +51,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
         BookingGameMove move = (BookingGameMove) state.getMoves().get(0);
 
         if (move.getException() == null) {
-            stateJson.put("direction", move.getDirection());
+            stateJson.put("movetype", move.getMoveType());
             stateJson.put("exception", JSONObject.NULL);
         } else {
             stateJson.put("isRefused", JSONObject.NULL);

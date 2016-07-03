@@ -19,7 +19,7 @@
 
 package io.riddles.bookinggame.game.move;
 
-import io.riddles.bookinggame.game.data.Direction;
+import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.javainterface.exception.InvalidMoveException;
 import io.riddles.javainterface.game.move.AbstractMove;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -33,19 +33,19 @@ import io.riddles.bookinggame.game.player.BookingGamePlayer;
  */
 public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
 
-    private Direction direction;
+    private MoveType type;
 
-    public BookingGameMove(BookingGamePlayer player, Direction direction) {
+    public BookingGameMove(BookingGamePlayer player, MoveType type) {
         super(player);
-        this.direction = direction;
+        this.type = type;
     }
 
     public BookingGameMove(BookingGamePlayer player, InvalidMoveException exception) {
         super(player, exception);
     }
 
-    public Direction getDirection() {
-        return this.direction;
+    public MoveType getMoveType() {
+        return this.type;
     }
 
 }

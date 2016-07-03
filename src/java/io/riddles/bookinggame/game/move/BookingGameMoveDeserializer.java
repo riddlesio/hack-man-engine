@@ -21,7 +21,7 @@ package io.riddles.bookinggame.game.move;
 
 import java.util.ArrayList;
 
-import io.riddles.bookinggame.game.data.Direction;
+import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.exception.InvalidMoveException;
 import io.riddles.javainterface.serialize.Deserializer;
@@ -58,24 +58,24 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
     private BookingGameMove visitMove(String input) throws InvalidMoveException {
         String[] split = input.split(" ");
 
-        Direction direction = visitAssessment(split[0]);
+        MoveType type = visitAssessment(split[0]);
 
         String checkPointInput = null;
-        return new BookingGameMove(this.player, direction);
+        return new BookingGameMove(this.player, type);
     }
 
-    public Direction visitAssessment(String input) throws InvalidMoveException {
+    public MoveType visitAssessment(String input) throws InvalidMoveException {
         switch (input) {
             case "up":
-                return Direction.UP;
+                return MoveType.UP;
             case "down":
-                return Direction.DOWN;
+                return MoveType.DOWN;
             case "left":
-                return Direction.LEFT;
+                return MoveType.LEFT;
             case "right":
-                return Direction.RIGHT;
+                return MoveType.RIGHT;
             case "pass":
-                return Direction.PASS;
+                return MoveType.PASS;
             default:
                 throw new InvalidMoveException("Move isn't valid");
         }

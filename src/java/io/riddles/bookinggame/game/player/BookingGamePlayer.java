@@ -30,20 +30,26 @@ import io.riddles.javainterface.game.player.AbstractPlayer;
  */
 public class BookingGamePlayer extends AbstractPlayer {
 
-    private double score;
+    private int snippets, weapons;
 
     public BookingGamePlayer(int id) {
         super(id);
-        this.score = 100.0;
+        this.snippets = 100;
+        this.weapons = 1;
     }
 
-    public void updateScore(boolean isFraudulent, boolean isRefused, double delta) {
-        if ((isFraudulent && !isRefused) || (!isFraudulent && isRefused)) {
-            this.score -= delta;
-        }
+    public void updateSnippets(int delta) {
+        this.snippets+=delta;
+    }
+    public void updateWeapons(int delta) {
+        this.weapons+=delta;
     }
 
-    public double getScore() {
-        return this.score;
+    public int getSnippets() {
+        return this.snippets;
     }
+    public int getWeapons() {
+        return this.weapons;
+    }
+
 }

@@ -61,7 +61,10 @@ public class Board {
     }
 
     public Boolean isEmpty(Coordinate c) {
-        return (fields[c.getX()][c.getY()].equals("."));
+        if (c.getX() < 0 || c.getY() < 0 || c.getX() >= this.width || c.getY() >= this.height) {
+            return false;
+        }
+        return (!fields[c.getX()][c.getY()].equals("x"));
     }
 
     public void dump() {

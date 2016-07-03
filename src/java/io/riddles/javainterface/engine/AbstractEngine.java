@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,11 +51,12 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
 
     protected final static Logger LOGGER = Logger.getLogger(AbstractEngine.class.getName());
 
-    private String[] botInputFiles;
+    protected String[] botInputFiles;
 
     protected IOHandler ioHandler;
     protected ArrayList<Pl> players;
     protected Pr processor;
+    protected HashMap<String, Object> configuration;
 
     // Can be overridden in subclass constructor
     protected GameLoop gameLoop;
@@ -173,8 +175,8 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
      */
     protected void parseSetupInput(String input) {
         String[] split = input.split(" ");
-
-        if (split[0].equals("bot_ids")) {
+        String command = split[0];
+        if (command.equals("bot_ids")) {
             String[] ids = split[1].split(",");
             for (int i = 0; i < ids.length; i++) {
                 Pl player = createPlayer(Integer.parseInt(ids[i]));
