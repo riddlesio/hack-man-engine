@@ -25,8 +25,6 @@ import org.json.JSONObject;
 import io.riddles.bookinggame.game.processor.BookingGameProcessor;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.game.state.BookingGameStateSerializer;
-import io.riddles.catchfrauds.game.state.CatchFraudsState;
-import io.riddles.catchfrauds.game.state.CatchFraudsStateSerializer;
 import io.riddles.javainterface.game.AbstractGameSerializer;
 
 /**

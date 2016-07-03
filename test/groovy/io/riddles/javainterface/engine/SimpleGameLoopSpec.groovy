@@ -33,6 +33,7 @@ import spock.lang.Specification
 class SimpleGameLoopSpec extends Specification {
 
     def "Run the game for 0 rounds"() {
+        println "SimpleGameLoopSpec"
 
         setup:
         def loop = new SimpleGameLoop()

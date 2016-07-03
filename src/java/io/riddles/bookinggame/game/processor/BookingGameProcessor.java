@@ -47,19 +47,16 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private boolean gameOver;
     private double scoreDelta; // subtracted from player score for each mistake
 
-    public BookingGameProcessor(ArrayList<BookingGamePlayer> players, ArrayList<Record> records) {
+    public BookingGameProcessor(ArrayList<BookingGamePlayer> players) {
         super(players);
         this.records = records;
         this.checkPointValues = new ArrayList<>();
         this.gameOver = false;
-        this.scoreDelta = 100.0 / records.size();
     }
 
     @Override
     public void preGamePhase() {
-        for (BookingGamePlayer player : this.players) {
-            storeCheckpointInput(player.requestMove(ActionType.CHECKPOINTS.toString()));
-        }
+
     }
 
     @Override
@@ -72,11 +69,13 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         for (BookingGamePlayer player : this.players) {
 
-            Record record = this.records.get(this.roundNumber - 1);
+            //Record record = this.records.get(this.roundNumber - 1);
 
-            // send next record and ask bot's assessment of the record
-            player.sendUpdate("next_record", player, record.toBotString());
-            String response = player.requestMove(ActionType.RECORD.toString());
+            System.out.println(state.getBoard());
+            System.out.println(player);
+            player.sendUpdate("board", player, state.getBoard().toString());
+            String response = player.requestMove(ActionType.MOVE.toString());
+            System.out.println("response " + response);
 
             // parse the response
             BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(
@@ -84,7 +83,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             BookingGameMove move = deserializer.traverse(response);
 
             // create the next state
-            nextState = new BookingGameState(state, move, roundNumber, record.isFraudulent());
+            nextState = new BookingGameState(state, move, roundNumber);
+            nextState.setBoard(state.getBoard());
 
             this.updateScore(nextState);
 
@@ -99,7 +99,10 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
     @Override
     public boolean hasGameEnded(BookingGameState state) {
-        return this.gameOver || this.roundNumber >= this.records.size();
+
+        /* TODO: get rid of this */
+        int MAXROUNDS = 23;
+        return this.gameOver || this.roundNumber >= MAXROUNDS;
     }
 
     @Override
@@ -122,8 +125,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private void updateScore(BookingGameState state) {
         BookingGameMove move = state.getMoves().get(0);
         BookingGamePlayer player = move.getPlayer();
-
-        player.updateScore(state.isFraudulent(), move.isRefused(), this.scoreDelta);
     }
 
     private void storeCheckpointInput(String input) {

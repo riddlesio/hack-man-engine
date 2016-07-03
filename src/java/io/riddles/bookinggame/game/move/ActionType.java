@@ -27,8 +27,7 @@ package io.riddles.bookinggame.game.move;
  * @author jim
  */
 public enum ActionType {
-    CHECKPOINTS,
-    RECORD;
+    MOVE;
 
     @Override
     public String toString() {

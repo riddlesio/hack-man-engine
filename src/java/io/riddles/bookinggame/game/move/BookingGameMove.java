@@ -19,10 +19,10 @@
 
 package io.riddles.bookinggame.game.move;
 
+import io.riddles.bookinggame.game.data.Direction;
 import io.riddles.javainterface.exception.InvalidMoveException;
 import io.riddles.javainterface.game.move.AbstractMove;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
-import io.riddles.bookinggame.game.move.CheckPoint;
 
 /**
  * io.riddles.bookinggame.game.move.BookingGameMove - Created on 2-6-16
@@ -33,24 +33,19 @@ import io.riddles.bookinggame.game.move.CheckPoint;
  */
 public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
 
-    private boolean isRefused;
-    private CheckPoint[] checkPoints;
+    private Direction direction;
 
-    public BookingGameMove(BookingGamePlayer player, boolean isRefused, CheckPoint[] checkPoints) {
+    public BookingGameMove(BookingGamePlayer player, Direction direction) {
         super(player);
-        this.isRefused = isRefused;
-        this.checkPoints = checkPoints;
+        this.direction = direction;
     }
 
     public BookingGameMove(BookingGamePlayer player, InvalidMoveException exception) {
         super(player, exception);
     }
 
-    public boolean isRefused() {
-        return this.isRefused;
+    public Direction getDirection() {
+        return this.direction;
     }
 
-    public CheckPoint[] getCheckPoints() {
-        return this.checkPoints;
-    }
 }

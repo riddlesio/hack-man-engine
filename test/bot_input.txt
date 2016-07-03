@@ -1,0 +1,17 @@
+left
+right
+right
+right
+authorized
+refused 3,4
+authorized 1,2,3
+authorized 3
+authorized 4
+authorized 4
+refused 1,2,3,4
+refused 1,2,3
+authorizeq
+authorized 2
+authorized 3
+authorized
+authorized 1,4

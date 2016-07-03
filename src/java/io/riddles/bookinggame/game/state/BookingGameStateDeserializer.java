@@ -29,6 +29,8 @@ import io.riddles.bookinggame.game.move.BookingGameMove;
 import io.riddles.bookinggame.game.move.CheckPoint;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.game.state.AbstractStateDeserializer;
+import io.riddles.bookinggame.game.move.BookingGameMoveDeserializer;
+import io.riddles.bookinggame.game.data.Direction;
 
 /**
  * io.riddles.catchfrauds.game.state.CatchFraudsStateDeserializer - Created on 3-6-16
@@ -70,11 +72,13 @@ public class BookingGameStateDeserializer extends
         int roundNumber = stateJson.getInt("round");
         boolean isFraudulent = stateJson.getBoolean("isFraudulent");
         boolean isBusted = stateJson.getBoolean("isBusted");
+        //Direction d = new BookingGameMoveDeserializer().visitAssessment(stateJson.getString("direction"));
         //CheckPoint[] checkPoints = visitCheckPoints(stateJson.getJSONArray("isApproved"));
 
-        BookingGameMove move = new BookingGameMove(this.getPlayers().get(1), isBusted, checkPoints);
+        //BookingGameMove move = new BookingGameMove(this.getPlayers().get(1), d);
 
-        return new BookingGameState(previousState, move, roundNumber, isFraudulent);
+        //return new BookingGameState(previousState, move, roundNumber);
+        return null;
     }
 
     private CheckPoint[] visitCheckPoints(JSONArray checkPointsJson) throws JSONException {

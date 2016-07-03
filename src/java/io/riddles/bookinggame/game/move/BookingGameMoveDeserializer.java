@@ -21,6 +21,7 @@ package io.riddles.bookinggame.game.move;
 
 import java.util.ArrayList;
 
+import io.riddles.bookinggame.game.data.Direction;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.exception.InvalidMoveException;
 import io.riddles.javainterface.serialize.Deserializer;
@@ -50,63 +51,33 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
             return new BookingGameMove(this.player, ex);
         } catch (Exception ex) {
             return new BookingGameMove(
-                    this.player, new InvalidMoveException("Failed to parse move"));
+                this.player, new InvalidMoveException("Failed to parse move"));
         }
     }
 
     private BookingGameMove visitMove(String input) throws InvalidMoveException {
         String[] split = input.split(" ");
 
-        boolean isRefused = visitAssessment(split[0]);
+        Direction direction = visitAssessment(split[0]);
 
         String checkPointInput = null;
-        if (split.length > 1) {
-            checkPointInput = split[1];
-        }
-        CheckPoint[] checkPoints = visitCheckPoints(checkPointInput);
-
-        return new BookingGameMove(this.player, isRefused, checkPoints);
+        return new BookingGameMove(this.player, direction);
     }
 
-    private boolean visitAssessment(String input) throws InvalidMoveException {
+    public Direction visitAssessment(String input) throws InvalidMoveException {
         switch (input) {
-            case "refused":
-                return true;
-            case "authorized":
-                return false;
+            case "up":
+                return Direction.UP;
+            case "down":
+                return Direction.DOWN;
+            case "left":
+                return Direction.LEFT;
+            case "right":
+                return Direction.RIGHT;
+            case "pass":
+                return Direction.PASS;
             default:
-                throw new InvalidMoveException("Move does not contain authorized or refused");
+                throw new InvalidMoveException("Move isn't valid");
         }
-    }
-
-    private CheckPoint[] visitCheckPoints(String input) throws InvalidMoveException {
-        CheckPoint[] checkPoints = new CheckPoint[this.checkPointCount];
-
-        if (input == null) {
-            for (int i = 0; i < checkPoints.length; i++) {
-                checkPoints[i] = new CheckPoint(true);
-            }
-            return checkPoints;
-        }
-
-        String[] split = input.split(",");
-        ArrayList<Integer> indexes = new ArrayList<>();
-        for (String index : split) {
-            try {
-                indexes.add(Integer.parseInt(index));
-            } catch (Exception ex) {
-                throw new InvalidMoveException("Can't parse failed checkpoints");
-            }
-        }
-
-        for (int i = 0; i < checkPoints.length; i++) {
-            if (indexes.contains(i + 1)) {
-                checkPoints[i] = new CheckPoint(false);
-            } else {
-                checkPoints[i] = new CheckPoint(true);
-            }
-        }
-
-        return checkPoints;
     }
 }

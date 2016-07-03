@@ -21,9 +21,11 @@ package io.riddles.bookinggame.game.state;
 
 import io.riddles.bookinggame.game.move.BookingGameMove;
 import io.riddles.javainterface.game.state.AbstractState;
+import io.riddles.bookinggame.game.data.Board;
+import io.riddles.bookinggame.game.processor.BookingGameLogic;
 
 /**
- * io.riddles.catchfrauds.game.state.CatchFraudsState - Created on 2-6-16
+ * io.riddles.bookinggame.game.state.BookingGameState - Created on 2-6-16
  *
  * [description]
  *
@@ -31,23 +33,28 @@ import io.riddles.javainterface.game.state.AbstractState;
  */
 public class BookingGameState extends AbstractState<BookingGameMove> {
 
-    private Boolean isFraudulent;
+    private Board board;
+    private String errorMessage;
 
     public BookingGameState() {
         super();
-        this.isFraudulent = null;
     }
 
-    public BookingGameState(BookingGameState previousState,
-                            BookingGameMove move, int roundNumber, boolean isFraudulent) {
+    public BookingGameState(BookingGameState previousState, BookingGameMove move, int roundNumber) {
         super(previousState, move, roundNumber);
-        this.isFraudulent = isFraudulent;
+        BookingGameLogic l = new BookingGameLogic();
+        try {
+            l.transformBoard(this.board, move);
+        } catch (Exception e) {
+            this.errorMessage = "Failed to parse move.";
+        }
+
+    }
+    public Board getBoard() {
+        return this.board;
+    }
+    public void setBoard(Board b) {
+        this.board = b;
     }
 
-    public boolean isFraudulent() throws NullPointerException {
-        if (this.isFraudulent != null) {
-            return this.isFraudulent;
-        }
-        throw new NullPointerException("State isFraudulent is not set");
-    }
 }

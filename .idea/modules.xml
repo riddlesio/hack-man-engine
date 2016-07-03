@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/engine-interface.iml" filepath="$PROJECT_DIR$/.idea/modules/engine-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bookinggame.iml" filepath="$PROJECT_DIR$/.idea/modules/bookinggame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bookinggame_main.iml" filepath="$PROJECT_DIR$/.idea/modules/bookinggame_main.iml" group="bookinggame" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bookinggame_test.iml" filepath="$PROJECT_DIR$/.idea/modules/bookinggame_test.iml" group="bookinggame" />
     </modules>
   </component>
 </project>

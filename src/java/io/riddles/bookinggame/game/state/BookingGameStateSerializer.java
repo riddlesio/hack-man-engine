@@ -47,13 +47,11 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
     private JSONObject visitState(BookingGameState state) throws NullPointerException {
         JSONObject stateJson = new JSONObject();
         stateJson.put("round", state.getRoundNumber());
-        stateJson.put("isFraudulent", state.isFraudulent());
 
         BookingGameMove move = (BookingGameMove) state.getMoves().get(0);
 
         if (move.getException() == null) {
-            stateJson.put("isRefused", move.isRefused());
-            stateJson.put("isCheckpointApproved", visitCheckPoints(move.getCheckPoints()));
+            stateJson.put("direction", move.getDirection());
             stateJson.put("exception", JSONObject.NULL);
         } else {
             stateJson.put("isRefused", JSONObject.NULL);
@@ -62,15 +60,5 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
         }
 
         return stateJson;
-    }
-
-    private JSONArray visitCheckPoints(CheckPoint[] checkPoints) throws NullPointerException {
-        JSONArray checkPointsJson = new JSONArray();
-
-        for (CheckPoint checkPoint : checkPoints) {
-            checkPointsJson.put(checkPoint.isApproved());
-        }
-
-        return checkPointsJson;
     }
 }
