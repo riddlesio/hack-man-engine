@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
+import io.riddles.bookinggame.game.data.Board;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.BookingGame;
@@ -84,7 +85,21 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
             // create the next state
             nextState = new BookingGameState(state, move, roundNumber);
-            nextState.setBoard(state.getBoard());
+
+
+            BookingGameLogic l = new BookingGameLogic();
+
+            Board newBoard = null;
+            try {
+                newBoard = l.transformBoard(state.getBoard(), move);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            newBoard.dump();
+
+            nextState.setBoard(newBoard);
+
+
 
             this.updateScore(nextState);
 

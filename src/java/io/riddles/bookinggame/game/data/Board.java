@@ -44,7 +44,7 @@ public class Board {
     public Coordinate getPlayerCoordinate(int pId) throws InvalidInputException {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                if (fields[x][y] == String.valueOf(pId)) {
+                if (fields[x][y].equals(String.valueOf(pId))) {
                     return new Coordinate (x, y);
                 }
             }
@@ -52,4 +52,24 @@ public class Board {
         throw new InvalidInputException("Player not found on Board");
     }
 
+    public String getFieldAt(Coordinate c) {
+        return fields[c.getX()][c.getY()];
+    }
+
+    public void setFieldAt(Coordinate c, String s) {
+        fields[c.getX()][c.getY()] = s;
+    }
+
+    public Boolean isEmpty(Coordinate c) {
+        return (fields[c.getX()][c.getY()].equals("."));
+    }
+
+    public void dump() {
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                System.out.print(fields[x][y]);
+            }
+            System.out.println();
+        }
+    }
 }

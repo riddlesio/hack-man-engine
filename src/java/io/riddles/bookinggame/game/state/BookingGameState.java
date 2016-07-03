@@ -42,13 +42,6 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
 
     public BookingGameState(BookingGameState previousState, BookingGameMove move, int roundNumber) {
         super(previousState, move, roundNumber);
-        BookingGameLogic l = new BookingGameLogic();
-        try {
-            l.transformBoard(this.board, move);
-        } catch (Exception e) {
-            this.errorMessage = "Failed to parse move.";
-        }
-
     }
     public Board getBoard() {
         return this.board;
