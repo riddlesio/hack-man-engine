@@ -19,11 +19,10 @@
 
 package io.riddles.bookinggame.game.processor;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
-import io.riddles.bookinggame.game.data.Board;
+import io.riddles.bookinggame.game.data.BookingGameBoard;
+import io.riddles.bookinggame.game.data.Enemy;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.BookingGame;
@@ -66,47 +65,46 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         LOGGER.info(String.format("Playing round %d", roundNumber));
 
         int checkPointCount = checkPointValues.size();
-        BookingGameState nextState = null;
+        BookingGameState nextState = state;
 
         for (BookingGamePlayer player : this.players) {
 
             //Record record = this.records.get(this.roundNumber - 1);
 
-            System.out.println(state.getBoard());
-            System.out.println(player);
             player.sendUpdate("board", player, state.getBoard().toString());
             String response = player.requestMove(ActionType.MOVE.toString());
-            System.out.println("response " + response);
+
+            //System.out.println("response " + response);
 
             // parse the response
-            BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(
-                    player, checkPointCount);
+            BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(player, checkPointCount);
             BookingGameMove move = deserializer.traverse(response);
 
             // create the next state
-            nextState = new BookingGameState(state, move, roundNumber);
+            nextState = new BookingGameState(nextState, move, roundNumber);
 
 
             BookingGameLogic l = new BookingGameLogic();
 
-            Board newBoard = null;
+            BookingGameBoard newBoard = null;
             try {
                 newBoard = l.transformBoard(state.getBoard(), move);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            newBoard.dump();
+
+            newBoard.dump(this.players, nextState);
 
             nextState.setBoard(newBoard);
-
-
-
             this.updateScore(nextState);
 
             // stop game if bot returns nothing
             if (response == null) {
                 this.gameOver = true;
             }
+        }
+        for (Enemy e : state.getEnemies()) {
+            e.update(nextState.getBoard());
         }
 
         return nextState;

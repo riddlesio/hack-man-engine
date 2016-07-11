@@ -1,6 +1,10 @@
 package io.riddles.bookinggame.engine;
 
-import io.riddles.bookinggame.game.data.Board;
+import io.riddles.bookinggame.game.data.BookingGameBoard;
+import io.riddles.bookinggame.game.data.Coordinate;
+
+import io.riddles.bookinggame.game.data.MoveType;
+import io.riddles.bookinggame.game.data.Enemy;
 import io.riddles.bookinggame.game.processor.BookingGameProcessor;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -12,14 +16,24 @@ import io.riddles.bookinggame.game.BookingGameSerializer;
  */
 public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, BookingGamePlayer, BookingGameState> {
 
+    private Coordinate[] startCoordinates;
     public BookingGameEngine() {
+
         super();
+        initialiseData();
     }
 
     public BookingGameEngine(String wrapperFile, String[] botFiles) {
+
         super(wrapperFile, botFiles);
+        initialiseData();
     }
 
+    public void initialiseData() {
+        this.startCoordinates = new Coordinate[4];
+        this.startCoordinates[0] = new Coordinate(1, 5);
+        this.startCoordinates[1] = new Coordinate(18, 5);
+    }
 
     @Override
     protected BookingGamePlayer createPlayer(int id) {
@@ -45,24 +59,29 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
     @Override
     protected BookingGameState getInitialState() {
         BookingGameState s = new BookingGameState();
-        Board b = new Board(20, 11);
-        b.initialiseFromString(getStandardBoard(), 20, 11);
+        BookingGameBoard b = new BookingGameBoard(20, 11);
+        String standardBoard = getStandardBoard();
+        standardBoard = standardBoard.replace("E", ".");
+
+        b.initialiseFromString(standardBoard, 20, 11);
         s.setBoard(b);
+        /* TODO: Parse board string and add enemies */
+        s.addEnemy(new Enemy(new Coordinate(4, 7), MoveType.RIGHT));
         return s;
     }
 
 
     private String getStandardBoard() {
         return  "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
-                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                "x,C,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                "x,.,x,.,x,x,.,x,x,.,.,x,x,.,.,.,.,x,.,x," +
-                "x,1,.,.,.,.,.,x,.,.,.,.,x,.,.,.,.,.,2,x," +
+                "x,.,x,W,x,x,.,x,x,.,.,x,x,E,.,.,.,x,.,x," +
+                "x,.,.,C,.,.,.,x,.,.,.,.,x,.,.,.,.,.,.,x," +
                 "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
-                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                "x,.,x,.,E,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
@@ -77,11 +96,13 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
                 if (this.botInputFiles != null)
                     player.setInputFile(this.botInputFiles[i]);
-
+                player.setCoordinate(startCoordinates[i]);
                 this.players.add(player);
             }
-        } else if (command.equals("initial_snippet_count")) {
-            configuration.put("initial_snippet_count", Integer.parseInt(split[1]));
+        } else if (command.equals("player_snippet_count")) {
+            configuration.put("player_snippet_count", Integer.parseInt(split[1]));
+        } else if (command.equals("map_snippet_count")) {
+            configuration.put("map_snippet_count", Integer.parseInt(split[1]));
         } else if (command.equals("snippet_spawn_rate")) {
             configuration.put("snippet_spawn_rate", Integer.parseInt(split[1]));
         } else if (command.equals("snippet_spawn_count")) {

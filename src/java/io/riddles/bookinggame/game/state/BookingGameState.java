@@ -19,35 +19,47 @@
 
 package io.riddles.bookinggame.game.state;
 
+import io.riddles.bookinggame.game.data.BookingGameBoard;
 import io.riddles.bookinggame.game.move.BookingGameMove;
+import io.riddles.bookinggame.game.data.Enemy;
 import io.riddles.javainterface.game.state.AbstractState;
-import io.riddles.bookinggame.game.data.Board;
-import io.riddles.bookinggame.game.processor.BookingGameLogic;
+
+import java.util.ArrayList;
 
 /**
  * io.riddles.bookinggame.game.state.BookingGameState - Created on 2-6-16
  *
  * [description]
  *
- * @author jim
+ * @author joost
  */
 public class BookingGameState extends AbstractState<BookingGameMove> {
 
-    private Board board;
+    private BookingGameBoard board;
+    private ArrayList<Enemy> enemies;
     private String errorMessage;
 
     public BookingGameState() {
         super();
+        this.enemies = new ArrayList<Enemy>();
     }
 
     public BookingGameState(BookingGameState previousState, BookingGameMove move, int roundNumber) {
         super(previousState, move, roundNumber);
+        this.enemies = previousState.getEnemies();
     }
-    public Board getBoard() {
+    public BookingGameBoard getBoard() {
         return this.board;
     }
-    public void setBoard(Board b) {
+    public void setBoard(BookingGameBoard b) {
         this.board = b;
     }
 
+    public void addEnemy(Enemy e) {
+        enemies.add(e);
+    }
+
+    public ArrayList<Enemy> getEnemies() {
+        return this.enemies;
+    }
 }

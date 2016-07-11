@@ -7,8 +7,8 @@ import io.riddles.javainterface.exception.InvalidInputException;
  */
 public class Board {
     protected String[][] fields;
-    private int width = 20;
-    private int height = 11;
+    protected int width = 20;
+    protected int height = 11;
 
 
     public Board(int w, int h) {
@@ -41,16 +41,6 @@ public class Board {
         }
     }
 
-    public Coordinate getPlayerCoordinate(int pId) throws InvalidInputException {
-        for (int y = 0; y < this.height; y++) {
-            for (int x = 0; x < this.width; x++) {
-                if (fields[x][y].equals(String.valueOf(pId))) {
-                    return new Coordinate (x, y);
-                }
-            }
-        }
-        throw new InvalidInputException("Player not found on Board");
-    }
 
     public String getFieldAt(Coordinate c) {
         return fields[c.getX()][c.getY()];

@@ -25,12 +25,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import io.riddles.bookinggame.game.move.BookingGameMove;
-import io.riddles.bookinggame.game.move.CheckPoint;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.game.state.AbstractStateDeserializer;
-import io.riddles.bookinggame.game.move.BookingGameMoveDeserializer;
-import io.riddles.bookinggame.game.data.MoveType;
 
 /**
  * io.riddles.catchfrauds.game.state.CatchFraudsStateDeserializer - Created on 3-6-16
@@ -73,7 +69,7 @@ public class BookingGameStateDeserializer extends
         boolean isFraudulent = stateJson.getBoolean("isFraudulent");
         boolean isBusted = stateJson.getBoolean("isBusted");
         //Direction d = new BookingGameMoveDeserializer().visitAssessment(stateJson.getString("direction"));
-        //CheckPoint[] checkPoints = visitCheckPoints(stateJson.getJSONArray("isApproved"));
+        //Enemy[] checkPoints = visitCheckPoints(stateJson.getJSONArray("isApproved"));
 
         //BookingGameMove move = new BookingGameMove(this.getPlayers().get(1), d);
 
@@ -81,13 +77,4 @@ public class BookingGameStateDeserializer extends
         return null;
     }
 
-    private CheckPoint[] visitCheckPoints(JSONArray checkPointsJson) throws JSONException {
-        CheckPoint[] checkPoints = new CheckPoint[checkPointsJson.length()];
-
-        for (int i = 0; i < checkPointsJson.length(); i++) {
-            checkPoints[i] = new CheckPoint(checkPointsJson.getBoolean(i));
-        }
-
-        return checkPoints;
-    }
 }

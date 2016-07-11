@@ -20,6 +20,7 @@
 package io.riddles.bookinggame.game.player;
 
 import io.riddles.javainterface.game.player.AbstractPlayer;
+import io.riddles.bookinggame.game.data.Coordinate;
 
 /**
  * io.riddles.catchfrauds.game.player.BookingGameMovePlayer - Created on 3-6-16
@@ -31,11 +32,13 @@ import io.riddles.javainterface.game.player.AbstractPlayer;
 public class BookingGamePlayer extends AbstractPlayer {
 
     private int snippets, weapons;
+    private Coordinate c;
 
     public BookingGamePlayer(int id) {
         super(id);
         this.snippets = 100;
         this.weapons = 1;
+        this.c = new Coordinate (0,0);
     }
 
     public void updateSnippets(int delta) {
@@ -48,8 +51,11 @@ public class BookingGamePlayer extends AbstractPlayer {
     public int getSnippets() {
         return this.snippets;
     }
-    public int getWeapons() {
-        return this.weapons;
+    public int getWeapons() { return this.weapons; }
+    public Coordinate getCoordinate() { return this.c; }
+
+    public void setCoordinate(Coordinate c) {
+        this.c = c;
     }
 
 }

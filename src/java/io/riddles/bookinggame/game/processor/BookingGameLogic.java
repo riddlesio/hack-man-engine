@@ -1,5 +1,6 @@
 package io.riddles.bookinggame.game.processor;
 
+import io.riddles.bookinggame.game.data.BookingGameBoard;
 import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 
@@ -17,11 +18,11 @@ public class BookingGameLogic {
     public BookingGameLogic() {
     }
 
-    public Board transformBoard(Board b, BookingGameMove move) throws InvalidInputException {
+    public BookingGameBoard transformBoard(BookingGameBoard b, BookingGameMove move) throws InvalidInputException {
 
         BookingGamePlayer p = move.getPlayer();
         int pId = p.getId();
-        Coordinate c = b.getPlayerCoordinate(pId);
+        Coordinate c = p.getCoordinate();
         Coordinate newC = c;
 
         switch(move.getMoveType()) {
@@ -57,15 +58,16 @@ public class BookingGameLogic {
                 p.updateSnippets(-3);
                 break;
             case "C": /* Code snippet */
+                b.setFieldAt(c, ".");
                 p.updateSnippets(+1);
                 break;
             case "W": /* A Weapon */
+                b.setFieldAt(c, ".");
                 p.updateWeapons(1);
                 break;
 
         }
-        b.setFieldAt(c, ".");
-        b.setFieldAt(newC, String.valueOf(pId));
+        p.setCoordinate(newC);
 
         return b;
     }
