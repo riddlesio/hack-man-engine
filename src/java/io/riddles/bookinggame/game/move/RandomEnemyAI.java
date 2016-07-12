@@ -25,9 +25,7 @@ public class RandomEnemyAI implements EnemyAI {
 
         /* Bump into wall */
         Coordinate newC = getMovedCoordinate(newE.getCoordinate(), newE.getDirection(), s.getBoard());
-        if (s.getBoard().isEmptyComplete(newC)) {
-            /* Move there */
-        } else {
+        if (!s.getBoard().isEmptyComplete(newC)) {
             System.out.println(e.toString() +  " bump into wall");
             int wallCounter = 0;
             if (!isEmptyInDirection(newE.getCoordinate(), MoveType.DOWN, s.getBoard())) wallCounter++;
@@ -56,7 +54,6 @@ public class RandomEnemyAI implements EnemyAI {
             }
         }
         newE.setCoordinate(newC);
-        int a;
         return newE;
     }
 

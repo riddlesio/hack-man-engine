@@ -39,6 +39,17 @@ import spock.lang.Specification
 class BookingGameEngineSpec extends Specification {
 
     class TestEngine extends BookingGameEngine {
+        String standardBoard = "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                                "x,C,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                                "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                                "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                                "x,.,.,C,.,.,.,x,C,.,.,C,x,.,.,.,.,.,.,x," +
+                                "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                                "x,.,x,.,.,.,.,.,.,.,.,.,.,C,.,.,.,x,.,x," +
+                                "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
+                                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
 
         TestEngine(IOHandler ioHandler) {
             super();
@@ -65,7 +76,6 @@ class BookingGameEngineSpec extends Specification {
         protected BookingGameState getInitialState() {
             BookingGameState s = new BookingGameState();
             BookingGameBoard b = new BookingGameBoard(20, 11);
-            String standardBoard = getStandardBoard();
             b.initialiseFromString(standardBoard, 20, 11);
             s.setBoard(b);
             s.addEnemy(new Enemy(new Coordinate(9, 5), MoveType.LEFT));
@@ -96,9 +106,30 @@ class BookingGameEngineSpec extends Specification {
         engine.getPlayers().get(1).getId() == 2
     }
 
+    def "test engine configuration"() {
+        println("test engine configuration")
 
-    def "Test running of full game with inputs from files"() {
-        println("Test running of full game with inputs from files")
+        setup:
+        String[] botInputs = new String[2]
+        def wrapperInput = "./test/wrapper_input.txt"
+        botInputs[0] = "./test/bot1_input.txt"
+        botInputs[1] = "./test/bot2_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+
+        engine.setup()
+
+        expect:
+        engine.getPlayers().size() == 2
+        engine.getPlayers().get(0).getId() == 1
+        engine.getPlayers().get(1).getId() == 2
+        engine.getConfiguration().get("max_rounds") == 2
+        engine.getConfiguration().get("weapon_paralysis_duration") == 2
+    }
+
+
+    def "test running of three round game"() {
+        println("test running of three round game")
 
         setup:
         String[] botInputs = new String[2]
@@ -106,6 +137,7 @@ class BookingGameEngineSpec extends Specification {
         def wrapperInput = "./test/wrapper_input.txt"
         botInputs[0] = "./test/bot1_input.txt"
         botInputs[1] = "./test/bot2_input.txt"
+        engine.getConfiguration().put("max_rounds", 3);
 
         def engine = new TestEngine(wrapperInput, botInputs)
 
@@ -116,10 +148,6 @@ class BookingGameEngineSpec extends Specification {
         1 * engine.finish()
 
         expect:
-        def checkPointValues = engine.processor.checkPointValues
-        checkPointValues.size() == 3
-        checkPointValues.get(0) == "checkpoint 1 test lalala"
-        checkPointValues.get(1) == "checkpoint 2 some other checkpoint"
-        checkPointValues.get(2) == "checkpoint 3 jajaja"
+        engine.getConfiguration().get("max_rounds") == 3
     }
 }

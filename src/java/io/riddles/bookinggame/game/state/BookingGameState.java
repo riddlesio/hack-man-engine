@@ -50,6 +50,12 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
         super(previousState, move, roundNumber);
         this.enemies = previousState.getEnemies();
     }
+
+    public BookingGameState(BookingGameState previousState, ArrayList<BookingGameMove> moves, int roundNumber) {
+        super(previousState, moves, roundNumber);
+        this.enemies = previousState.getEnemies();
+    }
+
     public BookingGameBoard getBoard() {
         return this.board;
     }
@@ -64,6 +70,8 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
     }
+
+    public void setEnemies(ArrayList<Enemy> e) { this.enemies = e; }
 
     public void setRepresentationString(ArrayList<BookingGamePlayer> players) {
         this.representationString = this.board.toRepresentationString(players, this);

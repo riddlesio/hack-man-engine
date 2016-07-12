@@ -61,7 +61,6 @@ public class BookingGameBoard extends Board {
                 if (counter > 0) output += ",";
                 output += s;
                 counter++;
-
             }
         }
         return output;
@@ -82,9 +81,7 @@ public class BookingGameBoard extends Board {
                         fieldsComplete[x][y] = "E";
                     }
                 }
-                System.out.print(fieldsComplete[x][y]);
             }
-            System.out.println("|");
         }
     }
 

@@ -65,6 +65,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.players = new ArrayList<>();
         this.gameLoop = new SimpleGameLoop();
         this.ioHandler = new IOHandler();
+        this.configuration = new HashMap<String, Object>();
     }
 
     /**
@@ -77,6 +78,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.gameLoop = new SimpleGameLoop();
         this.ioHandler = new IOHandler(wrapperInputFile);
         this.botInputFiles = botInputFiles;
+        this.configuration = new HashMap<String, Object>();
     }
 
     /**
@@ -228,6 +230,13 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
      */
     public ArrayList<Pl> getPlayers() {
         return this.players;
+    }
+
+    /**
+     * @return The configuration
+     */
+    public HashMap<String, Object> getConfiguration() {
+        return configuration;
     }
 
     /**
