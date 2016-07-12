@@ -33,11 +33,13 @@ public class BookingGamePlayer extends AbstractPlayer {
 
     private int snippets, weapons;
     private Coordinate c;
+    private int paralysis;
 
     public BookingGamePlayer(int id) {
         super(id);
         this.snippets = 100;
         this.weapons = 1;
+        this.paralysis = 0;
         this.c = new Coordinate (0,0);
     }
 
@@ -59,7 +61,21 @@ public class BookingGamePlayer extends AbstractPlayer {
     }
 
     public String toString() {
-        return "Player " + this.getId() + " coord " + this.getCoordinate() + " snippets " + this.snippets + " weapons " + weapons;
+        return "Player " + this.getId() + " coord " + this.getCoordinate() + " snippets " + this.snippets + " weapons " + weapons + " paralysis " + paralysis;
+    }
+
+    public void update() {
+        if (this.paralysis > 0) {
+            this.paralysis--;
+        }
+    }
+
+    public Boolean isParalyzed() {
+        return (this.paralysis > 0);
+    }
+
+    public void paralyse(int p) {
+        this.paralysis+=p;
     }
 
 }

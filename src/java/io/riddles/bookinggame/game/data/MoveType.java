@@ -19,5 +19,5 @@ public enum MoveType {
     BACKWARD,
     PASS,
     ATTACK,
-    UNKNOWN
+    PARALYZED
 }

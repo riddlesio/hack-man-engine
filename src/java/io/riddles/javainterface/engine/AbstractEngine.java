@@ -56,7 +56,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
     protected IOHandler ioHandler;
     protected ArrayList<Pl> players;
     protected Pr processor;
-    protected HashMap<String, Object> configuration;
+    protected HashMap<String, Integer> configuration;
 
     // Can be overridden in subclass constructor
     protected GameLoop gameLoop;
@@ -65,7 +65,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.players = new ArrayList<>();
         this.gameLoop = new SimpleGameLoop();
         this.ioHandler = new IOHandler();
-        this.configuration = new HashMap<String, Object>();
+        this.configuration = new HashMap<String, Integer>();
     }
 
     /**
@@ -78,7 +78,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.gameLoop = new SimpleGameLoop();
         this.ioHandler = new IOHandler(wrapperInputFile);
         this.botInputFiles = botInputFiles;
-        this.configuration = new HashMap<String, Object>();
+        this.configuration = new HashMap<String, Integer>();
     }
 
     /**
@@ -130,6 +130,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         }
 
         this.processor = createProcessor();
+        this.processor.setConfiguration(configuration);
 
         LOGGER.info("Got start. Sending game settings to bots...");
 
@@ -235,7 +236,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
     /**
      * @return The configuration
      */
-    public HashMap<String, Object> getConfiguration() {
+    public HashMap<String, Integer> getConfiguration() {
         return configuration;
     }
 

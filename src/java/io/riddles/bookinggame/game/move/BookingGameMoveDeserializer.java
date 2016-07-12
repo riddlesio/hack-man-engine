@@ -43,6 +43,7 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
 
     @Override
     public BookingGameMove traverse(String string) {
+        if (this.player.isParalyzed()) { return new BookingGameMove(this.player, MoveType.PARALYZED); }
         try {
             return visitMove(string);
         } catch (InvalidMoveException ex) {

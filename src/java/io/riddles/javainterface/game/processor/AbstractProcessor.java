@@ -20,6 +20,7 @@
 package io.riddles.javainterface.game.processor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import io.riddles.javainterface.game.player.AbstractPlayer;
@@ -43,6 +44,7 @@ public abstract class AbstractProcessor<P extends AbstractPlayer, S extends Abst
     protected final static Logger LOGGER = Logger.getLogger(AbstractProcessor.class.getName());
 
     protected ArrayList<P> players;
+    protected HashMap<String, Integer> configuration;
 
     public AbstractProcessor(ArrayList<P> players) {
         this.players = players;
@@ -54,6 +56,11 @@ public abstract class AbstractProcessor<P extends AbstractPlayer, S extends Abst
     public ArrayList<P> getPlayers() {
         return this.players;
     }
+
+    /**
+     * Set the configuration
+     */
+    public void setConfiguration(HashMap<String, Integer> configuration) { this.configuration = configuration; }
 
     /**
      * Implement this only if there is a pre-game phase, i.e. ask

@@ -17,7 +17,7 @@ import io.riddles.bookinggame.game.BookingGameSerializer;
  */
 public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, BookingGamePlayer, BookingGameState> {
 
-    private Coordinate[] startCoordinates;
+    protected Coordinate[] startCoordinates;
     public BookingGameEngine() {
 
         super();
@@ -30,7 +30,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         initialiseData();
     }
 
-    public void initialiseData() {
+    protected void initialiseData() {
         this.startCoordinates = new Coordinate[4];
         this.startCoordinates[0] = new Coordinate(1, 5);
         this.startCoordinates[1] = new Coordinate(18, 5);

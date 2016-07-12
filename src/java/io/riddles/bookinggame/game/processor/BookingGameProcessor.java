@@ -71,8 +71,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         for (BookingGamePlayer player : this.players) {
 
-            //Record record = this.records.get(this.roundNumber - 1);
-
+            System.out.println(player);
             player.sendUpdate("board", player, state.getBoard().toString());
             String response = player.requestMove(ActionType.MOVE.toString());
 
@@ -81,7 +80,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             BookingGameMove move = deserializer.traverse(response);
 
             // create the next state
-
             moves.add(move);
 
 
@@ -92,23 +90,36 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             } catch (Exception e) {
                 LOGGER.info(String.format("Unknown response: %s", response));
             }
+
             if (move.getMoveType() == MoveType.ATTACK) {
-                /* Kill enemies nearby */
-                int prevSize = state.getEnemies().size();
-                Iterator<Enemy> it = state.getEnemies().iterator();
-                while (it.hasNext()) {
-                    Enemy enemy = it.next();
-                    if (Math.abs(enemy.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(enemy.getCoordinate().getY() - player.getCoordinate().getY())) < 2){
-                        newBoard.setFieldAt(enemy.getCoordinate(), "-");
-                        it.remove();
+                if (player.getWeapons()>0) {
+                    player.updateWeapons(-1);
+                    /* Kill enemies nearby */
+                    int prevSize = state.getEnemies().size();
+                    Iterator<Enemy> it = state.getEnemies().iterator();
+                    while (it.hasNext()) {
+                        Enemy enemy = it.next();
+                        if (Math.abs(enemy.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(enemy.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
+                            newBoard.setFieldAt(enemy.getCoordinate(), "-");
+                            it.remove();
+                        }
+                    }
+                    if (state.getEnemies().size() != prevSize) {
+                        /* An enemy was killed */
+                    }
+                    /* Paralyse players nearby and take N code snippets*/
+                    for (BookingGamePlayer otherPlayer : this.players) {
+                        if (otherPlayer.getId() != player.getId()) {
+                            if (Math.abs(otherPlayer.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(otherPlayer.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
+                                otherPlayer.paralyse(this.configuration.get("weapon_paralysis_duration"));
+                                otherPlayer.updateSnippets(-this.configuration.get("weapon_snippet_loss"));
+                                System.out.println("ATTACK: " + otherPlayer);
+                            }
+                        }
                     }
                 }
-                if (state.getEnemies().size() != prevSize) {
-                    System.out.println("ENEMIE KILLED ");
-                }
-                /* Paralyse players nearby and take N code snippets*/
-
             }
+            player.update();
 
 
             // stop game if bot returns nothing
@@ -132,10 +143,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             enemy = AI.transform(enemy, nextState);
         }
 
-        /* TODO: Spawn snippets */
-        /* TODO: Spawn enemy */
-        /* TODO: Check paralysis */
-        /* TODO: Check weapon use */
         nextState.setRepresentationString(players);
 
         return nextState;
@@ -143,10 +150,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
     @Override
     public boolean hasGameEnded(BookingGameState state) {
-
-        /* TODO: get rid of this */
-        int MAXROUNDS = 48;
-        return this.gameOver || this.roundNumber >= MAXROUNDS;
+        return (this.gameOver || this.roundNumber >= this.configuration.get("max_rounds"));
     }
 
     @Override

@@ -83,6 +83,13 @@ class BookingGameEngineSpec extends Specification {
             s.addEnemy(new Enemy(new Coordinate(12, 7), MoveType.RIGHT));
             return s;
         }
+
+        @Override
+        protected void initialiseData() {
+            this.startCoordinates = new Coordinate[4];
+            this.startCoordinates[0] = new Coordinate(1, 5);
+            this.startCoordinates[1] = new Coordinate(3, 5);
+        }
     }
 
     def engine = new TestEngine(Mock(IOHandler));
@@ -137,7 +144,6 @@ class BookingGameEngineSpec extends Specification {
         def wrapperInput = "./test/wrapper_input.txt"
         botInputs[0] = "./test/bot1_input.txt"
         botInputs[1] = "./test/bot2_input.txt"
-        engine.getConfiguration().put("max_rounds", 3);
 
         def engine = new TestEngine(wrapperInput, botInputs)
 
@@ -148,6 +154,6 @@ class BookingGameEngineSpec extends Specification {
         1 * engine.finish()
 
         expect:
-        engine.getConfiguration().get("max_rounds") == 3
+        engine.getConfiguration().get("max_rounds") == 5
     }
 }
