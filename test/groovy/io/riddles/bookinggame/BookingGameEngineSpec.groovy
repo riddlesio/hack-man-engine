@@ -79,7 +79,7 @@ class BookingGameEngineSpec extends Specification {
             b.initialiseFromString(standardBoard, 20, 11);
             s.setBoard(b);
             s.addEnemy(new Enemy(new Coordinate(9, 5), MoveType.LEFT));
-            s.addEnemy(new Enemy(new Coordinate(8, 7), MoveType.LEFT));
+            s.addEnemy(new Enemy(new Coordinate(1, 7), MoveType.UP));
             s.addEnemy(new Enemy(new Coordinate(12, 7), MoveType.RIGHT));
             return s;
         }

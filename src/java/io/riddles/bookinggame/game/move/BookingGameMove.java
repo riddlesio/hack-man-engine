@@ -48,4 +48,8 @@ public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
         return this.type;
     }
 
+    public String toString() {
+        return "BookingGameMove " + this.type;
+    }
+
 }

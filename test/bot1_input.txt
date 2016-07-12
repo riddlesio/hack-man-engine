@@ -1,5 +1,5 @@
-up
-up
+pass
+attack
 up
 up
 right

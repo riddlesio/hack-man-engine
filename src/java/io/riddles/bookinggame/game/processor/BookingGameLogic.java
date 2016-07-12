@@ -46,10 +46,7 @@ public class BookingGameLogic {
                     newC = new Coordinate(c.getX()-1, c.getY());
                 }
                 break;
-            case WEAPON:
-                if (b.isEmpty(new Coordinate(c.getX()-1, c.getY()))) {
-                    newC = new Coordinate(c.getX()-1, c.getY());
-                }
+            case ATTACK:
                 break;
         }
 

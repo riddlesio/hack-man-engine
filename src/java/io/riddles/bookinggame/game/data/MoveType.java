@@ -18,5 +18,6 @@ public enum MoveType {
     FORWARD,
     BACKWARD,
     PASS,
-    WEAPON
+    ATTACK,
+    UNKNOWN
 }

@@ -37,6 +37,7 @@ public class Enemy {
 
     private Coordinate coordinate;
     private MoveType direction;
+    private boolean killMe = false;
 
     public Enemy(Coordinate c, MoveType d) {
         this.coordinate = c;
@@ -53,4 +54,7 @@ public class Enemy {
     public String toString() {
         return "Enemy " + this.coordinate;
     }
+
+    public void die() {this.killMe = true;}
+    public boolean isDead() { return this.killMe; }
 }
