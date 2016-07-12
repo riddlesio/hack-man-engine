@@ -58,4 +58,8 @@ public class BookingGamePlayer extends AbstractPlayer {
         this.c = c;
     }
 
+    public String toString() {
+        return "Player " + this.getId() + " coord " + this.getCoordinate() + " snippets " + this.snippets + " weapons " + weapons;
+    }
+
 }

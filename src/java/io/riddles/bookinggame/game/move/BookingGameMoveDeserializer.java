@@ -36,11 +36,9 @@ import io.riddles.javainterface.serialize.Deserializer;
 public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove> {
 
     private BookingGamePlayer player;
-    private int checkPointCount;
 
-    public BookingGameMoveDeserializer(BookingGamePlayer player, int checkPointCount) {
+    public BookingGameMoveDeserializer(BookingGamePlayer player) {
         this.player = player;
-        this.checkPointCount = checkPointCount;
     }
 
     @Override
@@ -76,6 +74,8 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
                 return MoveType.RIGHT;
             case "pass":
                 return MoveType.PASS;
+            case "weapon":
+                return MoveType.WEAPON;
             default:
                 throw new InvalidMoveException("Move isn't valid");
         }

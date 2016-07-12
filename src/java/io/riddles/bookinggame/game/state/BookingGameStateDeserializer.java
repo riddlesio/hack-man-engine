@@ -66,14 +66,6 @@ public class BookingGameStateDeserializer extends
     private BookingGameState visitState(JSONObject stateJson,
                                         BookingGameState previousState) throws JSONException {
         int roundNumber = stateJson.getInt("round");
-        boolean isFraudulent = stateJson.getBoolean("isFraudulent");
-        boolean isBusted = stateJson.getBoolean("isBusted");
-        //Direction d = new BookingGameMoveDeserializer().visitAssessment(stateJson.getString("direction"));
-        //Enemy[] checkPoints = visitCheckPoints(stateJson.getJSONArray("isApproved"));
-
-        //BookingGameMove move = new BookingGameMove(this.getPlayers().get(1), d);
-
-        //return new BookingGameState(previousState, move, roundNumber);
         return null;
     }
 

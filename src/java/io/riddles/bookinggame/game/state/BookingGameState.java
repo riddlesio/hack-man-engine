@@ -22,6 +22,7 @@ package io.riddles.bookinggame.game.state;
 import io.riddles.bookinggame.game.data.BookingGameBoard;
 import io.riddles.bookinggame.game.move.BookingGameMove;
 import io.riddles.bookinggame.game.data.Enemy;
+import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.game.state.AbstractState;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     private BookingGameBoard board;
     private ArrayList<Enemy> enemies;
     private String errorMessage;
+    private String representationString;
 
     public BookingGameState() {
         super();
@@ -61,5 +63,13 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
 
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
+    }
+
+    public void setRepresentationString(ArrayList<BookingGamePlayer> players) {
+        this.representationString = this.board.toRepresentationString(players, this);
+    }
+
+    public String getRepresentationString() {
+        return this.representationString;
     }
 }

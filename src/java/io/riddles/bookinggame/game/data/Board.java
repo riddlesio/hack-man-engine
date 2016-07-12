@@ -41,6 +41,9 @@ public class Board {
         }
     }
 
+    public int getWidth() { return this.width; }
+    public int getHeight() { return this.height; }
+
 
     public String getFieldAt(Coordinate c) {
         return fields[c.getX()][c.getY()];
@@ -50,6 +53,7 @@ public class Board {
         fields[c.getX()][c.getY()] = s;
     }
 
+    /* isEmpty doesn't check for players or enemies! */
     public Boolean isEmpty(Coordinate c) {
         if (c.getX() < 0 || c.getY() < 0 || c.getX() >= this.width || c.getY() >= this.height) {
             return false;

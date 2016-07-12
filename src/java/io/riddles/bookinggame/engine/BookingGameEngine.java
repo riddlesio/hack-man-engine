@@ -5,6 +5,7 @@ import io.riddles.bookinggame.game.data.Coordinate;
 
 import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.bookinggame.game.data.Enemy;
+import io.riddles.bookinggame.game.move.RandomEnemyAI;
 import io.riddles.bookinggame.game.processor.BookingGameProcessor;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -61,25 +62,25 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         BookingGameState s = new BookingGameState();
         BookingGameBoard b = new BookingGameBoard(20, 11);
         String standardBoard = getStandardBoard();
-        standardBoard = standardBoard.replace("E", ".");
-
         b.initialiseFromString(standardBoard, 20, 11);
         s.setBoard(b);
-        /* TODO: Parse board string and add enemies */
-        s.addEnemy(new Enemy(new Coordinate(4, 7), MoveType.RIGHT));
+        /* TODO: Add enemies according to configuration */
+        s.addEnemy(new Enemy(new Coordinate(4, 7), new RandomEnemyAI().getRandomDirection()));
+        /* TODO: Add snippets according to configuration */
+
         return s;
     }
 
 
-    private String getStandardBoard() {
+    protected String getStandardBoard() {
         return  "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
                 "x,C,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                "x,.,x,W,x,x,.,x,x,.,.,x,x,E,.,.,.,x,.,x," +
-                "x,.,.,C,.,.,.,x,.,.,.,.,x,.,.,.,.,.,.,x," +
+                "x,.,x,W,x,x,.,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                "x,.,.,C,.,.,.,x,C,.,.,C,x,.,.,.,.,.,.,x," +
                 "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
-                "x,.,x,.,E,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                "x,.,x,.,.,.,.,.,.,.,.,.,.,C,.,.,.,x,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";

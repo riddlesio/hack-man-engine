@@ -1,6 +1,6 @@
 package io.riddles.bookinggame.game.move;
 
-import io.riddles.bookinggame.game.data.Coordinate;
+import io.riddles.bookinggame.game.data.Enemy;
 import io.riddles.bookinggame.game.state.BookingGameState;
 
 /**
@@ -8,5 +8,5 @@ import io.riddles.bookinggame.game.state.BookingGameState;
  */
 public interface EnemyAI {
 
-    public Coordinate transform(Coordinate c, BookingGameState s);
+    public Enemy transform(Enemy e, BookingGameState s);
 }

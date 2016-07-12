@@ -17,8 +17,15 @@
  *     file that was distributed with this source code.
  */
 
-package io.riddles.bookinggame.engine
+package io.riddles.bookinggame
 
+import io.riddles.bookinggame.engine.BookingGameEngine
+import io.riddles.bookinggame.game.data.BookingGameBoard
+import io.riddles.bookinggame.game.data.Coordinate
+import io.riddles.bookinggame.game.data.Enemy
+import io.riddles.bookinggame.game.data.MoveType
+import io.riddles.bookinggame.game.move.RandomEnemyAI
+import io.riddles.bookinggame.game.state.BookingGameState
 import io.riddles.javainterface.io.IOHandler
 import spock.lang.Specification
 
@@ -53,20 +60,26 @@ class BookingGameEngineSpec extends Specification {
         void finish() {
             super.finish();
         }
+
+        @Override
+        protected BookingGameState getInitialState() {
+            BookingGameState s = new BookingGameState();
+            BookingGameBoard b = new BookingGameBoard(20, 11);
+            String standardBoard = getStandardBoard();
+            b.initialiseFromString(standardBoard, 20, 11);
+            s.setBoard(b);
+            s.addEnemy(new Enemy(new Coordinate(9, 5), MoveType.LEFT));
+            s.addEnemy(new Enemy(new Coordinate(8, 7), MoveType.LEFT));
+            s.addEnemy(new Enemy(new Coordinate(12, 7), MoveType.RIGHT));
+            return s;
+        }
     }
 
     def engine = new TestEngine(Mock(IOHandler));
 
-    def "test engine initialization"() {
-
-        setup:
-
-        expect:
-        1
-
-    }
 
     def "test engine setup"() {
+        println("test engine setup")
 
         setup:
         engine.getIOHandler().getNextMessage() >>> ["initialize", "bot_ids 1,2", "start"]
@@ -85,6 +98,7 @@ class BookingGameEngineSpec extends Specification {
 
 
     def "Test running of full game with inputs from files"() {
+        println("Test running of full game with inputs from files")
 
         setup:
         String[] botInputs = new String[2]

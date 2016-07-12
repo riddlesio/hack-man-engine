@@ -46,38 +46,11 @@ public class Enemy {
     public Coordinate getCoordinate() { return this.coordinate; }
     public void setCoordinate(Coordinate c) { this.coordinate = c; }
 
-    public Coordinate getMovedCoordinate(MoveType m, Board b) {
-        switch(m) {
-            case UP:
-                return new Coordinate(this.coordinate.getX(), this.coordinate.getY()-1);
-            case DOWN:
-                return new Coordinate(this.coordinate.getX(), this.coordinate.getY()+1);
-            case RIGHT:
-                return new Coordinate(this.coordinate.getX()+1, this.coordinate.getY());
-            case LEFT:
-                return new Coordinate(this.coordinate.getX()-1, this.coordinate.getY());
-        }
-        return this.coordinate;
-    }
-
-    public void update(Board b) {
-        /* Use AI to make a move */
-        /* TODO: Implement Chase, Scatter and Frightened modes? */
-
-        Coordinate newC = getMovedCoordinate(this.direction, b);
-        if (b.isEmpty(newC)) {
-            /* Move there */
-            this.coordinate = newC;
-        } else {
-            /* Field blocked, find a new direction */
-        }
-
-
-    }
 
     public MoveType getDirection() { return this.direction; }
+    public void setDirection(MoveType d) { this.direction = d; }
 
     public String toString() {
-        return "Enemy" + this.coordinate;
+        return "Enemy " + this.coordinate;
     }
 }

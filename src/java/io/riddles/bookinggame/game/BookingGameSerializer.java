@@ -40,16 +40,10 @@ public class BookingGameSerializer extends
     @Override
     public String traverseToString(BookingGameProcessor processor, BookingGameState initialState) {
         JSONObject game = new JSONObject();
-        game = addDefaultJSON(game, processor);
 
-        // add checkpoints
-        JSONArray checkPoints = new JSONArray();
-        for (String checkPointValue : processor.getCheckPointValues()) {
-            JSONObject checkPoint = new JSONObject();
-            checkPoint.put("description", checkPointValue);
-            checkPoints.put(checkPoint);
-        }
-        ((JSONObject) game.get("settings")).put("checkpoints", checkPoints);
+        game = addDefaultJSON(game, processor);
+        game.put("boardwidth", initialState.getBoard().getWidth());
+        game.put("boardheight", initialState.getBoard().getHeight());
 
         // add all states
         JSONArray states = new JSONArray();

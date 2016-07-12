@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import io.riddles.bookinggame.game.data.BookingGameBoard;
 import io.riddles.bookinggame.game.data.Enemy;
+import io.riddles.bookinggame.game.move.RandomEnemyAI;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.BookingGame;
@@ -41,7 +42,6 @@ import io.riddles.javainterface.game.processor.AbstractProcessor;
  */
 public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, BookingGameState> {
 
-    private ArrayList<String> checkPointValues;
     private ArrayList<Record> records;
     private int roundNumber;
     private boolean gameOver;
@@ -50,7 +50,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players) {
         super(players);
         this.records = records;
-        this.checkPointValues = new ArrayList<>();
         this.gameOver = false;
     }
 
@@ -64,7 +63,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         this.roundNumber = roundNumber;
         LOGGER.info(String.format("Playing round %d", roundNumber));
 
-        int checkPointCount = checkPointValues.size();
         BookingGameState nextState = state;
 
         for (BookingGamePlayer player : this.players) {
@@ -74,10 +72,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             player.sendUpdate("board", player, state.getBoard().toString());
             String response = player.requestMove(ActionType.MOVE.toString());
 
-            //System.out.println("response " + response);
-
             // parse the response
-            BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(player, checkPointCount);
+            BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(player);
             BookingGameMove move = deserializer.traverse(response);
 
             // create the next state
@@ -92,20 +88,35 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println(player);
 
             newBoard.dump(this.players, nextState);
 
             nextState.setBoard(newBoard);
+            nextState.setRepresentationString(players);
             this.updateScore(nextState);
 
             // stop game if bot returns nothing
             if (response == null) {
                 this.gameOver = true;
             }
+
+
         }
-        for (Enemy e : state.getEnemies()) {
-            e.update(nextState.getBoard());
+        RandomEnemyAI AI = new RandomEnemyAI();
+        for (Enemy e : nextState.getEnemies()) {
+            nextState.getBoard().updateComplete(players, nextState);
+            e = AI.transform(e, nextState);
+            /* Eat snippet if it's there */
+            if (nextState.getBoard().getFieldAt(e.getCoordinate()).equals("C")) {
+                nextState.getBoard().setFieldAt(e.getCoordinate(), ".");
+            }
         }
+        /* TODO: Spawn snippets */
+        /* TODO: Spawn enemy */
+        /* TODO: Check paralysis */
+        /* TODO: Check weapon use */
+        nextState.setRepresentationString(players);
 
         return nextState;
     }
@@ -114,7 +125,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     public boolean hasGameEnded(BookingGameState state) {
 
         /* TODO: get rid of this */
-        int MAXROUNDS = 23;
+        int MAXROUNDS = 48;
         return this.gameOver || this.roundNumber >= MAXROUNDS;
     }
 
@@ -128,24 +139,9 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         return 0;
     }
 
-    public ArrayList<String> getCheckPointValues() {
-        return this.checkPointValues;
-    }
 
     private void updateScore(BookingGameState state) {
         BookingGameMove move = state.getMoves().get(0);
         BookingGamePlayer player = move.getPlayer();
-    }
-
-    private void storeCheckpointInput(String input) {
-        if (input.length() <= 0) return;
-
-        String[] values = input.split(";");
-        for (String value : values) {
-            value = value.trim();
-            if (value.length() > 0) {
-                this.checkPointValues.add(value);
-            }
-        }
     }
 }
