@@ -22,6 +22,7 @@ package io.riddles.bookinggame;
 import java.net.URL;
 
 import io.riddles.bookinggame.engine.BookingGameEngine;
+import io.riddles.javainterface.exception.TerminalException;
 
 /**
  * io.riddles.bookinggame.BookingGame - Created on 2-6-16
@@ -35,6 +36,10 @@ public class BookingGame {
     public static void main(String[] args) {
         BookingGameEngine engine = new BookingGameEngine();
 
-        engine.run();
+        try {
+            engine.run();
+        } catch (TerminalException e) {
+            System.exit(e.getStatusCode());
+        }
     }
 }

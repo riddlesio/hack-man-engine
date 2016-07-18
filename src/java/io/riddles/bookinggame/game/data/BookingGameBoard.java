@@ -91,4 +91,14 @@ public class BookingGameBoard extends Board {
         }
          return (!fieldsComplete[c.getX()][c.getY()].equals("x"));
     }
+
+    public String toStringComplete() {
+        String s = "";
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                s += fieldsComplete[x][y];
+            }
+        }
+        return s;
+    }
 }

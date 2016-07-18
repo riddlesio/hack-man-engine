@@ -59,8 +59,7 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
 
         MoveType type = visitAssessment(split[0]);
 
-        String checkPointInput = null;
-        return new BookingGameMove(this.player, type);
+         return new BookingGameMove(this.player, type);
     }
 
     public MoveType visitAssessment(String input) throws InvalidMoveException {

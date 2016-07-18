@@ -19,6 +19,8 @@
 
 package io.riddles.javainterface.engine;
 
+import io.riddles.bookinggame.game.move.AlwaysRightEnemyAI;
+import io.riddles.javainterface.exception.TerminalException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -56,7 +58,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
     protected IOHandler ioHandler;
     protected ArrayList<Pl> players;
     protected Pr processor;
-    protected HashMap<String, Integer> configuration;
+    public static HashMap<String, Integer> configuration;
 
     // Can be overridden in subclass constructor
     protected GameLoop gameLoop;
@@ -85,18 +87,19 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
      * This method starts the engine. Should be called from the main
      * method in the project.
      */
-    public void run() {
+    public void run() throws TerminalException {
         LOGGER.info("Starting...");
 
         setup();
 
         if (this.processor == null) {
-            throw new NullPointerException("Processor has not been set");
+            throw new TerminalException("Processor has not been set");
         }
 
         LOGGER.info("Running pre-game phase...");
 
         this.processor.preGamePhase();
+
 
         LOGGER.info("Starting game loop...");
 
@@ -123,6 +126,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
             String line = "";
             while (!line.equals("start")) { // from "start", setup is done
                 line = this.ioHandler.getNextMessage();
+                System.out.println(line);
                 parseSetupInput(line);
             }
         } catch(IOException ex) {
@@ -130,7 +134,6 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         }
 
         this.processor = createProcessor();
-        this.processor.setConfiguration(configuration);
 
         LOGGER.info("Got start. Sending game settings to bots...");
 
@@ -167,8 +170,6 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         // send the game file
         this.ioHandler.waitForMessage("game");
         this.ioHandler.sendMessage(getPlayedGame(initialState));
-
-        System.exit(0);
     }
 
     /**
@@ -231,13 +232,6 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
      */
     public ArrayList<Pl> getPlayers() {
         return this.players;
-    }
-
-    /**
-     * @return The configuration
-     */
-    public HashMap<String, Integer> getConfiguration() {
-        return configuration;
     }
 
     /**

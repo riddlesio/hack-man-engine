@@ -52,6 +52,7 @@ public class IOHandler {
     // used for debugging only
     public IOHandler(String inputFile) {
         try {
+            System.out.println(inputFile);
             InputStream fis = new FileInputStream(inputFile);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
             this.reader = new BufferedReader(isr);

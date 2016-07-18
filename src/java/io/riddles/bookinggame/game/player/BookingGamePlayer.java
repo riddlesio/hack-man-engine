@@ -64,7 +64,7 @@ public class BookingGamePlayer extends AbstractPlayer {
         return "Player " + this.getId() + " coord " + this.getCoordinate() + " snippets " + this.snippets + " weapons " + weapons + " paralysis " + paralysis;
     }
 
-    public void update() {
+    public void updateParalysis() {
         if (this.paralysis > 0) {
             this.paralysis--;
         }

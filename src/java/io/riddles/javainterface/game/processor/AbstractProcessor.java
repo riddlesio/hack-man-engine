@@ -58,11 +58,6 @@ public abstract class AbstractProcessor<P extends AbstractPlayer, S extends Abst
     }
 
     /**
-     * Set the configuration
-     */
-    public void setConfiguration(HashMap<String, Integer> configuration) { this.configuration = configuration; }
-
-    /**
      * Implement this only if there is a pre-game phase, i.e. ask
      * bots where they will place their pieces on the board for the
      * initial state.

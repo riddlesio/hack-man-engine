@@ -22,16 +22,14 @@ package io.riddles.bookinggame.game.processor;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import io.riddles.bookinggame.engine.BookingGameEngine;
 import io.riddles.bookinggame.game.data.BookingGameBoard;
 import io.riddles.bookinggame.game.data.Enemy;
 import io.riddles.bookinggame.game.data.MoveType;
-import io.riddles.bookinggame.game.move.RandomEnemyAI;
+import io.riddles.bookinggame.game.move.*;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.BookingGame;
-import io.riddles.bookinggame.game.move.ActionType;
-import io.riddles.bookinggame.game.move.BookingGameMove;
-import io.riddles.bookinggame.game.move.BookingGameMoveDeserializer;
 import io.riddles.bookinggame.game.data.Record;
 import io.riddles.javainterface.game.processor.AbstractProcessor;
 
@@ -47,11 +45,11 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private ArrayList<Record> records;
     private int roundNumber;
     private boolean gameOver;
-    private double scoreDelta; // subtracted from player score for each mistake
+
+    private EnemyAI enemyAI = new RandomEnemyAI();
 
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players) {
         super(players);
-        this.records = records;
         this.gameOver = false;
     }
 
@@ -86,40 +84,16 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             BookingGameLogic l = new BookingGameLogic();
 
             try {
-                newBoard = l.transformBoard(newBoard, move);
+                state = l.transformBoard(state, move, this.players);
             } catch (Exception e) {
                 LOGGER.info(String.format("Unknown response: %s", response));
             }
 
-            if (move.getMoveType() == MoveType.ATTACK) {
-                if (player.getWeapons()>0) {
-                    player.updateWeapons(-1);
-                    /* Kill enemies nearby */
-                    int prevSize = state.getEnemies().size();
-                    Iterator<Enemy> it = state.getEnemies().iterator();
-                    while (it.hasNext()) {
-                        Enemy enemy = it.next();
-                        if (Math.abs(enemy.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(enemy.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
-                            newBoard.setFieldAt(enemy.getCoordinate(), "-");
-                            it.remove();
-                        }
-                    }
-                    if (state.getEnemies().size() != prevSize) {
-                        /* An enemy was killed */
-                    }
-                    /* Paralyse players nearby and take N code snippets*/
-                    for (BookingGamePlayer otherPlayer : this.players) {
-                        if (otherPlayer.getId() != player.getId()) {
-                            if (Math.abs(otherPlayer.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(otherPlayer.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
-                                otherPlayer.paralyse(this.configuration.get("weapon_paralysis_duration"));
-                                otherPlayer.updateSnippets(-this.configuration.get("weapon_snippet_loss"));
-                                System.out.println("ATTACK: " + otherPlayer);
-                            }
-                        }
-                    }
-                }
-            }
-            player.update();
+
+
+
+
+            player.updateParalysis();
 
 
             // stop game if bot returns nothing
@@ -137,10 +111,10 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         newBoard.dump(this.players, nextState);
 
 
-        RandomEnemyAI AI = new RandomEnemyAI();
+
         for (Enemy enemy : nextState.getEnemies()) {
             nextState.getBoard().updateComplete(players, nextState);
-            enemy = AI.transform(enemy, nextState);
+            enemy = this.enemyAI.transform(enemy, nextState);
         }
 
         nextState.setRepresentationString(players);
@@ -150,7 +124,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
     @Override
     public boolean hasGameEnded(BookingGameState state) {
-        return (this.gameOver || this.roundNumber >= this.configuration.get("max_rounds"));
+        return (this.gameOver || this.roundNumber >= BookingGameEngine.configuration.get("max_rounds"));
     }
 
     @Override
@@ -167,5 +141,9 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private void updateScore(BookingGameState state) {
         BookingGameMove move = state.getMoves().get(0);
         BookingGamePlayer player = move.getPlayer();
+    }
+
+    public void setEnemyAI(EnemyAI enemyAI) {
+        this.enemyAI = enemyAI;
     }
 }
