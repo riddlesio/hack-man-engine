@@ -74,8 +74,6 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
                 return MoveType.RIGHT;
             case "pass":
                 return MoveType.PASS;
-            case "attack":
-                return MoveType.ATTACK;
             default:
                 throw new InvalidMoveException("Move isn't valid");
         }

@@ -2,6 +2,8 @@ package io.riddles.bookinggame.game.data;
 
 import io.riddles.javainterface.exception.InvalidInputException;
 
+import java.util.Random;
+
 /**
  * Created by joost on 29-6-16.
  */
@@ -68,5 +70,32 @@ public class Board {
             }
             System.out.println();
         }
+    }
+
+    public void addRandomSnippet() {
+        boolean success = false;
+        if (this.getNrAvailableFields() > 0 ) {
+            Random r = new Random();
+            while (!success) {
+                int x = r.nextInt(this.width);
+                int y = r.nextInt(this.height);
+                if (this.fields[x][y] == ".") {
+                    this.fields[x][y] = "C";
+                    success = true;
+                }
+            }
+        }
+    }
+
+    public int getNrAvailableFields() {
+        int availableFields = 0;
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                if(fields[x][y] == ".") {
+                    availableFields++;
+                }
+            }
+        }
+        return availableFields;
     }
 }

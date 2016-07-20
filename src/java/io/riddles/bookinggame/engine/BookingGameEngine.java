@@ -38,7 +38,10 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
     @Override
     protected BookingGamePlayer createPlayer(int id) {
-        return new BookingGamePlayer(id);
+        BookingGamePlayer p = new BookingGamePlayer(id);
+        p.updateSnippets(configuration.get("player_snippet_count"));
+
+        return p;
     }
 
     @Override
@@ -63,10 +66,13 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         BookingGameBoard b = new BookingGameBoard(20, 11);
         String standardBoard = getStandardBoard();
         b.initialiseFromString(standardBoard, 20, 11);
-        s.setBoard(b);
         /* TODO: Add enemies according to configuration */
+
         s.addEnemy(new Enemy(new Coordinate(4, 7), new RandomEnemyAI().getRandomDirection()));
-        /* TODO: Add snippets according to configuration */
+        for (int i = 0; i < configuration.get("map_snippet_count"); i++) {
+            b.addRandomSnippet();
+        }
+        s.setBoard(b);
 
         return s;
     }
@@ -74,15 +80,15 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
     protected String getStandardBoard() {
         return  "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
-                "x,C,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
                 "x,.,x,W,x,x,.,x,x,.,.,x,x,.,x,x,.,x,.,x," +
-                "x,.,.,C,.,.,.,x,C,.,.,C,x,.,.,.,.,.,.,x," +
+                "x,.,.,.,.,.,.,x,.,.,.,.,x,.,.,.,.,.,.,x," +
                 "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
-                "x,.,x,.,.,.,.,.,.,.,.,.,.,C,.,.,.,x,.,x," +
+                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
+                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 

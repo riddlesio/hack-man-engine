@@ -91,8 +91,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
 
 
-
-
             player.updateParalysis();
 
 
@@ -108,7 +106,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         nextState.setBoard(newBoard);
         nextState.setRepresentationString(players);
         this.updateScore(nextState);
-        newBoard.dump(this.players, nextState);
 
 
 
@@ -117,8 +114,20 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             enemy = this.enemyAI.transform(enemy, nextState);
         }
 
-        nextState.setRepresentationString(players);
+        if (roundNumber % BookingGameEngine.configuration.get("snippet_spawn_rate") == 0) {
+            for (int i = 0; i < BookingGameEngine.configuration.get("snippet_spawn_count"); i++)
+                newBoard.addRandomSnippet();
+        }
 
+        if (roundNumber > BookingGameEngine.configuration.get("enemy_spawn_delay")) {
+            if (roundNumber % (BookingGameEngine.configuration.get("enemy_spawn_rate") - BookingGameEngine.configuration.get("enemy_spawn_delay")) == 0) {
+                for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
+                    newBoard.addRandomSnippet();
+            }
+        }
+
+        nextState.setRepresentationString(players);
+        newBoard.dump(this.players, nextState);
         return nextState;
     }
 

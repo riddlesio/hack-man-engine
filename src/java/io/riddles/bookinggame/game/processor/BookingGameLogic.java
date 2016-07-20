@@ -56,13 +56,31 @@ public class BookingGameLogic {
                     newC = new Coordinate(c.getX()-1, c.getY());
                 }
                 break;
-            case ATTACK:
-                break;
+        }
+
+        if () { /* another player at newC */
+            if ( p.getWeapons() > 0 ) { /* Player has weapon */
+                for (BookingGamePlayer otherPlayer : players) {
+                    if (otherPlayer.getId() != player.getId()) {
+                        otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
+                        otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
+                        System.out.println("ATTACK: " + otherPlayer);
+                    }
+                }
+            }
+            newC = c; /* Stay in position */
+
         }
 
         switch (b.getFieldAt(newC)) {
             case "B": /* A bug */
-                p.updateSnippets(-BookingGameEngine.configuration.get("enemy_snippet_loss"));
+                if ( p.getWeapons() > 0 ) { /* Player has weapon */
+                    p.updateWeapons(-1);
+                    b.killEnemy(newC);
+                } else {
+                    p.updateSnippets(-BookingGameEngine.configuration.get("enemy_snippet_loss"));
+                    newC = c; /* Stay in position */
+                }
                 break;
             case "C": /* Code snippet */
                 b.setFieldAt(c, ".");
@@ -77,37 +95,38 @@ public class BookingGameLogic {
         p.setCoordinate(newC);
     }
 
+    /* Deprecated */
     private void transformAttack(BookingGameState state, BookingGameMove move, ArrayList<BookingGamePlayer> players) {
-        BookingGamePlayer player = move.getPlayer();
-        BookingGameBoard board = state.getBoard();
-
-        if (move.getMoveType() == MoveType.ATTACK) {
-            if (player.getWeapons()>0) {
-                player.updateWeapons(-1);
-                    /* Kill enemies nearby */
-                int prevSize = state.getEnemies().size();
-                Iterator<Enemy> it = state.getEnemies().iterator();
-                while (it.hasNext()) {
-                    Enemy enemy = it.next();
-                    if (Math.abs(enemy.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(enemy.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
-                        board.setFieldAt(enemy.getCoordinate(), "-");
-                        it.remove();
-                    }
-                }
-                if (state.getEnemies().size() != prevSize) {
-                        /* An enemy was killed */
-                }
-                    /* Paralyse players nearby and take N code snippets*/
-                for (BookingGamePlayer otherPlayer : players) {
-                    if (otherPlayer.getId() != player.getId()) {
-                        if (Math.abs(otherPlayer.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(otherPlayer.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
-                            otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
-                            otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
-                            System.out.println("ATTACK: " + otherPlayer);
-                        }
-                    }
-                }
-            }
-        }
+//        BookingGamePlayer player = move.getPlayer();
+//        BookingGameBoard board = state.getBoard();
+//
+//        if (move.getMoveType() == MoveType.ATTACK) {
+//            if (player.getWeapons()>0) {
+//                player.updateWeapons(-1);
+//                    /* Kill enemies nearby */
+//                int prevSize = state.getEnemies().size();
+//                Iterator<Enemy> it = state.getEnemies().iterator();
+//                while (it.hasNext()) {
+//                    Enemy enemy = it.next();
+//                    if (Math.abs(enemy.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(enemy.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
+//                        board.setFieldAt(enemy.getCoordinate(), "-");
+//                        it.remove();
+//                    }
+//                }
+//                if (state.getEnemies().size() != prevSize) {
+//                        /* An enemy was killed */
+//                }
+//                    /* Paralyse players nearby and take N code snippets*/
+//                for (BookingGamePlayer otherPlayer : players) {
+//                    if (otherPlayer.getId() != player.getId()) {
+//                        if (Math.abs(otherPlayer.getCoordinate().getX() - player.getCoordinate().getX()) + (Math.abs(otherPlayer.getCoordinate().getY() - player.getCoordinate().getY())) < 2) {
+//                            otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
+//                            otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
+//                            System.out.println("ATTACK: " + otherPlayer);
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 }
