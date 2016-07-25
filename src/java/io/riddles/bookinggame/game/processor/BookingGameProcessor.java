@@ -115,19 +115,24 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         }
 
         if (roundNumber % BookingGameEngine.configuration.get("snippet_spawn_rate") == 0) {
+            System.out.println("Adding " + BookingGameEngine.configuration.get("snippet_spawn_count") + " snippet(s)");
             for (int i = 0; i < BookingGameEngine.configuration.get("snippet_spawn_count"); i++)
-                newBoard.addRandomSnippet();
+                newBoard.addSnippet(newBoard.getLoneliestField(players));
         }
 
         if (roundNumber > BookingGameEngine.configuration.get("enemy_spawn_delay")) {
             if (roundNumber % (BookingGameEngine.configuration.get("enemy_spawn_rate") - BookingGameEngine.configuration.get("enemy_spawn_delay")) == 0) {
-                for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
-                    newBoard.addRandomSnippet();
+               // for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
+                    //newBoard.addRandomSnippet();
             }
         }
 
+
+
         nextState.setRepresentationString(players);
         newBoard.dump(this.players, nextState);
+        System.out.println(newBoard.getLoneliestField(players));
+
         return nextState;
     }
 

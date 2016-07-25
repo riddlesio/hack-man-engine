@@ -58,25 +58,25 @@ public class BookingGameLogic {
                 break;
         }
 
-        if () { /* another player at newC */
-            if ( p.getWeapons() > 0 ) { /* Player has weapon */
-                for (BookingGamePlayer otherPlayer : players) {
-                    if (otherPlayer.getId() != player.getId()) {
-                        otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
-                        otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
-                        System.out.println("ATTACK: " + otherPlayer);
-                    }
-                }
-            }
-            newC = c; /* Stay in position */
-
-        }
+//        if () { /* another player at newC */
+//            if ( p.getWeapons() > 0 ) { /* Player has weapon */
+//                for (BookingGamePlayer otherPlayer : players) {
+//                    if (otherPlayer.getId() != player.getId()) {
+//                        otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
+//                        otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
+//                        System.out.println("ATTACK: " + otherPlayer);
+//                    }
+//                }
+//            }
+//            newC = c; /* Stay in position */
+//
+//        }
 
         switch (b.getFieldAt(newC)) {
             case "B": /* A bug */
                 if ( p.getWeapons() > 0 ) { /* Player has weapon */
                     p.updateWeapons(-1);
-                    b.killEnemy(newC);
+                    //b.killEnemy(newC);
                 } else {
                     p.updateSnippets(-BookingGameEngine.configuration.get("enemy_snippet_loss"));
                     newC = c; /* Stay in position */

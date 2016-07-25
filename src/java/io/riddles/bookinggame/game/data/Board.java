@@ -72,26 +72,12 @@ public class Board {
         }
     }
 
-    public void addRandomSnippet() {
-        boolean success = false;
-        if (this.getNrAvailableFields() > 0 ) {
-            Random r = new Random();
-            while (!success) {
-                int x = r.nextInt(this.width);
-                int y = r.nextInt(this.height);
-                if (this.fields[x][y] == ".") {
-                    this.fields[x][y] = "C";
-                    success = true;
-                }
-            }
-        }
-    }
 
     public int getNrAvailableFields() {
         int availableFields = 0;
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                if(fields[x][y] == ".") {
+                if(fields[x][y].equals(".")) {
                     availableFields++;
                 }
             }

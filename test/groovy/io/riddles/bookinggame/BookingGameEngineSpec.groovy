@@ -88,7 +88,7 @@ class BookingGameEngineSpec extends Specification {
         protected void initialiseData() {
             this.startCoordinates = new Coordinate[4];
             this.startCoordinates[0] = new Coordinate(1, 5);
-            this.startCoordinates[1] = new Coordinate(3, 5);
+            this.startCoordinates[1] = new Coordinate(19, 3);
         }
     }
 

@@ -39,13 +39,13 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
     @Override
     protected BookingGamePlayer createPlayer(int id) {
         BookingGamePlayer p = new BookingGamePlayer(id);
-        p.updateSnippets(configuration.get("player_snippet_count"));
-
         return p;
     }
 
     @Override
     protected BookingGameProcessor createProcessor() {
+        for (int i = 0; i < this.players.size(); i++)
+            this.players.get(i).updateSnippets(configuration.get("player_snippet_count"));
         return new BookingGameProcessor(this.players);
     }
 
@@ -116,16 +116,16 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
             configuration.put("snippet_spawn_count", Integer.parseInt(split[1]));
         } else if (command.equals("initial_bug_count")) {
             configuration.put("initial_bug_count", Integer.parseInt(split[1]));
-        } else if (command.equals("bug_spawn_delay")) {
-            configuration.put("bug_spawn_delay", Integer.parseInt(split[1]));
-        } else if (command.equals("bug_spawn_rate")) {
-            configuration.put("bug_spawn_rate", Integer.parseInt(split[1]));
-        } else if (command.equals("bug_spawn_count")) {
-            configuration.put("bug_spawn_count", Integer.parseInt(split[1]));
+        } else if (command.equals("enemy_spawn_delay")) {
+            configuration.put("enemy_spawn_delay", Integer.parseInt(split[1]));
+        } else if (command.equals("enemy_spawn_rate")) {
+            configuration.put("enemy_spawn_rate", Integer.parseInt(split[1]));
+        } else if (command.equals("enemy_spawn_count")) {
+            configuration.put("enemy_spawn_count", Integer.parseInt(split[1]));
         } else if (command.equals("max_rounds")) {
             configuration.put("max_rounds", Integer.parseInt(split[1]));
-        } else if (command.equals("bug_snippet_loss")) {
-            configuration.put("bug_snippet_loss", Integer.parseInt(split[1]));
+        } else if (command.equals("enemy_snippet_loss")) {
+            configuration.put("enemy_snippet_loss", Integer.parseInt(split[1]));
         } else if (command.equals("weapon_snippet_loss")) {
             configuration.put("weapon_snippet_loss", Integer.parseInt(split[1]));
         } else if (command.equals("weapon_paralysis_duration")) {

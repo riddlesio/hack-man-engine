@@ -37,7 +37,7 @@ public class BookingGamePlayer extends AbstractPlayer {
 
     public BookingGamePlayer(int id) {
         super(id);
-        this.snippets = 100;
+        this.snippets = 0;
         this.weapons = 1;
         this.paralysis = 0;
         this.c = new Coordinate (0,0);
