@@ -4,11 +4,9 @@
     <list default="true" id="d2aff5b1-c052-48b2-9b9e-ebc1cb86cc1e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/Board.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/Board.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/player/BookingGamePlayer.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/player/BookingGamePlayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameLogic.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameLogic.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java" afterPath="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy" afterPath="$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/resources/wrapper_input.txt" afterPath="$PROJECT_DIR$/test/resources/wrapper_input.txt" />
     </list>
@@ -111,8 +109,8 @@
       <file leaf-file-name="BookingGameEngineSpec.groovy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="90" column="56" selection-start-line="90" selection-start-column="56" selection-end-line="90" selection-end-column="56" />
+            <state relative-caret-position="237">
+              <caret line="174" column="68" selection-start-line="174" selection-start-column="68" selection-end-line="174" selection-end-column="68" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#825#879#0" expanded="true" />
@@ -121,11 +119,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wrapper_input.txt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="wrapper_input.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/resources/wrapper_input.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+            <state relative-caret-position="36">
+              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BookingGame.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/BookingGame.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="378">
+              <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbstractEngine.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/io/riddles/javainterface/engine/AbstractEngine.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-576">
+              <caret line="60" column="17" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -134,9 +152,22 @@
       <file leaf-file-name="BookingGameEngine.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="47" column="90" selection-start-line="47" selection-start-column="90" selection-end-line="47" selection-end-column="90" />
+            <state relative-caret-position="268">
+              <caret line="68" column="36" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BookingGameState.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="183">
+              <caret line="66" column="62" selection-start-line="66" selection-start-column="62" selection-end-line="66" selection-end-column="62" />
+              <folding>
+                <element signature="e#2673#2674#0" expanded="true" />
+                <element signature="e#2721#2722#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -163,21 +194,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BookingGameBoard.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BookingGameBoard.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="677">
-              <caret line="152" column="5" selection-start-line="152" selection-start-column="5" selection-end-line="152" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="javainterfaceTests.groovy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/javainterfaceTests.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="606">
-              <caret line="39" column="56" selection-start-line="39" selection-start-column="56" selection-end-line="39" selection-end-column="56" />
+            <state relative-caret-position="97">
+              <caret line="147" column="52" selection-start-line="147" selection-start-column="52" selection-end-line="147" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -186,32 +207,9 @@
       <file leaf-file-name="BookingGameProcessor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="582">
-              <caret line="131" column="51" selection-start-line="131" selection-start-column="51" selection-end-line="131" selection-end-column="51" />
+            <state relative-caret-position="294">
+              <caret line="121" column="42" selection-start-line="121" selection-start-column="42" selection-end-line="121" selection-end-column="42" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BookingGameMoveDeserializer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/move/BookingGameMoveDeserializer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BookingGamePlayer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/player/BookingGamePlayer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
-              <folding>
-                <element signature="e#1450#1451#0" expanded="true" />
-                <element signature="e#1486#1487#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -515,7 +513,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/move/RandomEnemyAI.java" />
-        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java" />
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/Enemy.java" />
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/move/BookingGameMove.java" />
         <option value="$PROJECT_DIR$/test/wrapper_input.txt" />
@@ -535,12 +532,13 @@
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/move/BookingGameMoveDeserializer.java" />
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameLogic.java" />
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/player/BookingGamePlayer.java" />
-        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java" />
-        <option value="$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy" />
         <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/Board.java" />
-        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java" />
-        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java" />
         <option value="$PROJECT_DIR$/test/resources/wrapper_input.txt" />
+        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java" />
+        <option value="$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy" />
+        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java" />
+        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java" />
+        <option value="$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java" />
       </list>
     </option>
   </component>
@@ -667,6 +665,40 @@
               <option name="myItemId" value="riddles" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="javainterface" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bookinggame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bookinggame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="riddles" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="javainterface" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="engine" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -721,6 +753,40 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="game" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bookinggame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bookinggame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="riddles" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bookinggame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="game" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="state" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1096,34 +1162,34 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 11m 12s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 48m 42s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 11m 39s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 49m 50s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 29m 07s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 50m 10s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 30m 16s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 51m 11s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 30m 47s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 51m 44s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 35m 12s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 53m 34s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 42m 09s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 54m 58s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 42m 38s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 18h 55m 50s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 43m 41s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 19h 01m 05s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
-    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 13h 44m 42s.xml">
+    <history-entry file="bookman-game-engine_[test] - 2016.07.25 at 19h 01m 37s.xml">
       <configuration name="bookman-game-engine [test]" configurationId="GradleRunConfiguration" />
     </history-entry>
   </component>
@@ -1149,10 +1215,10 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38146552" sideWeight="0.5021322" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297414" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39361703" sideWeight="0.4978678" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3893617" sideWeight="0.4978678" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297414" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17684887" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19356914" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09131833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1181,7 +1247,21 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="18" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java</url>
+          <line>69</line>
+          <properties />
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java</url>
+          <line>156</line>
+          <properties />
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="21" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1409,14 +1489,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="864">
-          <caret line="81" column="5" selection-start-line="81" selection-start-column="5" selection-end-line="81" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/move/BookingGameMove.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -1479,14 +1551,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/BookingGame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/Coordinate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -1503,21 +1567,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/javainterface/engine/AbstractEngine.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-828">
-          <caret line="60" column="17" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/player/BookingGamePlayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="336">
           <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
           <folding>
-            <element signature="e#1450#1451#0" expanded="true" />
-            <element signature="e#1486#1487#0" expanded="true" />
+            <element signature="e#1450#1451#0" expanded="false" />
+            <element signature="e#1486#1487#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1538,17 +1594,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="90" column="56" selection-start-line="90" selection-start-column="56" selection-end-line="90" selection-end-column="56" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#825#879#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/Board.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="353">
@@ -1556,30 +1601,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="582">
-          <caret line="131" column="51" selection-start-line="131" selection-start-column="51" selection-end-line="131" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="677">
-          <caret line="152" column="5" selection-start-line="152" selection-start-column="5" selection-end-line="152" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="47" column="90" selection-start-line="47" selection-start-column="90" selection-end-line="47" selection-end-column="90" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1593,8 +1614,70 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/resources/wrapper_input.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+        <state relative-caret-position="36">
+          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/processor/BookingGameProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="121" column="42" selection-start-line="121" selection-start-column="42" selection-end-line="121" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/groovy/io/riddles/bookinggame/BookingGameEngineSpec.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="237">
+          <caret line="174" column="68" selection-start-line="174" selection-start-column="68" selection-end-line="174" selection-end-column="68" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#825#879#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/BookingGame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/javainterface/engine/AbstractEngine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-576">
+          <caret line="60" column="17" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/state/BookingGameState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="66" column="62" selection-start-line="66" selection-start-column="62" selection-end-line="66" selection-end-column="62" />
+          <folding>
+            <element signature="e#2673#2674#0" expanded="true" />
+            <element signature="e#2721#2722#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/engine/BookingGameEngine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="68" column="36" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/io/riddles/bookinggame/game/data/BookingGameBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="147" column="52" selection-start-line="147" selection-start-column="52" selection-end-line="147" selection-end-column="52" />
           <folding />
         </state>
       </provider>

@@ -23,14 +23,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import io.riddles.bookinggame.engine.BookingGameEngine;
-import io.riddles.bookinggame.game.data.BookingGameBoard;
-import io.riddles.bookinggame.game.data.Enemy;
-import io.riddles.bookinggame.game.data.MoveType;
+import io.riddles.bookinggame.game.data.*;
 import io.riddles.bookinggame.game.move.*;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.BookingGame;
-import io.riddles.bookinggame.game.data.Record;
 import io.riddles.javainterface.game.processor.AbstractProcessor;
 
 /**
@@ -121,9 +118,11 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         }
 
         if (roundNumber > BookingGameEngine.configuration.get("enemy_spawn_delay")) {
-            if (roundNumber % (BookingGameEngine.configuration.get("enemy_spawn_rate") - BookingGameEngine.configuration.get("enemy_spawn_delay")) == 0) {
-               // for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
-                    //newBoard.addRandomSnippet();
+            System.out.println((roundNumber - BookingGameEngine.configuration.get("enemy_spawn_delay")));
+            if (roundNumber % (roundNumber - BookingGameEngine.configuration.get("enemy_spawn_delay")) == 0) {
+                System.out.println("Adding " + BookingGameEngine.configuration.get("enemy_spawn_count") + " enem(y)(ie)(s)");
+                for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
+                    nextState.addEnemy(new Enemy(newBoard.getLoneliestField(players), new RandomEnemyAI().getRandomDirection()));
             }
         }
 

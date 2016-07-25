@@ -92,6 +92,31 @@ class BookingGameEngineSpec extends Specification {
         }
     }
 
+
+    class StandardTestEngine extends BookingGameEngine {
+
+        StandardTestEngine(IOHandler ioHandler) {
+            super();
+            this.ioHandler = ioHandler;
+        }
+
+        StandardTestEngine(String wrapperFile, String[] botFiles) {
+            super(wrapperFile, botFiles)
+        }
+
+        IOHandler getIOHandler() {
+            return this.ioHandler;
+        }
+
+        void setup() {
+            super.setup();
+        }
+
+        void finish() {
+            super.finish();
+        }
+    }
+
     def engine = new TestEngine(Mock(IOHandler));
 
 
@@ -147,7 +172,7 @@ class BookingGameEngineSpec extends Specification {
         botInputs[0] = "./test/resources/bot1_input.txt"
         botInputs[1] = "./test/resources/bot2_input.txt"
 
-        def engine = new TestEngine(wrapperInput, botInputs)
+        def engine = new StandardTestEngine(wrapperInput, botInputs)
 
         when:
         engine.run()

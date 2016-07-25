@@ -64,6 +64,7 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     }
 
     public void addEnemy(Enemy e) {
+        System.out.println("adding enemy " + e.getCoordinate());
         enemies.add(e);
     }
 

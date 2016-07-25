@@ -119,7 +119,7 @@ public class BookingGameBoard extends Board {
                     distance += Math.abs(y - playerC.getY());
                     if (minDistance > distance) minDistance = distance;
                 }
-                if (minDistance > score && this.fields[x][y].equals(".")) {
+                if (minDistance > score && this.fieldsComplete[x][y].equals(".")) {
                     score = minDistance;
                     c = new Coordinate(x,y);
                 }
@@ -144,11 +144,22 @@ public class BookingGameBoard extends Board {
             while (!success) {
                 int x = r.nextInt(this.width);
                 int y = r.nextInt(this.height);
-                if (this.fields[x][y].equals(".")) {
-                    this.fields[x][y] = "C";
+                if (this.fieldsComplete[x][y].equals(".")) {
+                    this.fieldsComplete[x][y] = "C";
                     success = true;
                 }
             }
         }
+    }
+
+    public Coordinate getEnemyStartField() {
+        Coordinate c = new Coordinate(0,0);
+        int y = this.height / 2;
+        for (int x = this.width/2-1; x < this.width; x++) {
+            if (this.fieldsComplete[x][y] == ".") {
+                c = new Coordinate(x, y);
+            }
+        }
+        return c;
     }
 }

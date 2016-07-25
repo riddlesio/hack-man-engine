@@ -66,14 +66,14 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         BookingGameBoard b = new BookingGameBoard(20, 11);
         String standardBoard = getStandardBoard();
         b.initialiseFromString(standardBoard, 20, 11);
-        /* TODO: Add enemies according to configuration */
-
-        s.addEnemy(new Enemy(new Coordinate(4, 7), new RandomEnemyAI().getRandomDirection()));
+        b.updateComplete(players, s);
+        for (int i = 0; i < configuration.get("initial_enemy_count"); i++) {
+            s.addEnemy(new Enemy(b.getEnemyStartField(), new RandomEnemyAI().getRandomDirection()));
+        }
         for (int i = 0; i < configuration.get("map_snippet_count"); i++) {
             b.addRandomSnippet();
         }
         s.setBoard(b);
-
         return s;
     }
 
@@ -114,8 +114,8 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
             configuration.put("snippet_spawn_rate", Integer.parseInt(split[1]));
         } else if (command.equals("snippet_spawn_count")) {
             configuration.put("snippet_spawn_count", Integer.parseInt(split[1]));
-        } else if (command.equals("initial_bug_count")) {
-            configuration.put("initial_bug_count", Integer.parseInt(split[1]));
+        } else if (command.equals("initial_enemy_count")) {
+            configuration.put("initial_enemy_count", Integer.parseInt(split[1]));
         } else if (command.equals("enemy_spawn_delay")) {
             configuration.put("enemy_spawn_delay", Integer.parseInt(split[1]));
         } else if (command.equals("enemy_spawn_rate")) {

@@ -5,8 +5,8 @@ map_snippet_count 2
 snippet_spawn_rate 2
 snippet_spawn_count 1
 initial_enemy_count 2
-enemy_spawn_delay 10
-enemy_spawn_rate 20
+enemy_spawn_delay 3
+enemy_spawn_rate 2
 enemy_spawn_count 1
 enemy_snippet_loss 2
 weapon_snippet_loss 5
