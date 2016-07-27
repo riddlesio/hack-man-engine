@@ -91,7 +91,7 @@ public class BookingGameBoard extends Board {
         if (c.getX() < 0 || c.getY() < 0 || c.getX() >= this.width || c.getY() >= this.height) {
             return false;
         }
-         return (!fieldsComplete[c.getX()][c.getY()].equals("x"));
+        return (fieldsComplete[c.getX()][c.getY()].equals(".") || fieldsComplete[c.getX()][c.getY()].equals("C") || fieldsComplete[c.getX()][c.getY()].equals("W"));
     }
 
     public String toStringComplete() {
@@ -162,5 +162,14 @@ public class BookingGameBoard extends Board {
             }
         }
         return c;
+    }
+
+    public void dumpComplete() {
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                System.out.print(fieldsComplete[x][y]);
+            }
+            System.out.println();
+        }
     }
 }

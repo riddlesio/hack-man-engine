@@ -140,6 +140,8 @@ class BookingGameEngineSpec extends Specification {
     def engine = new TestEngine(Mock(IOHandler));
 
 
+
+    //@Ignore
     def "test engine setup"() {
         println("test engine setup")
 
@@ -158,6 +160,8 @@ class BookingGameEngineSpec extends Specification {
         engine.getPlayers().get(1).getId() == 2
     }
 
+
+    //@Ignore
     def "test engine configuration"() {
         println("test engine configuration")
 
@@ -182,6 +186,8 @@ class BookingGameEngineSpec extends Specification {
     }
 
 
+
+    //@Ignore
     def "test running of standard game"() {
         println("test running of standard game")
 
@@ -200,6 +206,8 @@ class BookingGameEngineSpec extends Specification {
         engine.configuration.get("max_rounds") == 40
     }
 
+
+    //@Ignore
     def "test enemy attack"() {
         println("test enemy attack")
 
@@ -231,6 +239,8 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,C,C,C,C,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,E,.,x,.,.,.,.,x,.,.,.,.,.,.,x,x,1,x,.,x,x,.,x,x,x,x,x,x,.,x,x,2,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,C,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
+
+    //@Ignore
     def "check winner when player 1 looses snippets, player 2 wins"() {
         println("check winner when player 1 looses snippets, player 2 wins")
 
@@ -263,6 +273,8 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,.,.,.,.,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,1,E,.,.,.,.,.,.,.,.,.,x,.,.,.,.,.,2,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,E,.,.,.,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
+
+    //@Ignore
     def "check winner when player 2 looses snippets, player 1 wins"() {
         println("check winner when player 2 looses snippets, player 1 wins")
 
@@ -296,6 +308,7 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,.,.,.,.,.,E,.,.,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,C,x,C,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,.,.,.,x,.,.,.,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
+    //@Ignore
     def "check winner when player 1 kills enemy"() {
         println("check winner when player 1 kills enemy")
 
@@ -328,7 +341,7 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,.,.,.,.,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,1,E,C,C,C,C,C,.,.,.,.,x,.,.,.,.,.,2,x,x,C,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,E,.,.,.,x,.,x,x,C,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,C,C,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
-    @Ignore
+    //@Ignore
     def "check if a draw occurs after max_rounds and players have equal snippets"() {
         println("check if a draw occurs after max_rounds and players have equal snippets")
 
@@ -364,7 +377,7 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,C,C,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,C,C,C,C,x,C,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,C,x,C,x,x,2,.,.,.,.,.,.,.,.,.,.,.,.,.,C,C,C,E,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,C,x,x,E,x,.,.,C,.,.,.,.,.,.,.,C,C,C,E,x,C,x,x,.,x,x,C,x,C,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,C,C,C,x,C,C,C,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
-    @Ignore
+    //@Ignore
     def "check player with most snippets wins after max_rounds"() {
         println("check player with most snippets wins after max_rounds")
 
@@ -400,4 +413,38 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,C,C,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,C,C,C,C,x,C,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,C,x,C,x,x,2,.,.,.,.,.,.,.,.,.,.,.,.,.,C,C,C,E,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,C,x,x,E,x,.,.,C,.,.,.,.,.,.,.,C,C,C,E,x,C,x,x,.,x,x,C,x,C,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,C,C,C,x,C,C,C,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
+    def "check player collision"() {
+        println("check player collision")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
+        botInputs[0] = "./test/resources/bot_goleft_input.txt"
+        botInputs[1] = "./test/resources/bot_goleft_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                        "x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,C,C,x," +
+                        "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+
+        engine.mockStartCoordinates[0] = new Coordinate(1, 1);
+        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.run()
+
+        expect:
+        engine.getPlayers().get(0).getSnippets() == 1;
+        engine.getPlayers().get(1).getSnippets() == 7;
+        engine.getProcessor().getWinner().getId() == 2;
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,C,C,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,C,C,C,C,x,C,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,C,x,C,x,x,2,.,.,.,.,.,.,.,.,.,.,.,.,.,C,C,C,E,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,C,x,x,E,x,.,.,C,.,.,.,.,.,.,.,C,C,C,E,x,C,x,x,.,x,x,C,x,C,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,C,C,C,x,C,C,C,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    }
 }
