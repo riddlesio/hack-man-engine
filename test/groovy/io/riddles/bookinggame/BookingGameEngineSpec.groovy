@@ -31,6 +31,7 @@ import io.riddles.javainterface.game.player.AbstractPlayer
 import io.riddles.javainterface.io.IOHandler
 import org.json.JSONObject
 import spock.lang.Specification
+import spock.lang.Ignore
 
 /**
  * io.riddles.bookinggame.engine.BookingGameEngineSpec - Created on 8-6-16
@@ -39,6 +40,7 @@ import spock.lang.Specification
  *
  * @author joost
  */
+
 class BookingGameEngineSpec extends Specification {
 
     class TestEngine extends BookingGameEngine {
@@ -54,14 +56,25 @@ class BookingGameEngineSpec extends Specification {
                 "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
         String finalBoard;
+        Coordinate[] mockStartCoordinates;
 
         TestEngine(IOHandler ioHandler) {
             super();
             this.ioHandler = ioHandler;
+
+            initMockCoordinates();
         }
 
         TestEngine(String wrapperFile, String[] botFiles) {
             super(wrapperFile, botFiles)
+            initMockCoordinates();
+
+        }
+
+        void initMockCoordinates() {
+            mockStartCoordinates = new Coordinate[4];
+            mockStartCoordinates[0] = new Coordinate(1, 5);
+            mockStartCoordinates[1] = new Coordinate(19, 5);
         }
 
         IOHandler getIOHandler() {
@@ -71,20 +84,11 @@ class BookingGameEngineSpec extends Specification {
         void setup() {
             super.setup();
             this.processor.enemyAI = new AlwaysRightEnemyAI();
+            Coordinate[] mockStartCoordinates = new Coordinate[2];
         }
 
-        void finish() {
-            super.finish();
-        }
-
-        /**
-         * Does everything needed to send the GameWrapper the results of
-         * the game.
-         * @param initialState The start-of-game state
-         */
         @Override
         protected void finish(BookingGameState initialState) {
-            System.out.println("FINISH");
             this.finalBoard = initialState.getBoard().toRepresentationString(players, initialState)
             super.finish(initialState);
         }
@@ -95,17 +99,15 @@ class BookingGameEngineSpec extends Specification {
             BookingGameBoard b = new BookingGameBoard(20, 11);
             b.initialiseFromString(standardBoard, 20, 11);
             s.setBoard(b);
-            s.addEnemy(new Enemy(new Coordinate(9, 5), MoveType.LEFT));
+            s.addEnemy(new Enemy(new Coordinate(1, 5), MoveType.RIGHT));
             s.addEnemy(new Enemy(new Coordinate(1, 7), MoveType.UP));
             s.addEnemy(new Enemy(new Coordinate(12, 7), MoveType.RIGHT));
             return s;
         }
 
         @Override
-        protected void initialiseData() {
-            this.startCoordinates = new Coordinate[4];
-            this.startCoordinates[0] = new Coordinate(1, 5);
-            this.startCoordinates[1] = new Coordinate(19, 3);
+        protected Coordinate getStartCoordinate(int i) {
+            return mockStartCoordinates[i];
         }
     }
 
@@ -127,6 +129,7 @@ class BookingGameEngineSpec extends Specification {
 
         void setup() {
             super.setup();
+            this.processor.enemyAI = new AlwaysRightEnemyAI();
         }
 
         void finish() {
@@ -141,7 +144,7 @@ class BookingGameEngineSpec extends Specification {
         println("test engine setup")
 
         setup:
-        engine.getIOHandler().getNextMessage() >>> ["initialize", "bot_ids 1,2", "start"]
+        engine.getIOHandler().getNextMessage() >>> ["initialize", "bot_ids 1,2", "player_snippet_count 1", "start"]
 
         when:
         engine.setup()
@@ -191,14 +194,10 @@ class BookingGameEngineSpec extends Specification {
 
         def engine = new StandardTestEngine(wrapperInput, botInputs)
 
-        when:
         engine.run()
 
-        then:
-        1 * engine.finish()
-
         expect:
-        engine.configuration().get("max_rounds") == 5
+        engine.configuration.get("max_rounds") == 40
     }
 
     def "test enemy attack"() {
@@ -224,12 +223,181 @@ class BookingGameEngineSpec extends Specification {
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
-        engine.run()
 
-        1 * engine.finish()
+        engine.run()
 
         expect:
         engine.configuration.get("max_rounds") == 40
-        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,C,C,.,.,x,.,C,.,C,C,C,C,.,x,2,.,.,.,x,x,C,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,.,.,x,.,.,.,E,x,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,1,.,.,.,.,.,.,.,C,.,E,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,.,.,.,.,C,x,C,.,.,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,C,C,C,C,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,E,.,x,.,.,.,.,x,.,.,.,.,.,.,x,x,1,x,.,x,x,.,x,x,x,x,x,x,.,x,x,2,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,C,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
+
+    def "check winner when player 1 looses snippets, player 2 wins"() {
+        println("check winner when player 1 looses snippets, player 2 wins")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
+        botInputs[0] = "./test/resources/bot_goleft_input.txt"
+        botInputs[1] = "./test/resources/bot2_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                        "x,.,.,.,.,.,.,.,.,.,.,.,x,.,.,.,.,.,.,x," +
+                        "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+
+        engine.run()
+
+        expect:
+        //engine.getProcessor().getPlayers().get(0).getSnippets() == 10;
+        engine.getProcessor().getWinner().getId() == 2;
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,.,.,.,.,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,1,E,.,.,.,.,.,.,.,.,.,x,.,.,.,.,.,2,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,E,.,.,.,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    }
+
+    def "check winner when player 2 looses snippets, player 1 wins"() {
+        println("check winner when player 2 looses snippets, player 1 wins")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
+        botInputs[0] = "./test/resources/bot_goleft_input.txt"
+        botInputs[1] = "./test/resources/bot_goleft_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                        "x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x," +
+                        "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+
+        engine.mockStartCoordinates[0] = new Coordinate(1, 1);
+        engine.mockStartCoordinates[1] = new Coordinate(18, 5);
+        engine.run()
+
+        expect:
+        engine.getProcessor().getWinner().getId() == 1;
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,.,.,.,.,.,E,.,.,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,C,x,C,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,.,.,.,x,.,.,.,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    }
+
+    def "check winner when player 1 kills enemy"() {
+        println("check winner when player 1 kills enemy")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
+        botInputs[0] = "./test/resources/bot1_inputTestAttack.txt"
+        botInputs[1] = "./test/resources/bot2_inputTestAttack.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                        "x,.,.,C,C,C,C,C,.,.,.,.,x,.,.,.,.,.,.,x," +
+                        "x,C,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                        "x,C,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,C,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,C,C,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+
+        engine.run()
+
+        expect:
+        //engine.getProcessor().getPlayers().get(0).getSnippets() == 10;
+        engine.getProcessor().getWinner().getId() == 2;
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,.,.,.,.,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,1,E,C,C,C,C,C,.,.,.,.,x,.,.,.,.,.,2,x,x,C,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,E,.,.,.,x,.,x,x,C,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,C,C,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    }
+
+    @Ignore
+    def "check if a draw occurs after max_rounds and players have equal snippets"() {
+        println("check if a draw occurs after max_rounds and players have equal snippets")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
+        botInputs[0] = "./test/resources/bot_goleft_input.txt"
+        botInputs[1] = "./test/resources/bot_goleft_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                        "x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x," +
+                        "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+
+        engine.mockStartCoordinates[0] = new Coordinate(1, 1);
+        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.run()
+
+        expect:
+        engine.getPlayers().get(0).getSnippets() == 1;
+        engine.getPlayers().get(1).getSnippets() == 1;
+        engine.getProcessor().getWinner() == null;
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,C,C,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,C,C,C,C,x,C,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,C,x,C,x,x,2,.,.,.,.,.,.,.,.,.,.,.,.,.,C,C,C,E,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,C,x,x,E,x,.,.,C,.,.,.,.,.,.,.,C,C,C,E,x,C,x,x,.,x,x,C,x,C,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,C,C,C,x,C,C,C,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    }
+
+    @Ignore
+    def "check player with most snippets wins after max_rounds"() {
+        println("check player with most snippets wins after max_rounds")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
+        botInputs[0] = "./test/resources/bot_goleft_input.txt"
+        botInputs[1] = "./test/resources/bot_goleft_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                        "x,.,.,.,.,.,.,.,.,.,.,.,.,C,C,C,C,C,C,x," +
+                        "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+
+        engine.mockStartCoordinates[0] = new Coordinate(1, 1);
+        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.run()
+
+        expect:
+        engine.getPlayers().get(0).getSnippets() == 1;
+        engine.getPlayers().get(1).getSnippets() == 7;
+        engine.getProcessor().getWinner().getId() == 2;
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,C,C,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,C,C,C,C,x,C,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,C,x,C,x,x,2,.,.,.,.,.,.,.,.,.,.,.,.,.,C,C,C,E,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,C,x,x,E,x,.,.,C,.,.,.,.,.,.,.,C,C,C,E,x,C,x,x,.,x,x,C,x,C,x,x,x,x,x,x,C,x,C,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,C,C,C,x,C,C,C,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    }
+
 }

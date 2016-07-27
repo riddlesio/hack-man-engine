@@ -100,7 +100,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
                 if (this.botInputFiles != null)
                     player.setInputFile(this.botInputFiles[i]);
-                player.setCoordinate(startCoordinates[i]);
+                player.setCoordinate(getStartCoordinate(i));
                 this.players.add(player);
             }
         } else if (command.equals("player_snippet_count")) {
@@ -128,5 +128,9 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         } else if (command.equals("weapon_paralysis_duration")) {
             configuration.put("weapon_paralysis_duration", Integer.parseInt(split[1]));
         }
+    }
+
+    protected Coordinate getStartCoordinate(int i) {
+        return this.startCoordinates[i];
     }
 }
