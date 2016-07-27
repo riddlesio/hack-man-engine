@@ -156,8 +156,9 @@ public class BookingGameBoard extends Board {
         Coordinate c = new Coordinate(0,0);
         int y = this.height / 2;
         for (int x = this.width/2-1; x < this.width; x++) {
-            if (this.fieldsComplete[x][y] == ".") {
+            if (this.fields[x][y].equals(".")) {
                 c = new Coordinate(x, y);
+                return c;
             }
         }
         return c;

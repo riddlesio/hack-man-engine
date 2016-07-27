@@ -20,6 +20,7 @@
 package io.riddles.bookinggame.game.state;
 
 import io.riddles.bookinggame.game.data.BookingGameBoard;
+import io.riddles.bookinggame.game.data.Coordinate;
 import io.riddles.bookinggame.game.move.BookingGameMove;
 import io.riddles.bookinggame.game.data.Enemy;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -40,6 +41,8 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     private ArrayList<Enemy> enemies;
     private String errorMessage;
     private String representationString;
+    private int snippetsEaten;
+
 
     public BookingGameState() {
         super();
@@ -49,11 +52,13 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     public BookingGameState(BookingGameState previousState, BookingGameMove move, int roundNumber) {
         super(previousState, move, roundNumber);
         this.enemies = previousState.getEnemies();
+        this.snippetsEaten = previousState.snippetsEaten;
     }
 
     public BookingGameState(BookingGameState previousState, ArrayList<BookingGameMove> moves, int roundNumber) {
         super(previousState, moves, roundNumber);
         this.enemies = previousState.getEnemies();
+        this.snippetsEaten = previousState.snippetsEaten;
     }
 
     public BookingGameBoard getBoard() {
@@ -68,6 +73,17 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
         enemies.add(e);
     }
 
+    public void killEnemyAt(Coordinate c) {
+        /* TODO: implement this. */
+        System.out.println("TODO: killing enemy at " + c);
+        for (Enemy e : this.enemies) {
+            Coordinate enemyCoordinate = e.getCoordinate();
+            if (c.getX() == enemyCoordinate.getX() && c.getY() == enemyCoordinate.getY()) {
+                this.enemies.remove(e);
+            }
+        }
+    }
+
     public ArrayList<Enemy> getEnemies() {
         return this.enemies;
     }
@@ -80,5 +96,17 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
 
     public String getRepresentationString() {
         return this.representationString;
+    }
+
+    public void setSnippetsEaten(int nr) {
+        this.snippetsEaten = nr;
+    }
+
+    public int getSnippetsEaten() {
+        return this.snippetsEaten;
+    }
+
+    public void updateSnippetsEaten(int nr) {
+        this.snippetsEaten += nr;
     }
 }

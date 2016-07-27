@@ -1,13 +1,12 @@
-pass
-attack
-down
 down
 down
 down
 down
 right
-down
-down
+right
+right
+right
+right
 up
 up
 up

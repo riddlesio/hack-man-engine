@@ -24,9 +24,12 @@ import io.riddles.bookinggame.game.data.BookingGameBoard
 import io.riddles.bookinggame.game.data.Coordinate
 import io.riddles.bookinggame.game.data.Enemy
 import io.riddles.bookinggame.game.data.MoveType
+import io.riddles.bookinggame.game.move.AlwaysRightEnemyAI
 import io.riddles.bookinggame.game.move.RandomEnemyAI
 import io.riddles.bookinggame.game.state.BookingGameState
+import io.riddles.javainterface.game.player.AbstractPlayer
 import io.riddles.javainterface.io.IOHandler
+import org.json.JSONObject
 import spock.lang.Specification
 
 /**
@@ -50,6 +53,7 @@ class BookingGameEngineSpec extends Specification {
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+        String finalBoard;
 
         TestEngine(IOHandler ioHandler) {
             super();
@@ -66,10 +70,23 @@ class BookingGameEngineSpec extends Specification {
 
         void setup() {
             super.setup();
+            this.processor.enemyAI = new AlwaysRightEnemyAI();
         }
 
         void finish() {
             super.finish();
+        }
+
+        /**
+         * Does everything needed to send the GameWrapper the results of
+         * the game.
+         * @param initialState The start-of-game state
+         */
+        @Override
+        protected void finish(BookingGameState initialState) {
+            System.out.println("FINISH");
+            this.finalBoard = initialState.getBoard().toRepresentationString(players, initialState)
+            super.finish(initialState);
         }
 
         @Override
@@ -157,13 +174,13 @@ class BookingGameEngineSpec extends Specification {
         engine.getPlayers().get(1).getId() == 2
         engine.getPlayers().get(0).getSnippets() == 5
 
-        engine.configuration().get("max_rounds") == 2
-        engine.configuration().get("weapon_paralysis_duration") == 2
+        engine.configuration.get("max_rounds") == 40
+        engine.configuration.get("weapon_paralysis_duration") == 10
     }
 
 
-    def "test running of three round game"() {
-        println("test running of three round game")
+    def "test running of standard game"() {
+        println("test running of standard game")
 
         setup:
         String[] botInputs = new String[2]
@@ -182,5 +199,37 @@ class BookingGameEngineSpec extends Specification {
 
         expect:
         engine.configuration().get("max_rounds") == 5
+    }
+
+    def "test enemy attack"() {
+        println("test enemy attack")
+
+        setup:
+        String[] botInputs = new String[2]
+
+        def wrapperInput = "./test/resources/wrapper_input.txt"
+        botInputs[0] = "./test/resources/bot1_input.txt"
+        botInputs[1] = "./test/resources/bot2_input.txt"
+
+        def engine = new TestEngine(wrapperInput, botInputs)
+        engine.standardBoard =
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                "x,.,.,.,.,.,.,x,.,.,.,.,x,.,.,.,.,.,.,x," +
+                "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
+                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+        engine.run()
+
+        1 * engine.finish()
+
+        expect:
+        engine.configuration.get("max_rounds") == 40
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,C,C,.,.,x,.,C,.,C,C,C,C,.,x,2,.,.,.,x,x,C,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,.,.,x,.,.,.,E,x,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,1,.,.,.,.,.,.,.,C,.,E,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,C,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,.,.,.,.,C,x,C,.,.,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 }

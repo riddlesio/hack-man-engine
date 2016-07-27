@@ -26,24 +26,24 @@ public class RandomEnemyAI implements EnemyAI {
         /* Bump into wall */
         Coordinate newC = getMovedCoordinate(newE.getCoordinate(), newE.getDirection(), s.getBoard());
         if (!s.getBoard().isEmptyComplete(newC)) {
-            System.out.println(e.toString() +  " bump into wall");
+            //System.out.println(e.toString() +  " bump into wall");
             int wallCounter = 0;
             if (!isEmptyInDirection(newE.getCoordinate(), MoveType.DOWN, s.getBoard())) wallCounter++;
             if (!isEmptyInDirection(newE.getCoordinate(), MoveType.UP, s.getBoard())) wallCounter++;
             if (!isEmptyInDirection(newE.getCoordinate(), MoveType.LEFT, s.getBoard())) wallCounter++;
             if (!isEmptyInDirection(newE.getCoordinate(), MoveType.RIGHT, s.getBoard())) wallCounter++;
             if (wallCounter > 2) { /* Dead end, go opposite direction */
-                System.out.println("Dead end!!");
+                //System.out.println("Dead end!!");
                 d = getOppositeDirection(oldDirection);
                 newE.setDirection(d);
                 newC = getMovedCoordinate(newE.getCoordinate(), newE.getDirection(), s.getBoard());
             } else {
                 /* Field blocked, find a new direction */
                 while (!isEmptyInDirection(newE.getCoordinate(), newE.getDirection(), s.getBoard())) {
-                    System.out.println("!isEmptyInDirection");
+                    //System.out.println("!isEmptyInDirection");
                     d = getRandomDirection();
                     while (d == getOppositeDirection(oldDirection)) {
-                        System.out.println("getRandomDirection");
+                        //System.out.println("getRandomDirection");
                         d = getRandomDirection();
                     }
                     newE.setDirection(d);

@@ -33,7 +33,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
     protected void initialiseData() {
         this.startCoordinates = new Coordinate[4];
         this.startCoordinates[0] = new Coordinate(1, 5);
-        this.startCoordinates[1] = new Coordinate(18, 5);
+        this.startCoordinates[1] = new Coordinate(19, 5);
     }
 
     @Override
@@ -67,9 +67,6 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         String standardBoard = getStandardBoard();
         b.initialiseFromString(standardBoard, 20, 11);
         b.updateComplete(players, s);
-        for (int i = 0; i < configuration.get("initial_enemy_count"); i++) {
-            s.addEnemy(new Enemy(b.getEnemyStartField(), new RandomEnemyAI().getRandomDirection()));
-        }
         for (int i = 0; i < configuration.get("map_snippet_count"); i++) {
             b.addRandomSnippet();
         }
@@ -83,12 +80,12 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
                 "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                "x,.,x,W,x,x,.,x,x,.,.,x,x,.,x,x,.,x,.,x," +
-                "x,.,.,.,.,.,.,x,.,.,.,.,x,.,.,.,.,.,.,x," +
-                "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
-                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
+                "x,C,x,.,x,x,.,x,x,.,.,x,x,.,x,x,.,x,.,x," +
+                "x,.,C,.,.,.,.,x,.,.,.,.,x,.,.,.,C,C,.,x," +
+                "x,C,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,.,x," +
+                "x,C,x,.,C,C,.,.,.,.,.,.,.,.,.,.,C,x,.,x," +
+                "x,C,x,x,C,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
+                "x,C,C,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 

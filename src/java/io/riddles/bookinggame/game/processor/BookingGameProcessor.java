@@ -43,7 +43,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private int roundNumber;
     private boolean gameOver;
 
-    private EnemyAI enemyAI = new RandomEnemyAI();
+    public EnemyAI enemyAI = new RandomEnemyAI();
 
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players) {
         super(players);
@@ -63,7 +63,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         ArrayList<BookingGameMove> moves = new ArrayList();
         BookingGameBoard newBoard = state.getBoard();
-
+        int oldSnippetsEaten = state.getSnippetsEaten();
         for (BookingGamePlayer player : this.players) {
 
             System.out.println(player);
@@ -77,7 +77,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             // create the next state
             moves.add(move);
 
-
             BookingGameLogic l = new BookingGameLogic();
 
             try {
@@ -85,7 +84,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             } catch (Exception e) {
                 LOGGER.info(String.format("Unknown response: %s", response));
             }
-
 
 
             player.updateParalysis();
@@ -102,7 +100,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         nextState.setBoard(newBoard);
         nextState.setRepresentationString(players);
-        this.updateScore(nextState);
 
 
 
@@ -117,12 +114,14 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
                 newBoard.addSnippet(newBoard.getLoneliestField(players));
         }
 
-        if (roundNumber > BookingGameEngine.configuration.get("enemy_spawn_delay")) {
-            System.out.println((roundNumber - BookingGameEngine.configuration.get("enemy_spawn_delay")));
-            if (roundNumber % (roundNumber - BookingGameEngine.configuration.get("enemy_spawn_delay")) == 0) {
-                System.out.println("Adding " + BookingGameEngine.configuration.get("enemy_spawn_count") + " enem(y)(ie)(s)");
-                for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
-                    nextState.addEnemy(new Enemy(newBoard.getLoneliestField(players), new RandomEnemyAI().getRandomDirection()));
+        if (oldSnippetsEaten != nextState.getSnippetsEaten()) { /* A snippet has been eaten */
+            if (nextState.getSnippetsEaten() > BookingGameEngine.configuration.get("enemy_spawn_delay")) {
+                System.out.println((nextState.getSnippetsEaten() - BookingGameEngine.configuration.get("enemy_spawn_delay")));
+                if ((nextState.getSnippetsEaten() - BookingGameEngine.configuration.get("enemy_spawn_delay")) % BookingGameEngine.configuration.get("enemy_spawn_rate") == 0) {
+                    System.out.println("Adding " + BookingGameEngine.configuration.get("enemy_spawn_count") + " enem(y)(ie)(s)");
+                    for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
+                        nextState.addEnemy(new Enemy(newBoard.getEnemyStartField(), new RandomEnemyAI().getRandomDirection()));
+                }
             }
         }
 
@@ -130,18 +129,36 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         nextState.setRepresentationString(players);
         newBoard.dump(this.players, nextState);
-        System.out.println(newBoard.getLoneliestField(players));
 
         return nextState;
     }
 
     @Override
     public boolean hasGameEnded(BookingGameState state) {
-        return (this.gameOver || this.roundNumber >= BookingGameEngine.configuration.get("max_rounds"));
+        boolean returnVal = false;
+        if (getWinner() != null) returnVal = true;
+        if (this.gameOver) returnVal = true;
+        if (this.roundNumber >= BookingGameEngine.configuration.get("max_rounds")) returnVal = true;
+        return returnVal;
     }
 
     @Override
     public BookingGamePlayer getWinner() {
+        System.out.println("checkWinner");
+        int playersWithSnippets = 0;
+        for (BookingGamePlayer player : this.players) {
+            if (player.getSnippets() > 0) playersWithSnippets++;
+        }
+
+        if (playersWithSnippets == 0) {
+            /* It's a draw */
+            this.gameOver = true;
+        } else if (playersWithSnippets == 1) {
+            /* There's a winner */
+            for (BookingGamePlayer player : this.players) {
+                if (player.getSnippets() > 0) return player;
+            }
+        }
         return null;
     }
 
@@ -150,13 +167,4 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         return 0;
     }
 
-
-    private void updateScore(BookingGameState state) {
-        BookingGameMove move = state.getMoves().get(0);
-        BookingGamePlayer player = move.getPlayer();
-    }
-
-    public void setEnemyAI(EnemyAI enemyAI) {
-        this.enemyAI = enemyAI;
-    }
 }

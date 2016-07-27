@@ -22,72 +22,84 @@ public class BookingGameLogic {
 
     public BookingGameState transformBoard(BookingGameState state, BookingGameMove move, ArrayList<BookingGamePlayer> players) throws InvalidInputException {
 
-        BookingGameBoard board = state.getBoard();
-        transformPlayerLocation(board, move);
+        transformPlayerLocation(state, move, players);
         transformAttack(state, move, players);
 
         return state;
     }
 
-    private void transformPlayerLocation(BookingGameBoard b, BookingGameMove move) {
+    private void transformPlayerLocation(BookingGameState state, BookingGameMove move, ArrayList<BookingGamePlayer> players) {
         BookingGamePlayer p = move.getPlayer();
+        BookingGameBoard board = state.getBoard();
+
         int pId = p.getId();
         Coordinate c = p.getCoordinate();
         Coordinate newC = c;
 
         switch(move.getMoveType()) {
             case UP:
-                if (b.isEmpty(new Coordinate(c.getX(), c.getY()-1))) {
+                if (board.isEmpty(new Coordinate(c.getX(), c.getY()-1))) {
                     newC = new Coordinate(c.getX(), c.getY()-1);
                 }
                 break;
             case DOWN:
-                if (b.isEmpty(new Coordinate(c.getX(), c.getY()+1))) {
+                if (board.isEmpty(new Coordinate(c.getX(), c.getY()+1))) {
                     newC = new Coordinate(c.getX(), c.getY()+1);
                 }
                 break;
             case RIGHT:
-                if (b.isEmpty(new Coordinate(c.getX()+1, c.getY()))) {
+                if (board.isEmpty(new Coordinate(c.getX()+1, c.getY()))) {
                     newC = new Coordinate(c.getX()+1, c.getY());
                 }
                 break;
             case LEFT:
-                if (b.isEmpty(new Coordinate(c.getX()-1, c.getY()))) {
+                if (board.isEmpty(new Coordinate(c.getX()-1, c.getY()))) {
                     newC = new Coordinate(c.getX()-1, c.getY());
                 }
                 break;
         }
 
-//        if () { /* another player at newC */
-//            if ( p.getWeapons() > 0 ) { /* Player has weapon */
-//                for (BookingGamePlayer otherPlayer : players) {
-//                    if (otherPlayer.getId() != player.getId()) {
-//                        otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
-//                        otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
-//                        System.out.println("ATTACK: " + otherPlayer);
-//                    }
-//                }
-//            }
-//            newC = c; /* Stay in position */
-//
-//        }
+        boolean otherPlayerPresent = false;
+        for (BookingGamePlayer player : players) {
+            if (player.getId() != p.getId()) {
+                if (player.getCoordinate().getX() == newC.getX() && player.getCoordinate().getY() == newC.getY()) {
+                    otherPlayerPresent = true;
+                }
+            }
+        }
+        if (otherPlayerPresent) { /* another player at newC */
+            if ( p.getWeapons() > 0 ) { /* Player has weapon */
+                for (BookingGamePlayer otherPlayer : players) {
+                    if (otherPlayer.getId() != p.getId()) {
+                        otherPlayer.paralyse(BookingGameEngine.configuration.get("weapon_paralysis_duration"));
+                        otherPlayer.updateSnippets(-BookingGameEngine.configuration.get("weapon_snippet_loss"));
+                        state.updateSnippetsEaten(BookingGameEngine.configuration.get("weapon_snippet_loss"));
 
-        switch (b.getFieldAt(newC)) {
+                        System.out.println("ATTACK: " + otherPlayer);
+                    }
+                }
+            }
+            newC = c; /* Stay in position */
+
+        }
+
+        switch (board.getFieldAt(newC)) {
             case "B": /* A bug */
                 if ( p.getWeapons() > 0 ) { /* Player has weapon */
                     p.updateWeapons(-1);
-                    //b.killEnemy(newC);
+                    state.killEnemyAt(newC);
                 } else {
                     p.updateSnippets(-BookingGameEngine.configuration.get("enemy_snippet_loss"));
                     newC = c; /* Stay in position */
                 }
                 break;
             case "C": /* Code snippet */
-                b.setFieldAt(c, ".");
+                board.setFieldAt(newC, ".");
                 p.updateSnippets(+1);
+                state.updateSnippetsEaten(1);
                 break;
             case "W": /* A Weapon */
-                b.setFieldAt(c, ".");
+                board.setFieldAt(newC, ".");
                 p.updateWeapons(1);
                 break;
 
