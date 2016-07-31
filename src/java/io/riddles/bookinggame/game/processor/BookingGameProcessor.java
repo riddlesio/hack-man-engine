@@ -170,15 +170,22 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             /* Player with most snippets wins */
             int max = 0;
             BookingGamePlayer winner = null;
-            int nrBumps = 0;
             for (BookingGamePlayer player : this.players) {
                 if (player.getSnippets() > max) {
                     max = player.getSnippets();
                     winner = player;
-                    nrBumps++;
                 }
             }
-            if (nrBumps > 1) { /* Not a draw */
+            int differences = 0;
+            int prevSnippets = Integer.MIN_VALUE;
+            for (BookingGamePlayer player : this.players) {
+                if (player.getSnippets() != prevSnippets) {
+                    differences++;
+                }
+                prevSnippets = player.getSnippets();
+
+            }
+            if (differences > 1) { /* Not a draw */
                 return winner;
             }
         }

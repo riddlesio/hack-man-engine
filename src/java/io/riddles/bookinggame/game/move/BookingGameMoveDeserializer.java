@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
-import io.riddles.javainterface.exception.InvalidMoveException;
+import io.riddles.javainterface.exception.InvalidInputException;
 import io.riddles.javainterface.serialize.Deserializer;
 
 /**
@@ -46,15 +46,15 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
         if (this.player.isParalyzed()) { return new BookingGameMove(this.player, MoveType.PARALYZED); }
         try {
             return visitMove(string);
-        } catch (InvalidMoveException ex) {
+        } catch (InvalidInputException ex) {
             return new BookingGameMove(this.player, ex);
         } catch (Exception ex) {
             return new BookingGameMove(
-                this.player, new InvalidMoveException("Failed to parse move"));
+                this.player, new InvalidInputException("Failed to parse move"));
         }
     }
 
-    private BookingGameMove visitMove(String input) throws InvalidMoveException {
+    private BookingGameMove visitMove(String input) throws InvalidInputException {
         String[] split = input.split(" ");
 
         MoveType type = visitAssessment(split[0]);
@@ -62,7 +62,7 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
          return new BookingGameMove(this.player, type);
     }
 
-    public MoveType visitAssessment(String input) throws InvalidMoveException {
+    public MoveType visitAssessment(String input) throws InvalidInputException {
         switch (input) {
             case "up":
                 return MoveType.UP;
@@ -75,7 +75,7 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
             case "pass":
                 return MoveType.PASS;
             default:
-                throw new InvalidMoveException("Move isn't valid");
+                throw new InvalidInputException("Move isn't valid");
         }
     }
 }

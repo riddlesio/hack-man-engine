@@ -20,7 +20,7 @@
 package io.riddles.bookinggame.game.move;
 
 import io.riddles.bookinggame.game.data.MoveType;
-import io.riddles.javainterface.exception.InvalidMoveException;
+import io.riddles.javainterface.exception.InvalidInputException;
 import io.riddles.javainterface.game.move.AbstractMove;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 
@@ -40,7 +40,7 @@ public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
         this.type = type;
     }
 
-    public BookingGameMove(BookingGamePlayer player, InvalidMoveException exception) {
+    public BookingGameMove(BookingGamePlayer player, InvalidInputException exception) {
         super(player, exception);
     }
 
