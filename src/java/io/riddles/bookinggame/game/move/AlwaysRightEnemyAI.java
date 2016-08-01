@@ -19,17 +19,11 @@ public class AlwaysRightEnemyAI implements EnemyAI {
         newE.setDirection(d);
 
         Coordinate newC = getMovedCoordinate(newE.getCoordinate(), newE.getDirection(), s.getBoard());
-        s.getBoard().dumpComplete();
         if (s.getBoard().isEmptyComplete(newC)) {
-            System.out.println(e.toString() +  " set new coordinate ");
-
             newE.setCoordinate(newC);
-        } else {
-            System.out.println(e.toString() +  " bump into wall");
         }
         return newE;
     }
-
 
 
     public Coordinate getMovedCoordinate(Coordinate c, MoveType m, Board b) {

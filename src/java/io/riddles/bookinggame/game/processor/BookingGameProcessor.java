@@ -60,16 +60,14 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         this.roundNumber = roundNumber;
         LOGGER.info(String.format("Playing round %d", roundNumber));
 
-
         ArrayList<BookingGameMove> moves = new ArrayList();
         BookingGameBoard newBoard = state.getBoard();
         int oldSnippetsEaten = state.getSnippetsEaten();
         for (BookingGamePlayer player : this.players) {
             newBoard.updateComplete(players, state);
-            System.out.println(player);
+            //System.out.println(player);
             player.sendUpdate("board", player, newBoard.toStringComplete());
             String response = player.requestMove(ActionType.MOVE.toString());
-            System.out.println(response);
 
             // parse the response
             BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(player);
@@ -109,7 +107,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         }
 
         if (roundNumber % BookingGameEngine.configuration.get("snippet_spawn_rate") == 0) {
-            System.out.println("Adding " + BookingGameEngine.configuration.get("snippet_spawn_count") + " snippet(s)");
+            //System.out.println("Adding " + BookingGameEngine.configuration.get("snippet_spawn_count") + " snippet(s)");
             for (int i = 0; i < BookingGameEngine.configuration.get("snippet_spawn_count"); i++) {
                 newBoard.addSnippet(newBoard.getLoneliestField(players));
                 newBoard.updateComplete(players, nextState);
@@ -118,9 +116,9 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         if (oldSnippetsEaten != nextState.getSnippetsEaten()) { /* A snippet has been eaten */
             if (nextState.getSnippetsEaten() > BookingGameEngine.configuration.get("enemy_spawn_delay")) {
-                System.out.println((nextState.getSnippetsEaten() - BookingGameEngine.configuration.get("enemy_spawn_delay")));
+                //System.out.println((nextState.getSnippetsEaten() - BookingGameEngine.configuration.get("enemy_spawn_delay")));
                 if ((nextState.getSnippetsEaten() - BookingGameEngine.configuration.get("enemy_spawn_delay")) % BookingGameEngine.configuration.get("enemy_spawn_rate") == 0) {
-                    System.out.println("Adding " + BookingGameEngine.configuration.get("enemy_spawn_count") + " enem(y)(ie)(s)");
+                    //System.out.println("Adding " + BookingGameEngine.configuration.get("enemy_spawn_count") + " enem(y)(ie)(s)");
                     for (int i = 0; i < BookingGameEngine.configuration.get("enemy_spawn_count"); i++)
                         nextState.addEnemy(new Enemy(newBoard.getEnemyStartField(), new RandomEnemyAI().getRandomDirection()));
                 }
@@ -141,32 +139,28 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         if (getWinner() != null) returnVal = true;
         if (this.gameOver) returnVal = true;
         if (this.roundNumber >= BookingGameEngine.configuration.get("max_rounds")) returnVal = true;
-        System.out.println("hasGameEnded" + returnVal);
         return returnVal;
     }
 
     @Override
     public BookingGamePlayer getWinner() {
-        System.out.println("getWinner");
         int playersWithSnippets = 0;
+
+        /* This is double work */
         for (BookingGamePlayer player : this.players) {
             if (player.getSnippets() > 0) playersWithSnippets++;
         }
 
         if (playersWithSnippets == 0) {
-            System.out.println("It's a draw");
-
             /* It's a draw */
             this.gameOver = true;
         } else if (playersWithSnippets == 1) {
             /* There's a winner */
-            System.out.println("There's a winner");
             for (BookingGamePlayer player : this.players) {
                 if (player.getSnippets() > 0) return player;
             }
         }
         if (this.roundNumber >= BookingGameEngine.configuration.get("max_rounds")) {
-            System.out.println("Player with most snippets wins");
             /* Player with most snippets wins */
             int max = 0;
             BookingGamePlayer winner = null;
@@ -183,7 +177,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
                     differences++;
                 }
                 prevSnippets = player.getSnippets();
-
             }
             if (differences > 1) { /* Not a draw */
                 return winner;

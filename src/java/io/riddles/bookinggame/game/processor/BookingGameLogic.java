@@ -87,11 +87,11 @@ public class BookingGameLogic {
             if (enemy.getCoordinate().getX() == newC.getX() && enemy.getCoordinate().getY() == newC.getY()) {
                 /* Collision with enemy */
                 if ( p.getWeapons() > 0 ) { /* Player has weapon */
-                    System.out.println("PLAYER KILL ENEMY");
+                    //System.out.println("PLAYER KILLS ENEMY");
                     p.updateWeapons(-1);
                     state.killEnemyAt(newC);
-                } else {
-                    System.out.println("PLAYER HIT BY ENEMY");
+                } else { /* Player gets a hit */
+                    //System.out.println("PLAYER HIT BY ENEMY");
                     int maxSnippets = BookingGameEngine.configuration.get("enemy_snippet_loss");
                     if (p.getSnippets() < maxSnippets) maxSnippets = p.getSnippets();
 
@@ -99,7 +99,7 @@ public class BookingGameLogic {
 
                     /* Spawn x snippets on map */
                     for (int i = 0; i < maxSnippets; i++) {
-                        System.out.println("Spawning snippet");
+                        //System.out.println("Spawning snippet");
                         board.addSnippet(board.getLoneliestField(players));
                         board.updateComplete(players, state);
                     }
