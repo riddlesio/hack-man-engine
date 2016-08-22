@@ -36,6 +36,7 @@ public class Enemy {
 
 
     private Coordinate coordinate;
+    private Coordinate prevCoordinate;
     private MoveType direction;
     private boolean killMe = false;
 
@@ -45,7 +46,20 @@ public class Enemy {
     }
 
     public Coordinate getCoordinate() { return this.coordinate; }
-    public void setCoordinate(Coordinate c) { this.coordinate = c; }
+    public Coordinate getPreviousCoordinate() { return this.prevCoordinate; }
+
+    public void setCoordinate(Coordinate c) {
+        if (prevCoordinate != null) {
+            if (c != prevCoordinate) {
+                prevCoordinate = coordinate;
+            }
+        } else {
+            prevCoordinate = coordinate;
+        }
+        this.coordinate = c;
+        System.out.println("setCoordinate " + prevCoordinate + " " + coordinate);
+
+    }
 
 
     public MoveType getDirection() { return this.direction; }

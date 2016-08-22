@@ -104,7 +104,10 @@ public class BookingGameBoard extends Board {
         return s;
     }
 
+    public String getFieldAtComplete(Coordinate c) {
 
+        return fieldsComplete[c.getX()][c.getY()];
+    }
 
     /* Returns coordinate of empty field furthest away from all players */
     public Coordinate getLoneliestField(ArrayList<BookingGamePlayer> players) {

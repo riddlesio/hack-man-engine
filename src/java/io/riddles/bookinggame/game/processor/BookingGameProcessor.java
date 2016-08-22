@@ -43,7 +43,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private int roundNumber;
     private boolean gameOver;
 
-    public EnemyAI enemyAI = new RandomEnemyAI();
+    public EnemyAI enemyAI = new ChaseEnemyAI();
 
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players) {
         super(players);
@@ -136,7 +136,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     @Override
     public boolean hasGameEnded(BookingGameState state) {
         boolean returnVal = false;
-        if (getWinner() != null) returnVal = true;
+        //if (getWinner() != null) returnVal = true;
         if (this.gameOver) returnVal = true;
         if (this.roundNumber >= BookingGameEngine.configuration.get("max_rounds")) returnVal = true;
         return returnVal;

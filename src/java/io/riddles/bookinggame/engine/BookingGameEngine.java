@@ -18,6 +18,7 @@ import io.riddles.bookinggame.game.BookingGameSerializer;
 public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, BookingGamePlayer, BookingGameState> {
 
     protected Coordinate[] startCoordinates;
+    protected String bot_ids;
     public BookingGameEngine() {
 
         super();
@@ -51,7 +52,13 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
     @Override
     protected void sendGameSettings(BookingGamePlayer player) {
-        //player.sendSetting("board", getInitialState().getBoard().toString());
+        /* TODO: Send all settings needed */
+        player.sendSetting("player_names", this.bot_ids);
+        player.sendSetting("board", getInitialState().getBoard().toString());
+        player.sendSetting("board_width", getInitialState().getBoard().getWidth());
+        player.sendSetting("board_height", getInitialState().getBoard().getHeight());
+        player.sendSetting("time_per_move", 5000); /* TODO: find this value */
+        player.sendSetting("your_botid", player.getId());
     }
 
     @Override
@@ -94,10 +101,10 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
         String[] split = input.split(" ");
         String command = split[0];
         if (command.equals("bot_ids")) {
+            this.bot_ids = split[1];
             String[] ids = split[1].split(",");
             for (int i = 0; i < ids.length; i++) {
                 BookingGamePlayer player = createPlayer(Integer.parseInt(ids[i]));
-
                 if (this.botInputFiles != null)
                     player.setInputFile(this.botInputFiles[i]);
                 player.setCoordinate(getStartCoordinate(i));

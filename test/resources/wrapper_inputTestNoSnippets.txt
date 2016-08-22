@@ -1,5 +1,5 @@
 initialize
-max_rounds 40
+max_rounds 90
 player_snippet_count 1
 map_snippet_count 2
 snippet_spawn_rate 3
