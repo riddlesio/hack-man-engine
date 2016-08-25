@@ -66,7 +66,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         for (BookingGamePlayer player : this.players) {
             newBoard.updateComplete(players, state);
             //System.out.println(player);
-            player.sendUpdate("board", player, newBoard.toStringComplete());
+            player.sendUpdate("field", player, newBoard.toStringComplete());
             String response = player.requestMove(ActionType.MOVE.toString());
 
             // parse the response
