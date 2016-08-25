@@ -56,6 +56,8 @@ class BookingGameEngineSpec extends Specification {
                 "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                 "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,C,x," +
                 "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+        int standardBoardWidth = 20;
+        int standardBoardHeight = 11;
         String finalBoard;
         Coordinate[] mockStartCoordinates;
 
@@ -97,8 +99,8 @@ class BookingGameEngineSpec extends Specification {
         @Override
         protected BookingGameState getInitialState() {
             BookingGameState s = new BookingGameState();
-            BookingGameBoard b = new BookingGameBoard(20, 11);
-            b.initialiseFromString(standardBoard, 20, 11);
+            BookingGameBoard b = new BookingGameBoard(standardBoardWidth, standardBoardHeight);
+            b.initialiseFromString(standardBoard, standardBoardWidth, standardBoardHeight);
             s.setBoard(b);
             s.addEnemy(new Enemy(new Coordinate(1, 3), MoveType.RIGHT));
             s.addEnemy(new Enemy(new Coordinate(1, 7), MoveType.UP));
@@ -498,23 +500,30 @@ class BookingGameEngineSpec extends Specification {
         setup:
         String[] botInputs = new String[2]
 
-        def wrapperInput = "./test/resources/wrapper_inputTestNoSnippets.txt"
+        def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
         botInputs[0] = "./test/resources/bot1_inputTestAttack.txt"
         botInputs[1] = "./test/resources/bot2_inputTestAttack.txt"
 
         def engine = new TestEngine(wrapperInput, botInputs)
         engine.standardBoard =
-                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
-                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
-                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                        "x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x," +
-                        "x,W,.,C,C,W,.,.,.,.,.,.,x,.,.,.,.,.,.,x," +
-                        "x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x," +
-                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                        "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                        "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
-                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
+                        "x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x," +
+                        "x,.,x,x,x,x,x,.,x,x,x,x,x,x,.,x,x,x,x,x,.,x," +
+                        "x,.,x,.,.,.,.,.,x,x,x,x,x,x,.,.,.,.,.,x,.,x," +
+                        "x,.,x,.,x,x,x,.,.,.,x,x,.,.,.,x,x,x,.,x,.,x," +
+                        "x,.,.,.,.,.,x,x,x,.,x,x,.,x,x,x,.,.,.,.,.,x," +
+                        "x,.,x,x,x,.,x,.,.,.,.,.,.,.,.,x,.,x,x,x,.,x," +
+                        "x,.,.,.,x,.,x,.,x,x,x,x,x,x,.,x,.,x,.,.,.,x," +
+                        "x,x,x,.,x,.,.,.,x,x,x,x,x,x,.,.,.,x,.,x,x,x," +
+                        "x,.,.,.,x,x,x,.,x,x,x,x,x,x,.,x,x,x,.,.,.,x," +
+                        "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
+                        "x,.,x,x,x,.,x,x,x,x,x,x,x,x,x,x,.,x,x,x,.,x," +
+                        "x,.,x,x,x,.,.,.,.,.,.,.,.,.,.,.,.,x,x,x,.,x," +
+                        "x,.,x,x,x,.,x,x,x,.,x,x,.,x,x,x,.,x,x,x,.,x," +
+                        "x,.,.,.,.,.,.,.,.,.,x,x,.,.,.,.,.,.,.,.,.,x," +
+                        "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+        engine.standardBoardWidth = 22;
+        engine.standardBoardHeight = 16;
         engine.mockStartCoordinates[0] = new Coordinate(8, 5);
         engine.mockStartCoordinates[1] = new Coordinate(19, 5);
         //engine.getProcessor().enemyAI = new ChaseEnemyAI();

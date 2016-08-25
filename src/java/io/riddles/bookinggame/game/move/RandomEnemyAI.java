@@ -12,8 +12,6 @@ public class RandomEnemyAI implements EnemyAI {
 
     public Enemy transform(Enemy e, BookingGameState s) {
         Enemy newE = e;
-        /* TODO: Make this intelligent (i.e. follow a nearby player) */
-
 
         /* Go around corners */
         MoveType d = getRandomDirection();

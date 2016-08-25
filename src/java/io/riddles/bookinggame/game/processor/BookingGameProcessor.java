@@ -136,7 +136,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     @Override
     public boolean hasGameEnded(BookingGameState state) {
         boolean returnVal = false;
-        //if (getWinner() != null) returnVal = true;
+        if (getWinner() != null) returnVal = true;
         if (this.gameOver) returnVal = true;
         if (this.roundNumber >= BookingGameEngine.configuration.get("max_rounds")) returnVal = true;
         return returnVal;
@@ -152,10 +152,10 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         }
 
         if (playersWithSnippets == 0) {
-            /* It's a draw */
+            /* All players lost their snippets, it's a draw */
             this.gameOver = true;
         } else if (playersWithSnippets == 1) {
-            /* There's a winner */
+            /* Only one player left with snippets, there's a winner */
             for (BookingGamePlayer player : this.players) {
                 if (player.getSnippets() > 0) return player;
             }

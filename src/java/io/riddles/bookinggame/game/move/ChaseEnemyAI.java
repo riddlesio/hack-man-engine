@@ -63,29 +63,33 @@ public class ChaseEnemyAI implements EnemyAI {
 
 
     public Coordinate getMovedCoordinate(Coordinate c, MoveType m, Board b) {
-        switch(m) {
-            case UP:
-                return new Coordinate(c.getX(), c.getY()-1);
-            case DOWN:
-                return new Coordinate(c.getX(), c.getY()+1);
-            case RIGHT:
-                return new Coordinate(c.getX()+1, c.getY());
-            case LEFT:
-                return new Coordinate(c.getX()-1, c.getY());
+        if (m != null) {
+            switch(m) {
+                case UP:
+                    return new Coordinate(c.getX(), c.getY()-1);
+                case DOWN:
+                    return new Coordinate(c.getX(), c.getY()+1);
+                case RIGHT:
+                    return new Coordinate(c.getX()+1, c.getY());
+                case LEFT:
+                    return new Coordinate(c.getX()-1, c.getY());
+            }
         }
         return c;
     }
 
     public Boolean isEmptyInDirection(Coordinate c, MoveType m, BookingGameBoard b) {
-        switch(m) {
-            case UP:
-                return (b.isEmpty(new Coordinate(c.getX(), c.getY()-1)));
-            case DOWN:
-                return (b.isEmpty(new Coordinate(c.getX(), c.getY()+1)));
-            case RIGHT:
-                return (b.isEmpty(new Coordinate(c.getX()+1, c.getY())));
-            case LEFT:
-                return (b.isEmpty(new Coordinate(c.getX()-1, c.getY())));
+        if (m != null) {
+            switch(m) {
+                case UP:
+                    return (b.isEmpty(new Coordinate(c.getX(), c.getY()-1)));
+                case DOWN:
+                    return (b.isEmpty(new Coordinate(c.getX(), c.getY()+1)));
+                case RIGHT:
+                    return (b.isEmpty(new Coordinate(c.getX()+1, c.getY())));
+                case LEFT:
+                    return (b.isEmpty(new Coordinate(c.getX()-1, c.getY())));
+            }
         }
         return true;
     }
@@ -93,10 +97,9 @@ public class ChaseEnemyAI implements EnemyAI {
     private MoveType getChaseDirection(Coordinate c, Coordinate prevC, BookingGameBoard b) {
         Map map = new Map(b.getWidth(), b.getHeight());
         map.initFromBoard(b, prevC);
-        map.drawMap();
         Coordinate newC = getNearestPlayerCoordinate(map, c, b);
 
-        System.out.println( "c: " + c + " getNearestPlayerCoordinate    " + newC);
+        //System.out.println( "c: " + c + " getNearestPlayerCoordinate    " + newC);
 
         if (c.getX() != newC.getX() || c.getY() != newC.getY()) {
             List<Node> l = map.findPath(c, newC);
@@ -105,7 +108,7 @@ public class ChaseEnemyAI implements EnemyAI {
             }
         }
         System.out.println("getChaseDirection FAILED");
-        return null;
+        return getRandomDirection();
     }
 
     public MoveType getRandomDirection() {
@@ -123,17 +126,20 @@ public class ChaseEnemyAI implements EnemyAI {
         }
     }
 
-    private MoveType getOppositeDirection(MoveType d) {
-        switch(d) {
-            case LEFT:
-                return MoveType.RIGHT;
-            case RIGHT:
-                return MoveType.LEFT;
-            case UP:
-                return MoveType.DOWN;
-            default:
-                return MoveType.UP;
+    private MoveType getOppositeDirection(MoveType m) {
+        if (m != null) {
+                switch(m) {
+                case LEFT:
+                    return MoveType.RIGHT;
+                case RIGHT:
+                    return MoveType.LEFT;
+                case UP:
+                    return MoveType.DOWN;
+                default:
+                    return MoveType.UP;
+            }
         }
+        return m;
     }
 
     private MoveType getDirection(Coordinate oldC, Coordinate newC) {
@@ -160,7 +166,7 @@ public class ChaseEnemyAI implements EnemyAI {
                         List<Node> l = map.findPath(c, newC);
                         if (l.size() < smallestDistance && l.size() > 1 ) {
                             nearestX = x; nearestY = y; smallestDistance = l.size();
-                            System.out.println( "c: " + c + " checkNPC    " + newC + " dist: " + l.size());
+                            //System.out.println( "c: " + c + " checkNPC    " + newC + " dist: " + l.size());
 
                         }
 

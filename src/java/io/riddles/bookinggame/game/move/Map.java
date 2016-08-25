@@ -101,7 +101,7 @@ public class Map<T extends Node> {
                 nodes[i][j] = (T) new Node(i, j);
                 nodes[i][j].setWalkable(b.isEmpty(new Coordinate(i, j)));
                 if (block != null) {
-                    if (i == block.getX() && j == block.getY()) { nodes[i][j].setWalkable(false); System.out.println("setblock " + i + j); }
+                    if (i == block.getX() && j == block.getY()) nodes[i][j].setWalkable(false);
                 }
             }
         }

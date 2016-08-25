@@ -74,13 +74,10 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     }
 
     public void killEnemyAt(Coordinate c) {
-        /* TODO: implement this. */
         for (Enemy e : this.enemies) {
             Coordinate enemyCoordinate = e.getCoordinate();
             if (c.getX() == enemyCoordinate.getX() && c.getY() == enemyCoordinate.getY()) {
                 this.enemies.remove(e);
-                System.out.println("TODO: killing enemy at " + c);
-
             }
         }
     }
@@ -110,4 +107,5 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     public void updateSnippetsEaten(int nr) {
         this.snippetsEaten += nr;
     }
+
 }
