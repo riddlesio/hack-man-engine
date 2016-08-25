@@ -104,6 +104,10 @@ public class BookingGameLogic {
                         board.updateComplete(players, state);
                     }
                     newC = c; /* Stay in position */
+
+                    /* TODO: enemy returns to previous position */
+                    System.out.println(" SDKFDSFKDSOFKDSOFKDSFOKDSFODS " + enemy.getCoordinate() + " " + enemy.getPreviousCoordinate());
+                    enemy.setCoordinate(enemy.getPreviousCoordinate());
                 }
             }
 
