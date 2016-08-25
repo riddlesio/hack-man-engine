@@ -3,9 +3,6 @@ package io.riddles.bookinggame.engine;
 import io.riddles.bookinggame.game.data.BookingGameBoard;
 import io.riddles.bookinggame.game.data.Coordinate;
 
-import io.riddles.bookinggame.game.data.MoveType;
-import io.riddles.bookinggame.game.data.Enemy;
-import io.riddles.bookinggame.game.move.RandomEnemyAI;
 import io.riddles.bookinggame.game.processor.BookingGameProcessor;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -33,8 +30,11 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
     protected void initialiseData() {
         this.startCoordinates = new Coordinate[4];
+        /* TODO: Find start coordinates */
         this.startCoordinates[0] = new Coordinate(1, 5);
         this.startCoordinates[1] = new Coordinate(19, 5);
+        this.startCoordinates[2] = new Coordinate(1, 7);
+        this.startCoordinates[3] = new Coordinate(19, 7);
     }
 
     @Override

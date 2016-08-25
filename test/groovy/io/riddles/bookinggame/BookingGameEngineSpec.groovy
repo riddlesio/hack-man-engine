@@ -498,11 +498,14 @@ class BookingGameEngineSpec extends Specification {
         println("check chaseEnemyAI")
 
         setup:
-        String[] botInputs = new String[2]
+        String[] botInputs = new String[4]
 
         def wrapperInput = "./test/resources/wrapper_inputTestSnippetWinner.txt"
         botInputs[0] = "./test/resources/bot1_inputTestAttack.txt"
         botInputs[1] = "./test/resources/bot2_inputTestAttack.txt"
+        botInputs[2] = "./test/resources/bot2_inputTestAttack.txt"
+        botInputs[3] = "./test/resources/bot2_inputTestAttack.txt"
+
 
         def engine = new TestEngine(wrapperInput, botInputs)
         engine.standardBoard =
@@ -526,6 +529,8 @@ class BookingGameEngineSpec extends Specification {
         engine.standardBoardHeight = 16;
         engine.mockStartCoordinates[0] = new Coordinate(8, 5);
         engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.mockStartCoordinates[2] = new Coordinate(8, 7);
+        engine.mockStartCoordinates[3] = new Coordinate(19, 7);
         //engine.getProcessor().enemyAI = new ChaseEnemyAI();
 
         engine.run()

@@ -19,6 +19,7 @@
 
 package io.riddles.bookinggame.game;
 
+import io.riddles.javainterface.game.player.AbstractPlayer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -41,9 +42,7 @@ public class BookingGameSerializer extends
     public String traverseToString(BookingGameProcessor processor, BookingGameState initialState) {
         JSONObject game = new JSONObject();
 
-        game = addDefaultJSON(game, processor);
-        game.put("boardwidth", initialState.getBoard().getWidth());
-        game.put("boardheight", initialState.getBoard().getHeight());
+        game = addAdditionalJSON(game, processor, initialState);
 
         // add all states
         JSONArray states = new JSONArray();
@@ -59,5 +58,43 @@ public class BookingGameSerializer extends
         game.put("score", processor.getScore());
 
         return game.toString();
+    }
+
+    protected JSONObject addAdditionalJSON(JSONObject game, BookingGameProcessor processor, BookingGameState initialState) {
+
+        // add default settings (player settings)
+        JSONArray playerNames = new JSONArray();
+        for (Object obj : processor.getPlayers()) {
+            AbstractPlayer player = (AbstractPlayer) obj;
+            playerNames.put(player.getName());
+        }
+
+        JSONObject players = new JSONObject();
+        players.put("count", processor.getPlayers().size());
+        players.put("names", playerNames);
+
+        JSONObject settings = new JSONObject();
+        settings.put("players", players);
+
+
+        JSONObject board = new JSONObject();
+        board.put("width", initialState.getBoard().getWidth());
+        board.put("height", initialState.getBoard().getHeight());
+
+        settings.put("board", board);
+
+        game.put("settings", settings);
+
+        // add winner
+        Object winner = JSONObject.NULL;
+        if (processor.getWinner() != null) {
+            winner = (String)String.valueOf(processor.getWinner().getId());
+        }
+        game.put("winner", winner);
+
+        // add score
+        game.put("score", processor.getScore());
+
+        return game;
     }
 }
