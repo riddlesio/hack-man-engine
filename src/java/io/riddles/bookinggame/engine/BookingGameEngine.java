@@ -1,7 +1,27 @@
+/*
+ * Copyright 2016 riddles.io (developers@riddles.io)
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ *     For the full copyright and license information, please view the LICENSE
+ *     file that was distributed with this source code.
+ */
+
 package io.riddles.bookinggame.engine;
 
-import io.riddles.bookinggame.game.data.BookingGameBoard;
-import io.riddles.bookinggame.game.data.Coordinate;
+import java.awt.Point;
+
+import io.riddles.bookinggame.game.board.BookingGameBoard;
 
 import io.riddles.bookinggame.game.processor.BookingGameProcessor;
 import io.riddles.bookinggame.game.state.BookingGameState;
@@ -10,55 +30,71 @@ import io.riddles.javainterface.engine.AbstractEngine;
 import io.riddles.bookinggame.game.BookingGameSerializer;
 
 /**
- * Created by joost on 6/27/16.
+ * io.riddles.bookinggame.engine.BookingGameEngine - Created on 6/27/16
+ *
+ * [description]
+ *
+ * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
-public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, BookingGamePlayer, BookingGameState> {
+public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
+        BookingGamePlayer, BookingGameState> {
 
-    protected Coordinate[] startCoordinates;
-    protected String bot_ids;
+    private Point[] startCoordinates;
+
     public BookingGameEngine() {
-
         super();
-        initialiseData();
+        setDefaults();
     }
 
     public BookingGameEngine(String wrapperFile, String[] botFiles) {
-
         super(wrapperFile, botFiles);
-        initialiseData();
+        setDefaults();
     }
 
-    protected void initialiseData() {
-        this.startCoordinates = new Coordinate[4];
-        /* TODO: Find start coordinates */
-        this.startCoordinates[0] = new Coordinate(1, 5);
-        this.startCoordinates[1] = new Coordinate(19, 5);
-        this.startCoordinates[2] = new Coordinate(1, 7);
-        this.startCoordinates[3] = new Coordinate(19, 7);
+    private void setDefaults() {
+        this.startCoordinates = new Point[4];
+
+        this.startCoordinates[0] = new Point(2, 7);
+        this.startCoordinates[1] = new Point(17, 7);
+        this.startCoordinates[2] = new Point(2, 7);
+        this.startCoordinates[3] = new Point(17, 7);
+
+        configuration.put("maxRounds", 40);
+        configuration.put("playerSnippetCount", 0);
+        configuration.put("mapSnippetCount", 0);
+        configuration.put("snippetSpawnRate", 4);
+        configuration.put("snippetSpawnCount", 1);
+        configuration.put("initialEnemyCount", 0);
+        configuration.put("enemySpawnDelay", 5);
+        configuration.put("enemySpawnRate", 6);
+        configuration.put("enemySpawnCount", 1);
+        configuration.put("enemySnippetLoss", 4);
+        configuration.put("weaponParalysisDuration", 1);
+        configuration.put("fieldWidth", 20);
+        configuration.put("fieldHeight", 14);
+        configuration.put("fieldLayout", getDefaultFieldLayout());
     }
 
     @Override
     protected BookingGamePlayer createPlayer(int id) {
-        BookingGamePlayer p = new BookingGamePlayer(id);
-        return p;
+        BookingGamePlayer player = new BookingGamePlayer(id);
+        player.setCoordinate(getStartCoordinate(id));
+        return player;
     }
 
     @Override
     protected BookingGameProcessor createProcessor() {
-        for (int i = 0; i < this.players.size(); i++)
-            this.players.get(i).updateSnippets(configuration.get("player_snippet_count"));
+        for (BookingGamePlayer player : this.players) {
+            player.updateSnippets(configuration.getInt("playerSnippetCount"));
+        }
+
         return new BookingGameProcessor(this.players);
     }
 
     @Override
     protected void sendGameSettings(BookingGamePlayer player) {
-        /* TODO: Send all settings needed */
-        player.sendSetting("player_names", this.bot_ids);
-        player.sendSetting("board", getInitialState().getBoard().toString());
-        player.sendSetting("board_width", getInitialState().getBoard().getWidth());
-        player.sendSetting("board_height", getInitialState().getBoard().getHeight());
-        player.sendSetting("time_per_move", 5000); /* TODO: find this value */
-        player.sendSetting("your_botid", player.getId());
+        player.sendSetting("field_width", configuration.getInt("fieldWidth"));
+        player.sendSetting("field_height", configuration.getInt("fieldHeight"));
     }
 
     @Override
@@ -69,75 +105,43 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor, Book
 
     @Override
     protected BookingGameState getInitialState() {
-        BookingGameState s = new BookingGameState();
-        BookingGameBoard b = new BookingGameBoard(20, 11);
-        String standardBoard = getStandardBoard();
-        b.initialiseFromString(standardBoard, 20, 11);
-        b.updateComplete(players, s);
-        for (int i = 0; i < configuration.get("map_snippet_count"); i++) {
-            b.addRandomSnippet();
+        BookingGameState state = new BookingGameState();
+
+        int fieldWidth = configuration.getInt("fieldWidth");
+        int fieldHeight = configuration.getInt("fieldHeight");
+        String fieldLayout = configuration.getString("fieldLayout");
+
+        BookingGameBoard board = new BookingGameBoard(
+                fieldWidth, fieldHeight,fieldLayout, this.players);
+        board.updatePlayerMovements();
+
+        for (int i = 0; i < configuration.getInt("mapSnippetCount"); i++) {
+            board.addRandomSnippet();
         }
-        s.setBoard(b);
-        return s;
+
+        state.setBoard(board);
+
+        return state;
     }
 
-
-    protected String getStandardBoard() {
-        return  "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
-                "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
-                "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                "x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x," +
-                "x,C,x,.,x,x,.,x,x,.,.,x,x,.,x,x,.,x,.,x," +
-                "x,.,C,.,.,.,.,x,.,.,.,.,x,.,.,.,C,C,.,x," +
-                "x,C,x,.,x,x,.,x,x,x,x,x,x,.,x,x,C,x,.,x," +
-                "x,C,x,.,C,C,.,.,.,.,.,.,.,.,.,.,C,x,.,x," +
-                "x,C,x,x,C,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
-                "x,C,C,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
-                "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+    private String getDefaultFieldLayout() {
+        return  ".,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.," +
+                ".,x,x,x,x,x,.,x,x,x,x,x,x,.,x,x,x,x,x,.," +
+                ".,x,.,.,.,.,.,x,x,x,x,x,x,.,.,.,.,.,x,.," +
+                ".,x,.,x,x,x,.,.,.,x,x,.,.,.,x,x,x,.,x,.," +
+                ".,.,.,.,.,x,x,x,.,x,x,.,x,x,x,.,.,.,.,.," +
+                ".,x,x,x,.,x,.,.,.,.,.,.,.,.,x,.,x,x,x,.," +
+                ".,.,.,x,.,x,.,x,x,x,x,x,x,.,x,.,x,.,.,.," +
+                "x,x,.,x,.,.,.,x,x,x,x,x,x,.,.,.,x,.,x,x," +
+                ".,.,.,x,x,x,.,x,x,x,x,x,x,.,x,x,x,.,.,.," +
+                ".,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.," +
+                ".,x,x,x,.,x,x,x,x,x,x,x,x,x,x,.,x,x,x,.," +
+                ".,x,x,x,.,.,.,.,.,.,.,.,.,.,.,.,x,x,x,.," +
+                ".,x,x,x,.,x,x,x,.,x,x,.,x,x,x,.,x,x,x,.," +
+                ".,.,.,.,.,.,.,.,.,x,x,.,.,.,.,.,.,.,.,.";
     }
 
-    @Override
-    protected void parseSetupInput(String input) {
-        String[] split = input.split(" ");
-        String command = split[0];
-        if (command.equals("bot_ids")) {
-            this.bot_ids = split[1];
-            String[] ids = split[1].split(",");
-            for (int i = 0; i < ids.length; i++) {
-                BookingGamePlayer player = createPlayer(Integer.parseInt(ids[i]));
-                if (this.botInputFiles != null)
-                    player.setInputFile(this.botInputFiles[i]);
-                player.setCoordinate(getStartCoordinate(i));
-                this.players.add(player);
-            }
-        } else if (command.equals("player_snippet_count")) {
-            configuration.put("player_snippet_count", Integer.parseInt(split[1]));
-        } else if (command.equals("map_snippet_count")) {
-            configuration.put("map_snippet_count", Integer.parseInt(split[1]));
-        } else if (command.equals("snippet_spawn_rate")) {
-            configuration.put("snippet_spawn_rate", Integer.parseInt(split[1]));
-        } else if (command.equals("snippet_spawn_count")) {
-            configuration.put("snippet_spawn_count", Integer.parseInt(split[1]));
-        } else if (command.equals("initial_enemy_count")) {
-            configuration.put("initial_enemy_count", Integer.parseInt(split[1]));
-        } else if (command.equals("enemy_spawn_delay")) {
-            configuration.put("enemy_spawn_delay", Integer.parseInt(split[1]));
-        } else if (command.equals("enemy_spawn_rate")) {
-            configuration.put("enemy_spawn_rate", Integer.parseInt(split[1]));
-        } else if (command.equals("enemy_spawn_count")) {
-            configuration.put("enemy_spawn_count", Integer.parseInt(split[1]));
-        } else if (command.equals("max_rounds")) {
-            configuration.put("max_rounds", Integer.parseInt(split[1]));
-        } else if (command.equals("enemy_snippet_loss")) {
-            configuration.put("enemy_snippet_loss", Integer.parseInt(split[1]));
-        } else if (command.equals("weapon_snippet_loss")) {
-            configuration.put("weapon_snippet_loss", Integer.parseInt(split[1]));
-        } else if (command.equals("weapon_paralysis_duration")) {
-            configuration.put("weapon_paralysis_duration", Integer.parseInt(split[1]));
-        }
-    }
-
-    protected Coordinate getStartCoordinate(int i) {
+    private Point getStartCoordinate(int i) {
         return this.startCoordinates[i];
     }
 }

@@ -19,13 +19,13 @@
 
 package io.riddles.javainterface.engine;
 
-import io.riddles.bookinggame.game.move.AlwaysRightEnemyAI;
+import io.riddles.javainterface.configuration.Configuration;
 import io.riddles.javainterface.exception.TerminalException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,13 +52,13 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         Pl extends AbstractPlayer, S extends AbstractState> {
 
     protected final static Logger LOGGER = Logger.getLogger(AbstractEngine.class.getName());
+    public final static Configuration configuration = new Configuration();
 
     protected String[] botInputFiles;
 
     protected IOHandler ioHandler;
     protected ArrayList<Pl> players;
     protected Pr processor;
-    public static HashMap<String, Integer> configuration;
 
     // Can be overridden in subclass constructor
     protected GameLoop gameLoop;
@@ -67,7 +67,6 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.players = new ArrayList<>();
         this.gameLoop = new SimpleGameLoop();
         this.ioHandler = new IOHandler();
-        this.configuration = new HashMap<String, Integer>();
     }
 
     /**
@@ -80,7 +79,6 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.gameLoop = new SimpleGameLoop();
         this.ioHandler = new IOHandler(wrapperInputFile);
         this.botInputFiles = botInputFiles;
-        this.configuration = new HashMap<String, Integer>();
     }
 
     /**
@@ -180,16 +178,29 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
     protected void parseSetupInput(String input) {
         String[] split = input.split(" ");
         String command = split[0];
-        if (command.equals("bot_ids")) {
-            String[] ids = split[1].split(",");
-            for (int i = 0; i < ids.length; i++) {
-                Pl player = createPlayer(Integer.parseInt(ids[i]));
+        switch (command) {
+            case "bot_ids":
+                String[] ids = split[1].split(",");
+                for (int i = 0; i < ids.length; i++) {
+                    Pl player = createPlayer(Integer.parseInt(ids[i]));
 
-                if (this.botInputFiles != null)
-                    player.setInputFile(this.botInputFiles[i]);
+                    if (this.botInputFiles != null)
+                        player.setInputFile(this.botInputFiles[i]);
 
-                this.players.add(player);
-            }
+                    this.players.add(player);
+                }
+                break;
+            case "configuration":
+            case "config":
+                JSONObject config = new JSONObject(split[1].trim());
+                Iterator<String> keys = config.keys();
+
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    JSONObject configValue = config.getJSONObject(key);
+                    configuration.put(key, configValue);
+                }
+                break;
         }
     }
 

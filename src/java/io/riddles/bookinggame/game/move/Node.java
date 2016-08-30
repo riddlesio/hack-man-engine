@@ -76,14 +76,14 @@ public class Node {
     /**
      * @return the xPosition
      */
-    public int getxPosition() {
+    public int getXPosition() {
         return xPosition;
     }
 
     /**
      * @return the yPosition
      */
-    public int getyPosition() {
+    public int getYPosition() {
         return yPosition;
     }
 
@@ -255,7 +255,7 @@ public class Node {
      */
     @Override
     public String toString() {
-        return "(" + getxPosition() + ", " + getyPosition() + "): h: "
+        return "(" + getXPosition() + ", " + getYPosition() + "): h: "
                 + gethCosts() + " g: " + getgCosts() + " f: " + getfCosts();
     }
 
@@ -294,8 +294,8 @@ public class Node {
         return hash;
     }
     public void sethCosts(Node endNode) {
-        this.sethCosts((absolute(this.getxPosition() - endNode.getxPosition())
-                + absolute(this.getyPosition() - endNode.getyPosition()))
+        this.sethCosts((absolute(this.getXPosition() - endNode.getXPosition())
+                + absolute(this.getYPosition() - endNode.getYPosition()))
                 * BASICMOVEMENTCOST);
     }
 

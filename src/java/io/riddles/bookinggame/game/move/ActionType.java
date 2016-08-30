@@ -20,11 +20,11 @@
 package io.riddles.bookinggame.game.move;
 
 /**
- * io.riddles.catchfrauds.game.move.ActionTypes - Created on 6-6-16
+ * io.riddles.bookinggame.game.move.ActionType - Created on 6/27/16
  *
  * [description]
  *
- * @author jim
+ * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
 public enum ActionType {
     MOVE;

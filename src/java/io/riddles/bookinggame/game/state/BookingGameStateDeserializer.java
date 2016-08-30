@@ -29,11 +29,11 @@ import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.game.state.AbstractStateDeserializer;
 
 /**
- * io.riddles.catchfrauds.game.state.CatchFraudsStateDeserializer - Created on 3-6-16
+ * io.riddles.bookinggame.game.state.BookingGameStateDeserializer - Created on 6/27/16
  *
  * [description]
  *
- * @author jim
+ * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
 public class BookingGameStateDeserializer extends
         AbstractStateDeserializer<BookingGamePlayer, BookingGameState> {

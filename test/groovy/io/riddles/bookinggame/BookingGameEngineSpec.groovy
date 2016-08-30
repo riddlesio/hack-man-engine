@@ -20,19 +20,17 @@
 package io.riddles.bookinggame
 
 import io.riddles.bookinggame.engine.BookingGameEngine
-import io.riddles.bookinggame.game.data.BookingGameBoard
-import io.riddles.bookinggame.game.data.Coordinate
-import io.riddles.bookinggame.game.data.Enemy
-import io.riddles.bookinggame.game.data.MoveType
-import io.riddles.bookinggame.game.move.AlwaysRightEnemyAI
-import io.riddles.bookinggame.game.move.ChaseEnemyAI
-import io.riddles.bookinggame.game.move.RandomEnemyAI
+import io.riddles.bookinggame.game.board.BookingGameBoard
+import io.riddles.bookinggame.game.enemy.Enemy
+import io.riddles.bookinggame.game.move.MoveType
+import io.riddles.bookinggame.game.enemy.AlwaysRightEnemyAI
+import io.riddles.bookinggame.game.enemy.ChaseEnemyAI
 import io.riddles.bookinggame.game.state.BookingGameState
-import io.riddles.javainterface.game.player.AbstractPlayer
 import io.riddles.javainterface.io.IOHandler
-import org.json.JSONObject
 import spock.lang.Specification
 import spock.lang.Ignore
+
+import java.awt.Point
 
 /**
  * io.riddles.bookinggame.engine.BookingGameEngineSpec - Created on 8-6-16
@@ -59,7 +57,7 @@ class BookingGameEngineSpec extends Specification {
         int standardBoardWidth = 20;
         int standardBoardHeight = 11;
         String finalBoard;
-        Coordinate[] mockStartCoordinates;
+        Point[] mockStartCoordinates;
 
         TestEngine(IOHandler ioHandler) {
             super();
@@ -75,9 +73,9 @@ class BookingGameEngineSpec extends Specification {
         }
 
         void initMockCoordinates() {
-            mockStartCoordinates = new Coordinate[4];
-            mockStartCoordinates[0] = new Coordinate(1, 5);
-            mockStartCoordinates[1] = new Coordinate(19, 5);
+            mockStartCoordinates = new Point[4];
+            mockStartCoordinates[0] = new Point(1, 5);
+            mockStartCoordinates[1] = new Point(19, 5);
         }
 
         IOHandler getIOHandler() {
@@ -86,8 +84,8 @@ class BookingGameEngineSpec extends Specification {
 
         void setup() {
             super.setup();
-            this.processor.enemyAI = new ChaseEnemyAI();
-            Coordinate[] mockStartCoordinates = new Coordinate[2];
+            this.processor.setEnemyAI(new ChaseEnemyAI());
+            Point[] mockStartCoordinates = new Point[2];
         }
 
         @Override
@@ -102,14 +100,14 @@ class BookingGameEngineSpec extends Specification {
             BookingGameBoard b = new BookingGameBoard(standardBoardWidth, standardBoardHeight);
             b.initialiseFromString(standardBoard, standardBoardWidth, standardBoardHeight);
             s.setBoard(b);
-            s.addEnemy(new Enemy(new Coordinate(1, 3), MoveType.RIGHT));
-            s.addEnemy(new Enemy(new Coordinate(1, 7), MoveType.UP));
-            s.addEnemy(new Enemy(new Coordinate(12, 7), MoveType.RIGHT));
+            s.addEnemy(new Enemy(new Point(1, 3), MoveType.RIGHT));
+            s.addEnemy(new Enemy(new Point(1, 7), MoveType.UP));
+            s.addEnemy(new Enemy(new Point(12, 7), MoveType.RIGHT));
             return s;
         }
 
         @Override
-        protected Coordinate getStartCoordinate(int i) {
+        protected Point getStartCoordinate(int i) {
             return mockStartCoordinates[i];
         }
     }
@@ -132,7 +130,7 @@ class BookingGameEngineSpec extends Specification {
 
         void setup() {
             super.setup();
-            this.processor.enemyAI = new AlwaysRightEnemyAI();
+            this.processor.setEnemyAI(new AlwaysRightEnemyAI());
         }
 
         void finish() {
@@ -184,13 +182,13 @@ class BookingGameEngineSpec extends Specification {
         engine.getPlayers().get(1).getId() == 2
         engine.getPlayers().get(0).getSnippets() == 5
 
-        engine.configuration.get("max_rounds") == 40
-        engine.configuration.get("weapon_paralysis_duration") == 10
+        engine.configuration.getInt("maxRounds") == 40
+        engine.configuration.getInt("weaponParalysisDuration") == 10
     }
 
 
 
-    @Ignore
+//    @Ignore
     def "test running of standard game"() {
         println("test running of standard game")
 
@@ -206,7 +204,7 @@ class BookingGameEngineSpec extends Specification {
         engine.run()
 
         expect:
-        engine.configuration.get("max_rounds") == 40
+        engine.configuration.getInt("maxRounds") == 40
     }
 
 
@@ -238,7 +236,7 @@ class BookingGameEngineSpec extends Specification {
         engine.run()
 
         expect:
-        engine.configuration.get("max_rounds") == 40
+        engine.configuration.getInt("maxRounds") == 40
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,C,C,C,C,C,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,E,.,x,.,.,.,.,x,.,.,.,.,.,.,x,x,1,x,.,x,x,.,x,x,x,x,x,x,.,x,x,2,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,C,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
@@ -301,13 +299,13 @@ class BookingGameEngineSpec extends Specification {
                         "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                         "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
 
-        engine.mockStartCoordinates[0] = new Coordinate(4, 1);
-        engine.mockStartCoordinates[1] = new Coordinate(18, 5);
+        engine.mockStartCoordinates[0] = new Point(4, 1);
+        engine.mockStartCoordinates[1] = new Point(18, 5);
         engine.run()
 
         expect:
         engine.getProcessor().getWinner().getId() == 1;
-        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,.,.,.,.,E,2,.,.,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,C,x,C,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,.,.,.,x,.,.,.,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
+        engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,PointPointPointPointPointx,x,x,x,x,x,x,1,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,C,C,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,.,.,.,.,.,.,.,.,E,2,.,.,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,C,x,C,x,x,x,x,x,x,.,x,.,x,x,C,x,x,.,.,.,C,x,C,C,.,.,.,.,.,.,x,.,.,.,C,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
     @Ignore
@@ -368,8 +366,8 @@ class BookingGameEngineSpec extends Specification {
                         "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                         "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
 
-        engine.mockStartCoordinates[0] = new Coordinate(1, 1);
-        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.mockStartCoordinates[0] = new Point(1, 1);
+        engine.mockStartCoordinates[1] = new Point(19, 5);
         engine.run()
 
         expect:
@@ -404,8 +402,8 @@ class BookingGameEngineSpec extends Specification {
                         "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                         "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
 
-        engine.mockStartCoordinates[0] = new Coordinate(1, 1);
-        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.mockStartCoordinates[0] = new Point(1, 1);
+        engine.mockStartCoordinates[1] = new Point(19, 5);
         engine.run()
 
         expect:
@@ -440,8 +438,8 @@ class BookingGameEngineSpec extends Specification {
                         "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                         "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
 
-        engine.mockStartCoordinates[0] = new Coordinate(1, 5);
-        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.mockStartCoordinates[0] = new Point(1, 5);
+        engine.mockStartCoordinates[1] = new Point(19, 5);
         engine.run()
 
         expect:
@@ -479,11 +477,11 @@ class BookingGameEngineSpec extends Specification {
                         "x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x," +
                         "x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x," +
                         "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
-        engine.mockStartCoordinates[0] = new Coordinate(8, 5);
-        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
+        engine.mockStartCoordinates[0] = new Point(8, 5);
+        engine.mockStartCoordinates[1] = new Point(19, 5);
         engine.run()
 
-        expect:
+        expect:Point
         engine.getProcessor().getPlayers().get(0).getSnippets() == 3;
         engine.getProcessor().getPlayers().get(0).getWeapons() == 1;
 
@@ -493,7 +491,7 @@ class BookingGameEngineSpec extends Specification {
         engine.finalBoard == "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,.,.,.,.,x,2,.,.,.,.,.,.,.,x,.,.,.,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.,x,x,x,x,x,x,x,x,x,x,.,.,x,x,.,x,x,.,x,.,x,x,1,.,.,.,.,.,.,.,.,.,.,x,.,.,.,.,.,.,x,x,.,x,.,x,x,.,x,x,x,x,x,x,.,x,x,.,x,.,x,x,E,x,.,.,.,.,.,.,.,.,.,.,.,.,.,E,x,.,x,x,.,x,x,.,x,.,x,x,x,x,x,x,.,x,.,x,x,.,x,x,.,.,.,.,x,.,.,.,.,.,.,.,.,x,.,.,.,.,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
     }
 
-    //@Ignore
+    @Ignore
     def "check chaseEnemyAI"() {
         println("check chaseEnemyAI")
 
@@ -527,10 +525,10 @@ class BookingGameEngineSpec extends Specification {
                         "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x";
         engine.standardBoardWidth = 22;
         engine.standardBoardHeight = 16;
-        engine.mockStartCoordinates[0] = new Coordinate(8, 5);
-        engine.mockStartCoordinates[1] = new Coordinate(19, 5);
-        engine.mockStartCoordinates[2] = new Coordinate(8, 7);
-        engine.mockStartCoordinates[3] = new Coordinate(19, 7);
+        engine.mockStartCoordinates[0] = new Point(8, 5);
+        engine.mockStartCoordinates[1] = new Point(19, 5);
+        engine.mockStartCoordinates[2] = new Point(8, 7);
+        engine.mockStartCoordinates[3] = new Point(19, 7);
         //engine.getProcessor().enemyAI = new ChaseEnemyAI();
 
         engine.run()

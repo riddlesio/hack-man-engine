@@ -19,17 +19,16 @@
 
 package io.riddles.bookinggame.game.move;
 
-import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.javainterface.exception.InvalidInputException;
 import io.riddles.javainterface.game.move.AbstractMove;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 
 /**
- * io.riddles.bookinggame.game.move.BookingGameMove - Created on 2-6-16
+ * io.riddles.bookinggame.game.move.BookingGameMove - Created on 6/27/16
  *
  * [description]
  *
- * @author jim
+ * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
 public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
 
@@ -49,7 +48,7 @@ public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
     }
 
     public String toString() {
-        return "BookingGameMove " + this.type;
+        return "" + this.type;
     }
 
 }

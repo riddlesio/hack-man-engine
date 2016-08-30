@@ -19,46 +19,75 @@
 
 package io.riddles.bookinggame.game.player;
 
+import java.awt.*;
+
+import io.riddles.bookinggame.BookingGame;
 import io.riddles.javainterface.game.player.AbstractPlayer;
-import io.riddles.bookinggame.game.data.Coordinate;
 
 /**
  * io.riddles.catchfrauds.game.player.BookingGameMovePlayer - Created on 3-6-16
  *
  * [description]
  *
- * @author jim
+ * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
 public class BookingGamePlayer extends AbstractPlayer {
 
-    private int snippets, weapons;
-    private Coordinate c;
+    private int snippets;
+    private int weapons;
+    private Point coordinate;
     private int paralysis;
+    private boolean hasCollectedSnippet;
 
     public BookingGamePlayer(int id) {
         super(id);
         this.snippets = 0;
         this.weapons = 0;
         this.paralysis = 0;
-        this.c = new Coordinate (0,0);
+        this.coordinate = new Point(0, 0);
+    }
+
+    public BookingGamePlayer(int id, int snippets, int weapons,
+                             int paralysis, boolean hasCollectedSnippet, Point coordinate) {
+        super(id);
+        this.snippets = snippets;
+        this.weapons = weapons;
+        this.paralysis = paralysis;
+        this.coordinate = coordinate;
+        this.hasCollectedSnippet = hasCollectedSnippet;
+    }
+
+    public BookingGamePlayer clone() {
+        Point clonedCoordinate = new Point(this.coordinate);
+        return new BookingGamePlayer(this.getId(), this.snippets,this.weapons,
+                this.paralysis, this.hasCollectedSnippet, clonedCoordinate);
     }
 
     public void updateSnippets(int delta) {
-        this.snippets+=delta;
-        if (this.snippets < 0) this.snippets = 0;
+        if (!this.hasCollectedSnippet && delta > 0) {
+            this.hasCollectedSnippet = true;
+        }
+
+        this.snippets += delta;
+
+        if (this.snippets < 0) {
+            this.snippets = 0;
+        }
     }
     public void updateWeapons(int delta) {
-        this.weapons+=delta;
+        this.weapons += delta;
     }
 
     public int getSnippets() {
         return this.snippets;
     }
-    public int getWeapons() { return this.weapons; }
-    public Coordinate getCoordinate() { return this.c; }
 
-    public void setCoordinate(Coordinate c) {
-        this.c = c;
+    public int getWeapons() { return this.weapons; }
+
+    public Point getCoordinate() { return this.coordinate; }
+
+    public void setCoordinate(Point c) {
+        this.coordinate = c;
     }
 
     public String toString() {
@@ -76,7 +105,10 @@ public class BookingGamePlayer extends AbstractPlayer {
     }
 
     public void paralyse(int p) {
-        this.paralysis+=p;
+        this.paralysis += p;
     }
 
+    public boolean hasCollectedSnippet() {
+        return this.hasCollectedSnippet;
+    }
 }

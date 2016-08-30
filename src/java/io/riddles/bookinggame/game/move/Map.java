@@ -25,9 +25,9 @@ package io.riddles.bookinggame.game.move;
  */
 
 
-import io.riddles.bookinggame.game.data.BookingGameBoard;
-import io.riddles.bookinggame.game.data.Coordinate;
+import io.riddles.bookinggame.game.board.BookingGameBoard;
 
+import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -95,11 +95,11 @@ public class Map<T extends Node> {
     /**
      * initializes all nodes. Their coordinates will be set correctly.
      */
-    public void initFromBoard(BookingGameBoard b, Coordinate block) {
+    public void initFromBoard(BookingGameBoard b, Point block) {
         for (int i = 0; i <= width; i++) {
             for (int j = 0; j <= height; j++) {
                 nodes[i][j] = (T) new Node(i, j);
-                nodes[i][j].setWalkable(b.isEmpty(new Coordinate(i, j)));
+                nodes[i][j].setWalkable(b.isCoordinateValid(new Point(i, j)));
                 if (block != null) {
                     if (i == block.getX() && j == block.getY()) nodes[i][j].setWalkable(false);
                 }
@@ -199,29 +199,29 @@ public class Map<T extends Node> {
      * <p>
      * x/y must be bigger or equal to 0 and smaller or equal to width/height.
      *
-     * @param Coordinate oldC
-     * @param Coordinate newC
+     * @param oldC
+     * @param newC
      * @return
      */
-    public final List<T> findPath(Coordinate oldC, Coordinate newC) {
-        int oldX = oldC.getX();
-        int oldY = oldC.getY();
-        int newX = newC.getX();
-        int newY = newC.getY();
+    public final List<T> findPath(Point oldC, Point newC) {
+        int oldX = oldC.x;
+        int oldY = oldC.y;
+        int newX = newC.x;
+        int newY = newC.y;
         // TODO check input
         openList = new LinkedList<T>();
         closedList = new LinkedList<T>();
-        openList.add(nodes[oldX][oldY]); // add starting node to open list
+        openList.add(nodes[oldX][oldY]); // put starting node to open list
 
         done = false;
         T current;
         while (!done) {
             current = lowestFInOpen(); // get node with lowest fCosts from openList
-            closedList.add(current); // add current node to closed list
+            closedList.add(current); // put current node to closed list
             openList.remove(current); // delete current node from open list
 
-            if ((current.getxPosition() == newX)
-                    && (current.getyPosition() == newY)) { // found goal
+            if ((current.getXPosition() == newX)
+                    && (current.getYPosition() == newY)) { // found goal
                 return calcPath(nodes[oldX][oldY], current);
             }
 
@@ -233,7 +233,7 @@ public class Map<T extends Node> {
                     currentAdj.setPrevious(current); // set current node as previous for this node
                     currentAdj.sethCosts(nodes[newX][newY]); // set h costs of this node (estimated costs to goal)
                     currentAdj.setgCosts(current); // set g costs of this node (costs from start to this node)
-                    openList.add(currentAdj); // add node to openList
+                    openList.add(currentAdj); // put node to openList
                 } else { // node is in openList
                     if (currentAdj.getgCosts() > currentAdj.calculategCosts(current)) { // costs from current node are cheaper than previous costs
                         currentAdj.setPrevious(current); // set current node as previous for this node
@@ -297,8 +297,8 @@ public class Map<T extends Node> {
      */
     private List<T> getAdjacent(T node) {
         // TODO make loop
-        int x = node.getxPosition();
-        int y = node.getyPosition();
+        int x = node.getXPosition();
+        int y = node.getYPosition();
         List<T> adj = new LinkedList<T>();
 
         T temp;
@@ -335,7 +335,7 @@ public class Map<T extends Node> {
         }
 
 
-        // add nodes that are diagonaly adjacent too:
+        // put nodes that are diagonaly adjacent too:
         if (CANMOVEDIAGONALY) {
             if (x < width && y < height) {
                 temp = this.getNode((x + 1), (y + 1));

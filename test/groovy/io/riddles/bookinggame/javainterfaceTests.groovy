@@ -1,11 +1,9 @@
 package io.riddles.bookinggame
 
-import io.riddles.bookinggame.game.data.MoveType
+import io.riddles.bookinggame.game.move.MoveType
 import io.riddles.bookinggame.game.move.BookingGameMove
 import io.riddles.bookinggame.game.move.BookingGameMoveDeserializer
 import io.riddles.bookinggame.game.player.BookingGamePlayer
-import io.riddles.javainterface.exception.InvalidInputException
-import jdk.nashorn.internal.ir.annotations.Ignore
 import spock.lang.Specification
 
 class javainterfaceTests extends Specification {

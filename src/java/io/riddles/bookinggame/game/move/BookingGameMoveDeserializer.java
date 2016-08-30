@@ -19,19 +19,16 @@
 
 package io.riddles.bookinggame.game.move;
 
-import java.util.ArrayList;
-
-import io.riddles.bookinggame.game.data.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.exception.InvalidInputException;
 import io.riddles.javainterface.serialize.Deserializer;
 
 /**
- * io.riddles.catchfrauds.game.move.BookingGameMoveDeserializer - Created on 8-6-16
+ * io.riddles.bookinggame.game.move.BookingGameMoveDeserializer - Created on 6/27/16
  *
  * [description]
  *
- * @author jim
+ * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
 public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove> {
 
@@ -43,7 +40,10 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
 
     @Override
     public BookingGameMove traverse(String string) {
-        if (this.player.isParalyzed()) { return new BookingGameMove(this.player, MoveType.PARALYZED); }
+        if (this.player.isParalyzed()) {
+            return new BookingGameMove(this.player, MoveType.PARALYZED);
+        }
+
         try {
             return visitMove(string);
         } catch (InvalidInputException ex) {
@@ -62,7 +62,7 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
          return new BookingGameMove(this.player, type);
     }
 
-    public MoveType visitAssessment(String input) throws InvalidInputException {
+    private MoveType visitAssessment(String input) throws InvalidInputException {
         switch (input) {
             case "up":
                 return MoveType.UP;

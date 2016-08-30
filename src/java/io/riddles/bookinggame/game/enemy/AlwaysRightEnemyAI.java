@@ -17,33 +17,31 @@
  *     file that was distributed with this source code.
  */
 
-package io.riddles.javainterface.exception;
+package io.riddles.bookinggame.game.enemy;
+
+import java.awt.Point;
+
+import io.riddles.bookinggame.game.move.MoveType;
+import io.riddles.bookinggame.game.state.BookingGameState;
 
 /**
- * io.riddles.javainterface.exception.TerminalException - Created on 6/27/16
+ * io.riddles.bookinggame.game.enemy.AlwayRightEnemyAI - Created on 7/18/16.
  *
  * [description]
  *
  * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
-public class TerminalException extends Exception {
+public class AlwaysRightEnemyAI extends AbstractEnemyAI {
 
-    private int statusCode = 1;
+    public Point transform(Enemy enemy, BookingGameState state) {
+        MoveType d = MoveType.RIGHT;
+        enemy.setDirection(d);
 
-    public TerminalException(String message) {
-        super(message);
-    }
+        Point newCoordinate = getMovedCoordinate(enemy.getCoordinate(), enemy.getDirection());
+        if (state.getBoard().isEmpty(newCoordinate)) {
+            return newCoordinate;
+        }
 
-    public TerminalException(String message, int statusCode) {
-        super(message);
-        this.statusCode = statusCode;
-    }
-
-    public void setStatusCode(int s) {
-        this.statusCode = s;
-    }
-
-    public int getStatusCode() {
-        return this.statusCode;
+        return enemy.getCoordinate();
     }
 }
