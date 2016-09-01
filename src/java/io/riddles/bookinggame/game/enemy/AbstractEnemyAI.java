@@ -20,6 +20,8 @@
 package io.riddles.bookinggame.game.enemy;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 import io.riddles.bookinggame.game.move.MoveType;
@@ -49,7 +51,7 @@ abstract class AbstractEnemyAI implements EnemyAIInterface {
         return coordinate;
     }
 
-    Boolean isEmptyInDirection(Point coordinate, MoveType moveType, BookingGameBoard board) {
+    boolean isEmptyInDirection(Point coordinate, MoveType moveType, BookingGameBoard board) {
         if (moveType == null) {
             return false;
         }
@@ -63,6 +65,32 @@ abstract class AbstractEnemyAI implements EnemyAIInterface {
         if (newCoordinate.x < oldCoordinate.x) return MoveType.LEFT;
         if (newCoordinate.y > oldCoordinate.y) return MoveType.DOWN;
         if (newCoordinate.y < oldCoordinate.y) return MoveType.UP;
+        return null;
+    }
+
+    ArrayList<MoveType> getAvailableDirections(Enemy enemy, BookingGameBoard board) {
+        return MoveType.getMovingMoveTypes().stream()
+                .filter(moveType ->
+                        !moveType.equals(enemy.getDirection().getOppositeMoveType()) &&
+                            isEmptyInDirection(enemy.getCoordinate(), moveType, board))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    Point mandatoryTranform(Enemy enemy) {
+        ArrayList<MoveType> movingMoveTypes = (ArrayList<MoveType>) MoveType.getMovingMoveTypes();
+
+        switch (movingMoveTypes.size()) {
+            // No directions available (stuck), stay in place
+            case 0:
+                return enemy.getCoordinate();
+            // Only one direction available, go that way
+            case 1:
+                return getMovedCoordinate(enemy.getCoordinate(), movingMoveTypes.get(0));
+            // Not on a crossroad, continue same direction
+            case 2:
+                return getMovedCoordinate(enemy.getCoordinate(), enemy.getDirection());
+        }
+
         return null;
     }
 }

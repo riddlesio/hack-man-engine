@@ -1,12 +1,11 @@
 package io.riddles.bookinggame.game.board;
 
-import io.riddles.bookinggame.BookingGame;
+import io.riddles.bookinggame.engine.BookingGameEngine;
 import io.riddles.bookinggame.game.enemy.Enemy;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -135,12 +134,8 @@ public class BookingGameBoard extends Board {
         return (cell.equals(".") || cell.equals("C") || cell.equals("W"));
     }
 
-    public String getField(Point coordinate) {
-        return this.field[coordinate.x][coordinate.y];
-    }
-
     /* Returns coordinate of empty field furthest away from all players */
-    public Point getLoneliestField() {
+    public Point getLoneliestCoordinate() {
         Point coordinate = new Point(0,0);
         int score = 0;
 
@@ -168,29 +163,24 @@ public class BookingGameBoard extends Board {
         return coordinate;
     }
 
+    public void addRandomSnippet() {
+        ArrayList<Point> emptyLocations = getEmptyLocations();
+        if (emptyLocations.size() <= 0) {
+            System.err.println("Can't spawn snippets, no empty field available.");
+            return;
+        }
+
+        Point spawnLocation = emptyLocations.get(
+                BookingGameEngine.RANDOM.nextInt(emptyLocations.size()));
+        addSnippet(spawnLocation);
+    }
+
     public boolean addSnippet(Point c) {
         if (this.field[c.x][c.y].equals(".")) {
             this.field[c.x][c.y] = "C";
             return true;
         }
         return false;
-    }
-
-    public void addRandomSnippet() {
-        boolean success = false;
-        if (this.getNrAvailableFields() > 0 ) {
-            Random r = new Random();
-
-            while (!success) {
-                int x = r.nextInt(this.width);
-                int y = r.nextInt(this.height);
-
-                if (this.field[x][y].equals(".")) {
-                    this.field[x][y] = "C";
-                    success = true;
-                }
-            }
-        }
     }
 
     public Point getEnemyStartField() {
@@ -246,6 +236,10 @@ public class BookingGameBoard extends Board {
         }
 
         return snippetLocations;
+    }
+
+    public ArrayList<Point> getEmptyLocations() {
+        return getLocationOf(".");
     }
 
     public ArrayList<Point> getSnippetLocations() {

@@ -24,8 +24,8 @@ import java.util.ArrayList;
 
 import io.riddles.bookinggame.engine.BookingGameEngine;
 import io.riddles.bookinggame.game.board.BookingGameBoard;
+import io.riddles.bookinggame.game.enemy.ChaseWithChanceEnemyAI;
 import io.riddles.bookinggame.game.enemy.EnemyAIInterface;
-import io.riddles.bookinggame.game.enemy.ChaseEnemyAI;
 import io.riddles.bookinggame.game.enemy.Enemy;
 import io.riddles.bookinggame.game.move.*;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -45,7 +45,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private int roundNumber;
     private boolean gameOver;
 
-    private EnemyAIInterface enemyAI = (EnemyAIInterface) new ChaseEnemyAI();
+    private EnemyAIInterface enemyAI = (EnemyAIInterface) new ChaseWithChanceEnemyAI(
+            0.2, (0.8 / BookingGameEngine.configuration.getInt("maxRounds")));
 
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players) {
         super(players);
@@ -64,6 +65,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         BookingGameState nextState = state.createNextState(roundNumber);
         BookingGameBoard nextBoard = nextState.getBoard();
 
+        // Update player movements
+
         for (BookingGamePlayer player : this.players) {
             player.sendUpdate("field", player, state.getBoard().toString());
             String response = player.requestMove(ActionType.MOVE.toString());
@@ -74,7 +77,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(nextPlayer);
             BookingGameMove move = deserializer.traverse(response);
 
-            // create the next state
             nextState.getMoves().add(move);
 
             if (!move.isInvalid()) {
@@ -90,16 +92,12 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         Configuration config = BookingGameEngine.configuration;
 
+        // Move enemies
         for (Enemy enemy : nextState.getBoard().getEnemies()) {
             enemy.performMovement(nextState);
         }
 
-        if (roundNumber % config.getInt("snippetSpawnRate") == 0) {
-            for (int i = 0; i < config.getInt("snippetSpawnCount"); i++) {
-                nextBoard.addSnippet(nextBoard.getLoneliestField());
-            }
-        }
-
+        // Spawn new enemies
         int snippetsEaten = nextState.getSnippetsEaten();
         int oldSnippetsEaten = state.getSnippetsEaten();
         if (oldSnippetsEaten != snippetsEaten) { /* A snippet has been eaten */
@@ -112,6 +110,13 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
                         nextState.getBoard().addEnemy(enemy);
                     }
                 }
+            }
+        }
+
+        // Spawn snippets
+        if (roundNumber % config.getInt("snippetSpawnRate") == 0) {
+            for (int i = 0; i < config.getInt("snippetSpawnCount"); i++) {
+                nextBoard.addRandomSnippet();
             }
         }
 

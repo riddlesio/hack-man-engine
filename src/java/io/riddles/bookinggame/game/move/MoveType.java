@@ -19,10 +19,12 @@
 
 package io.riddles.bookinggame.game.move;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+
+import io.riddles.bookinggame.engine.BookingGameEngine;
 
 /**
  * io.riddles.bookinggame.game.move.MoveType
@@ -40,10 +42,20 @@ public enum MoveType {
     PARALYZED;
 
     private static final List<MoveType> values = Collections.unmodifiableList(Arrays.asList(values()));
-    private static final Random rand = new Random();
 
     public static MoveType getRandomMoveType() {
-        return values.get(rand.nextInt(values.size()));
+        return values.get(BookingGameEngine.RANDOM.nextInt(values.size()));
+    }
+
+    public static List<MoveType> getMovingMoveTypes() {
+        ArrayList<MoveType> movingMoveTypes = new ArrayList<>();
+
+        movingMoveTypes.add(UP);
+        movingMoveTypes.add(DOWN);
+        movingMoveTypes.add(LEFT);
+        movingMoveTypes.add(RIGHT);
+
+        return movingMoveTypes;
     }
 
     public MoveType getOppositeMoveType() {

@@ -27,11 +27,9 @@ import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.move.BookingGameMove;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.javainterface.configuration.Configuration;
-import io.riddles.javainterface.exception.InvalidInputException;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * io.riddles.bookinggame.game.processor.BookingGameLogic - Created on 6/27/16
@@ -125,7 +123,7 @@ public class BookingGameLogic {
                     /* Spawn x snippets on map */
                     for (int i = 0; i < maxSnippets; i++) {
                         //System.out.println("Spawning snippet");
-                        board.addSnippet(board.getLoneliestField());
+                        board.addSnippet(board.getLoneliestCoordinate());
                     }
                     newCoordinate = new Point(coordinate); /* Stay in position */
 

@@ -20,6 +20,7 @@
 package io.riddles.bookinggame.engine;
 
 import java.awt.Point;
+import java.security.SecureRandom;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 
@@ -38,6 +39,8 @@ import io.riddles.bookinggame.game.BookingGameSerializer;
  */
 public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         BookingGamePlayer, BookingGameState> {
+
+    public static final SecureRandom RANDOM = new SecureRandom();
 
     private Point[] startCoordinates;
 
