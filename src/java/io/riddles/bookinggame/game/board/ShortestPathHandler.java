@@ -3,6 +3,7 @@ package io.riddles.bookinggame.game.board;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * io.riddles.bookinggame.game.board.ShortestPath - Created on 31-8-16
@@ -44,10 +45,10 @@ public class ShortestPathHandler {
 
         initializeGraph(goalNode);
 
-        for (Point point : blockedPoints) { // block some points on the field
-            Node blockedNode = this.graph[point.x][point.y];
-            blockedNode.setTraversible(false);
-        }
+        // List of (given) inaccessible nodes
+        ArrayList<Node> blockedNodes = blockedPoints.stream()
+                .map(point -> this.graph[point.x][point.y])
+                .collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<Node> closedSet = new ArrayList<>();
         ArrayList<Node> openSet = new ArrayList<>();
@@ -72,8 +73,10 @@ public class ShortestPathHandler {
             closedSet.add(current);
 
             for (Node neighbor : current.getNeighbors()) {
-                if (!neighbor.isTraversible() || closedSet.contains(neighbor)) // already evaluated
+                if (!neighbor.isTraversible() || closedSet.contains(neighbor) ||
+                        blockedNodes.contains(neighbor)) {
                     continue;
+                }
 
                 int distanceFromHere = current.getDistanceScore() + 1;
 
@@ -113,7 +116,7 @@ public class ShortestPathHandler {
         shortestPath.add(current.getLocation());
 
         Node predecessor = current.getPredecessor();
-        while (!predecessor.getLocation().equals(start.getLocation())) {
+        while (predecessor != null && !predecessor.getLocation().equals(start.getLocation())) {
             shortestPath.add(predecessor.getLocation());
             predecessor = predecessor.getPredecessor();
         }

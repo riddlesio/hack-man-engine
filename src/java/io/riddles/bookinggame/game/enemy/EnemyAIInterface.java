@@ -13,5 +13,5 @@ import io.riddles.bookinggame.game.state.BookingGameState;
  */
 public interface EnemyAIInterface {
 
-    Point transform(Enemy enemy, BookingGameState state);
+    Point transform(BookingGameEnemy enemy, BookingGameState state);
 }

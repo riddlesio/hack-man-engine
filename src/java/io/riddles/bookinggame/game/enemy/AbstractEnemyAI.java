@@ -21,6 +21,7 @@ package io.riddles.bookinggame.game.enemy;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
@@ -35,60 +36,65 @@ import io.riddles.bookinggame.game.move.MoveType;
  */
 abstract class AbstractEnemyAI implements EnemyAIInterface {
 
-    Point getMovedCoordinate(Point coordinate, MoveType moveType) {
-        if (moveType != null) {
-            switch(moveType) {
-                case UP:
-                    return new Point(coordinate.x, coordinate.y - 1);
-                case DOWN:
-                    return new Point(coordinate.x, coordinate.y + 1);
-                case RIGHT:
-                    return new Point(coordinate.x + 1, coordinate.y);
-                case LEFT:
-                    return new Point(coordinate.x - 1, coordinate.y);
-            }
-        }
-        return coordinate;
-    }
-
-    boolean isEmptyInDirection(Point coordinate, MoveType moveType, BookingGameBoard board) {
-        if (moveType == null) {
-            return false;
+    ArrayList<MoveType> getAvailableDirections(BookingGameEnemy enemy, BookingGameBoard board) {
+        if (enemy.getDirection() == null) {
+            return (ArrayList<MoveType>) MoveType.getMovingMoveTypes();
         }
 
-        Point newCoordinate = getMovedCoordinate(coordinate, moveType);
-        return board.isCoordinateValid(newCoordinate);
-    }
-
-    MoveType getDirection(Point oldCoordinate, Point newCoordinate) {
-        if (newCoordinate.x > oldCoordinate.x) return MoveType.RIGHT;
-        if (newCoordinate.x < oldCoordinate.x) return MoveType.LEFT;
-        if (newCoordinate.y > oldCoordinate.y) return MoveType.DOWN;
-        if (newCoordinate.y < oldCoordinate.y) return MoveType.UP;
-        return null;
-    }
-
-    ArrayList<MoveType> getAvailableDirections(Enemy enemy, BookingGameBoard board) {
         return MoveType.getMovingMoveTypes().stream()
                 .filter(moveType ->
                         !moveType.equals(enemy.getDirection().getOppositeMoveType()) &&
-                            isEmptyInDirection(enemy.getCoordinate(), moveType, board))
+                            board.isEmptyInDirection(enemy.getCoordinate(), moveType))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    Point mandatoryTranform(Enemy enemy) {
-        ArrayList<MoveType> movingMoveTypes = (ArrayList<MoveType>) MoveType.getMovingMoveTypes();
+    // Makes movements that are mandatory
+    Point mandatoryTranform(BookingGameEnemy enemy,
+                            BookingGameBoard board, ArrayList<MoveType> availableDirections) {
+        Point coordinate = enemy.getCoordinate();
+        Point outOfSpawn = moveOutOfSpawn(enemy, board);
 
-        switch (movingMoveTypes.size()) {
-            // No directions available (stuck), stay in place
+        if (outOfSpawn != null) return outOfSpawn;
+
+        switch (availableDirections.size()) {
+            // No directions available, turn around
             case 0:
-                return enemy.getCoordinate();
+                MoveType oppositeDirection = enemy.getDirection().getOppositeMoveType();
+                return board.getCoordinateAfterMove(coordinate, oppositeDirection);
             // Only one direction available, go that way
             case 1:
-                return getMovedCoordinate(enemy.getCoordinate(), movingMoveTypes.get(0));
-            // Not on a crossroad, continue same direction
-            case 2:
-                return getMovedCoordinate(enemy.getCoordinate(), enemy.getDirection());
+                return board.getCoordinateAfterMove(coordinate, availableDirections.get(0));
+        }
+
+        return null;
+    }
+
+    // Forces the enemy to move out of the spawn area
+    private Point moveOutOfSpawn(BookingGameEnemy enemy, BookingGameBoard board) {
+        Point coordinate = enemy.getCoordinate();
+
+        if (board.isOnSpawnPoint(coordinate)) {
+            ArrayList<Point> validNeighbors = board.getValidNeighbors(coordinate);
+
+            if (validNeighbors.size() == 1) {
+                return validNeighbors.get(0);
+            }
+
+            if (validNeighbors.size() > 1) {
+                for (Point neighbor : validNeighbors) {
+                    if (!board.isOnSpawnPoint(neighbor)) {
+                        return neighbor;
+                    }
+                }
+            }
+        } else if (board.isOnSpawnGate(coordinate)) {
+            ArrayList<Point> validNeighbors = board.getValidNeighbors(coordinate);
+
+            for (Point neighbor : validNeighbors) {
+                if (!board.isOnSpawnPoint(neighbor) && !board.isOnSpawnGate(neighbor)) {
+                    return neighbor;
+                }
+            }
         }
 
         return null;

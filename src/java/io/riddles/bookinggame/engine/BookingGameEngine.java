@@ -24,6 +24,8 @@ import java.security.SecureRandom;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 
+import io.riddles.bookinggame.game.enemy.ChaseWithChanceEnemyAI;
+import io.riddles.bookinggame.game.enemy.EnemyAIInterface;
 import io.riddles.bookinggame.game.processor.BookingGameProcessor;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -41,8 +43,10 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         BookingGamePlayer, BookingGameState> {
 
     public static final SecureRandom RANDOM = new SecureRandom();
+    private EnemyAIInterface enemyAI;
 
     private Point[] startCoordinates;
+    private Point[] enemySpawnPoints;
 
     public BookingGameEngine() {
         super();
@@ -52,26 +56,42 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
     public BookingGameEngine(String wrapperFile, String[] botFiles) {
         super(wrapperFile, botFiles);
         setDefaults();
+        setEnemyAI();
+    }
+
+    private void setEnemyAI() {
+        this.enemyAI = new ChaseWithChanceEnemyAI(0.2, (0.8 / configuration.getInt("maxRounds")));
     }
 
     private void setDefaults() {
+        // TODO: make start/spawn points configurable
         this.startCoordinates = new Point[4];
-
         this.startCoordinates[0] = new Point(2, 7);
         this.startCoordinates[1] = new Point(17, 7);
         this.startCoordinates[2] = new Point(2, 7);
         this.startCoordinates[3] = new Point(17, 7);
 
+        this.enemySpawnPoints = new Point[4];
+        this.enemySpawnPoints[0] = new Point(8, 7);
+        this.enemySpawnPoints[1] = new Point(9, 7);
+        this.enemySpawnPoints[2] = new Point(10, 7);
+        this.enemySpawnPoints[3] = new Point(11, 7);
+
         configuration.put("maxRounds", 40);
         configuration.put("playerSnippetCount", 0);
-        configuration.put("mapSnippetCount", 0);
-        configuration.put("snippetSpawnRate", 4);
+        configuration.put("mapSnippetCount", 2);
+        configuration.put("snippetSpawnRate", 8);
         configuration.put("snippetSpawnCount", 1);
         configuration.put("initialEnemyCount", 0);
         configuration.put("enemySpawnDelay", 5);
         configuration.put("enemySpawnRate", 6);
         configuration.put("enemySpawnCount", 1);
         configuration.put("enemySnippetLoss", 4);
+        configuration.put("mapWeaponCount", 0);
+        configuration.put("weaponSpawnDelay", 20);
+        configuration.put("weaponSpawnRate", 16);
+        configuration.put("weaponSpawnCount", 1);
+        configuration.put("weaponSnippetLoss", 4);
         configuration.put("weaponParalysisDuration", 1);
         configuration.put("fieldWidth", 20);
         configuration.put("fieldHeight", 14);
@@ -81,7 +101,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
     @Override
     protected BookingGamePlayer createPlayer(int id) {
         BookingGamePlayer player = new BookingGamePlayer(id);
-        player.setCoordinate(getStartCoordinate(id));
+        player.setCoordinate(this.startCoordinates[id - 1]);
         return player;
     }
 
@@ -91,7 +111,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
             player.updateSnippets(configuration.getInt("playerSnippetCount"));
         }
 
-        return new BookingGameProcessor(this.players);
+        return new BookingGameProcessor(this.players, this.enemyAI);
     }
 
     @Override
@@ -108,6 +128,8 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
 
     @Override
     protected BookingGameState getInitialState() {
+        setEnemyAI();
+
         BookingGameState state = new BookingGameState();
 
         int fieldWidth = configuration.getInt("fieldWidth");
@@ -115,11 +137,16 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         String fieldLayout = configuration.getString("fieldLayout");
 
         BookingGameBoard board = new BookingGameBoard(
-                fieldWidth, fieldHeight,fieldLayout, this.players);
-        board.updatePlayerMovements();
+                fieldWidth, fieldHeight, fieldLayout, this.enemySpawnPoints, this.players);
 
         for (int i = 0; i < configuration.getInt("mapSnippetCount"); i++) {
             board.addRandomSnippet();
+        }
+        for (int i = 0; i < configuration.getInt("mapWeaponCount"); i++) {
+            board.addRandomWeapon();
+        }
+        for (int i = 0; i < configuration.getInt("initialEnemyCount"); i++) {
+            board.spawnEnemy(this.enemyAI);
         }
 
         state.setBoard(board);
@@ -134,8 +161,8 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
                 ".,x,.,x,x,x,.,.,.,x,x,.,.,.,x,x,x,.,x,.," +
                 ".,.,.,.,.,x,x,x,.,x,x,.,x,x,x,.,.,.,.,.," +
                 ".,x,x,x,.,x,.,.,.,.,.,.,.,.,x,.,x,x,x,.," +
-                ".,.,.,x,.,x,.,x,x,x,x,x,x,.,x,.,x,.,.,.," +
-                "x,x,.,x,.,.,.,x,x,x,x,x,x,.,.,.,x,.,x,x," +
+                ".,.,.,x,.,x,.,x,x,.,.,x,x,.,x,.,x,.,.,.," +
+                "x,x,.,x,.,.,.,x,.,.,.,.,x,.,.,.,x,.,x,x," +
                 ".,.,.,x,x,x,.,x,x,x,x,x,x,.,x,x,x,.,.,.," +
                 ".,x,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,x,.," +
                 ".,x,x,x,.,x,x,x,x,x,x,x,x,x,x,.,x,x,x,.," +

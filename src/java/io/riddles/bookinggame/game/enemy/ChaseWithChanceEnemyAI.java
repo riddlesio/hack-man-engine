@@ -1,11 +1,10 @@
 package io.riddles.bookinggame.game.enemy;
 
 import java.awt.*;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 
-import io.riddles.bookinggame.BookingGame;
 import io.riddles.bookinggame.engine.BookingGameEngine;
+import io.riddles.bookinggame.game.board.BookingGameBoard;
 import io.riddles.bookinggame.game.board.ShortestPathHandler;
 import io.riddles.bookinggame.game.move.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
@@ -30,25 +29,31 @@ public class ChaseWithChanceEnemyAI extends AbstractEnemyAI {
     }
 
     @Override
-    public Point transform(Enemy enemy, BookingGameState state) {
-        Point mandatoryTransform = mandatoryTranform(enemy);
+    public Point transform(BookingGameEnemy enemy, BookingGameState state) {
+        BookingGameBoard board = state.getBoard();
+        ArrayList<MoveType> availableDirections = getAvailableDirections(enemy, board);
+
+        Point mandatoryTransform = mandatoryTranform(enemy, board, availableDirections);
         if (mandatoryTransform != null) {
             // Directions that are mandatory will always be taken
             return mandatoryTransform;
         }
 
         if (this.shortestPathHandler == null) {
-            this.shortestPathHandler = new ShortestPathHandler(state.getBoard());
+            this.shortestPathHandler = new ShortestPathHandler(board);
         }
 
         double pChase = getPChase(state.getRoundNumber());
         if (BookingGameEngine.RANDOM.nextDouble() <= pChase) {  // chase with chance pChase
-            return getShortestPathTransform(enemy, state.getBoard().getPlayers());
+            Point transform = getShortestPathTransform(enemy, board);
+
+            if (transform != null) {
+                return transform;
+            }
         }
 
         // otherwise go random direction
-        ArrayList<MoveType> availableDirections = getAvailableDirections(enemy, state.getBoard());
-        return getRandomAvailableTransform(availableDirections, enemy.getCoordinate());
+        return getRandomAvailableTransform(availableDirections, enemy.getCoordinate(), board);
     }
 
     private double getPChase(int roundNumber) {
@@ -60,27 +65,30 @@ public class ChaseWithChanceEnemyAI extends AbstractEnemyAI {
     }
 
     private Point getRandomAvailableTransform(ArrayList<MoveType> availableDirections,
-                                              Point coordinate) {
+                                              Point coordinate, BookingGameBoard board) {
         MoveType moveType = availableDirections.get(
                 BookingGameEngine.RANDOM.nextInt(availableDirections.size()));
-        return getMovedCoordinate(coordinate, moveType);
+        return board.getCoordinateAfterMove(coordinate, moveType);
     }
 
-    private Point getShortestPathTransform(Enemy enemy, ArrayList<BookingGamePlayer> players) {
+    private Point getShortestPathTransform(BookingGameEnemy enemy, BookingGameBoard board) {
         ArrayList<Point> blockedMoves = new ArrayList<>();
-        Point oppositeMove = getMovedCoordinate(
+        Point oppositeMove = board.getCoordinateAfterMove(
                 enemy.getCoordinate(), enemy.getDirection().getOppositeMoveType());
         blockedMoves.add(oppositeMove);
 
         // Get shortest path to closest player
-        ArrayList<Point> shortestPath = new ArrayList<>();
-        for (BookingGamePlayer player : players) {
+        ArrayList<Point> shortestPath = null;
+        for (BookingGamePlayer player : board.getPlayers()) {
             ArrayList<Point> toPlayerPath = this.shortestPathHandler.getShortestPath(
                     enemy.getCoordinate(), player.getCoordinate(), blockedMoves);
-            if (toPlayerPath.size() > shortestPath.size()) {
+            if (shortestPath == null ||
+                    (toPlayerPath != null && toPlayerPath.size() > shortestPath.size())) {
                 shortestPath = toPlayerPath;
             }
         }
+
+        if (shortestPath == null || shortestPath.size() <= 0) return null;
 
         return shortestPath.get(0);
     }

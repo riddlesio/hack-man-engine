@@ -21,10 +21,8 @@ package io.riddles.bookinggame
 
 import io.riddles.bookinggame.engine.BookingGameEngine
 import io.riddles.bookinggame.game.board.BookingGameBoard
-import io.riddles.bookinggame.game.enemy.Enemy
+import io.riddles.bookinggame.game.enemy.BookingGameEnemy
 import io.riddles.bookinggame.game.move.MoveType
-import io.riddles.bookinggame.game.enemy.AlwaysRightEnemyAI
-import io.riddles.bookinggame.game.enemy.ChaseEnemyAI
 import io.riddles.bookinggame.game.state.BookingGameState
 import io.riddles.javainterface.io.IOHandler
 import spock.lang.Specification
@@ -41,6 +39,8 @@ import java.awt.Point
  */
 
 class BookingGameEngineSpec extends Specification {
+
+    // THIS FILE IS NOT UPDATED SINCE REWORK OF ENGINE
 
     class TestEngine extends BookingGameEngine {
         String standardBoard = "x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x," +
@@ -84,7 +84,6 @@ class BookingGameEngineSpec extends Specification {
 
         void setup() {
             super.setup();
-            this.processor.setEnemyAI(new ChaseEnemyAI());
             Point[] mockStartCoordinates = new Point[2];
         }
 
@@ -100,9 +99,9 @@ class BookingGameEngineSpec extends Specification {
             BookingGameBoard b = new BookingGameBoard(standardBoardWidth, standardBoardHeight);
             b.initialiseFromString(standardBoard, standardBoardWidth, standardBoardHeight);
             s.setBoard(b);
-            s.addEnemy(new Enemy(new Point(1, 3), MoveType.RIGHT));
-            s.addEnemy(new Enemy(new Point(1, 7), MoveType.UP));
-            s.addEnemy(new Enemy(new Point(12, 7), MoveType.RIGHT));
+            s.addEnemy(new BookingGameEnemy(new Point(1, 3), MoveType.RIGHT));
+            s.addEnemy(new BookingGameEnemy(new Point(1, 7), MoveType.UP));
+            s.addEnemy(new BookingGameEnemy(new Point(12, 7), MoveType.RIGHT));
             return s;
         }
 
@@ -130,11 +129,6 @@ class BookingGameEngineSpec extends Specification {
 
         void setup() {
             super.setup();
-            this.processor.setEnemyAI(new AlwaysRightEnemyAI());
-        }
-
-        void finish() {
-            super.finish();
         }
     }
 

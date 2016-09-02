@@ -41,12 +41,6 @@ public enum MoveType {
     PASS,
     PARALYZED;
 
-    private static final List<MoveType> values = Collections.unmodifiableList(Arrays.asList(values()));
-
-    public static MoveType getRandomMoveType() {
-        return values.get(BookingGameEngine.RANDOM.nextInt(values.size()));
-    }
-
     public static List<MoveType> getMovingMoveTypes() {
         ArrayList<MoveType> movingMoveTypes = new ArrayList<>();
 
@@ -56,6 +50,12 @@ public enum MoveType {
         movingMoveTypes.add(RIGHT);
 
         return movingMoveTypes;
+    }
+
+    public static MoveType getRandomMovingMoveType() {
+        ArrayList<MoveType> movingMoveTypes = (ArrayList<MoveType>) getMovingMoveTypes();
+
+        return movingMoveTypes.get(BookingGameEngine.RANDOM.nextInt(movingMoveTypes.size()));
     }
 
     public MoveType getOppositeMoveType() {

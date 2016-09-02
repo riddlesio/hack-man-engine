@@ -1,6 +1,7 @@
 package io.riddles.bookinggame.game.board;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * io.riddles.bookinggame.game.board.Board - Created on 29-6-16
@@ -67,8 +68,7 @@ public class Board {
         field[c.x][c.y] = s;
     }
 
-    /* isEmpty doesn't check for players or enemies! */
-    public Boolean isCoordinateValid(Point coordinate) {
+    public boolean isCoordinateValid(Point coordinate) {
         int x = coordinate.x;
         int y = coordinate.y;
 
@@ -96,5 +96,32 @@ public class Board {
             }
         }
         return availableFields;
+    }
+
+    public ArrayList<Point> getValidNeighbors(Point coordinate) {
+        ArrayList<Point> coordinates = new ArrayList<>();
+        coordinates.add(coordinate);
+        return getValidNeighbors(coordinates);
+    }
+
+    public ArrayList<Point> getValidNeighbors(ArrayList<Point> coordinates) {
+        ArrayList<Point> neighbors = new ArrayList<>();
+
+        for (Point coordinate : coordinates) {
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    if (Math.abs(dx + dy) != 1) continue; // skip diagonal neighbors
+
+                    Point neighbor = new Point(coordinate.x + dx, coordinate.y + dy);
+                    boolean exists = neighbors.stream().anyMatch(p -> p.equals(neighbor));
+
+                    if (!exists && isCoordinateValid(neighbor)) {
+                        neighbors.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        return neighbors;
     }
 }

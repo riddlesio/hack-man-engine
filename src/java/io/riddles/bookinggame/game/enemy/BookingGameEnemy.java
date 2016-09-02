@@ -31,31 +31,37 @@ import io.riddles.bookinggame.game.state.BookingGameState;
  *
  * @author Joost de Meij - joost@riddles.io, Jim van Eeden - jim@riddles.io
  */
-public class Enemy {
+public class BookingGameEnemy {
 
     private Point coordinate;
     private Point prevCoordinate;
     private MoveType direction;
     private EnemyAIInterface enemyAI;
 
-    public Enemy(Point coordinate, MoveType direction, EnemyAIInterface enemyAI) {
+    public BookingGameEnemy(Point coordinate, MoveType direction, EnemyAIInterface enemyAI) {
         this.coordinate = coordinate;
         this.direction = direction;
         this.enemyAI = enemyAI;
     }
 
-    public Enemy(Point coordinate, Point prevCoordinate,
-                 MoveType direction, EnemyAIInterface enemyAI) {
+    public BookingGameEnemy(Point coordinate, Point prevCoordinate,
+                            MoveType direction, EnemyAIInterface enemyAI) {
         this.coordinate = coordinate;
         this.prevCoordinate = prevCoordinate;
         this.direction = direction;
         this.enemyAI = enemyAI;
     }
 
-    public Enemy clone() {
+    public BookingGameEnemy clone() {
         Point clonedCoordinate = new Point(this.coordinate);
-        Point clonedPrevCoordinate = new Point(this.prevCoordinate);
-        return new Enemy(clonedCoordinate, clonedPrevCoordinate, this.direction, this.enemyAI);
+        Point clonedPrevCoordinate = null;
+
+        if (this.prevCoordinate != null) {
+            clonedPrevCoordinate = new Point(this.prevCoordinate);
+        }
+
+        return new BookingGameEnemy(clonedCoordinate,
+                clonedPrevCoordinate, this.direction, this.enemyAI);
     }
 
     public void performMovement(BookingGameState state) {
@@ -64,10 +70,17 @@ public class Enemy {
     }
 
     public void setCoordinate(Point coordinate) {
-        if (this.prevCoordinate == null || !coordinate.equals(this.prevCoordinate)) {
-            this.prevCoordinate = new Point(coordinate);
-        }
+        this.prevCoordinate = this.coordinate;
         this.coordinate = coordinate;
+        setDirection(getDirection(this.prevCoordinate, this.coordinate));
+    }
+
+    private MoveType getDirection(Point oldCoordinate, Point newCoordinate) {
+        if (newCoordinate.x > oldCoordinate.x) return MoveType.RIGHT;
+        if (newCoordinate.x < oldCoordinate.x) return MoveType.LEFT;
+        if (newCoordinate.y > oldCoordinate.y) return MoveType.DOWN;
+        if (newCoordinate.y < oldCoordinate.y) return MoveType.UP;
+        return null;
     }
 
     public MoveType getDirection() {
@@ -84,9 +97,5 @@ public class Enemy {
 
     public Point getCoordinate() {
         return this.coordinate;
-    }
-
-    public Point getPreviousCoordinate() {
-        return this.prevCoordinate;
     }
 }

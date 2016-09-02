@@ -1,11 +1,14 @@
 package io.riddles.bookinggame.game.board;
 
 import io.riddles.bookinggame.engine.BookingGameEngine;
-import io.riddles.bookinggame.game.enemy.Enemy;
+import io.riddles.bookinggame.game.enemy.BookingGameEnemy;
+import io.riddles.bookinggame.game.enemy.EnemyAIInterface;
+import io.riddles.bookinggame.game.move.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -18,27 +21,29 @@ import java.util.stream.Collectors;
 public class BookingGameBoard extends Board {
 
     private ArrayList<BookingGamePlayer> players;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<BookingGameEnemy> enemies;
+    private ArrayList<Point> enemySpawnPoints;
+    private ArrayList<Point> playerInaccessablePoints;
 
-    public BookingGameBoard(int width, int height, ArrayList<BookingGamePlayer> players) {
-        super(width, height);
-        this.players = players;
-        this.enemies = new ArrayList<>();
-    }
-
-    public BookingGameBoard(int width, int height,
-                            String fieldLayout, ArrayList<BookingGamePlayer> players) {
+    public BookingGameBoard(int width, int height, String fieldLayout,
+                            Point[] enemySpawnPoints,
+                            ArrayList<BookingGamePlayer> players) {
         super(width, height, fieldLayout);
         this.players = players;
         this.enemies = new ArrayList<>();
+        this.enemySpawnPoints = new ArrayList<>(Arrays.asList(enemySpawnPoints));
+        this.playerInaccessablePoints = getValidNeighbors(this.enemySpawnPoints);
     }
 
-    public BookingGameBoard(int width, int height,
-                            ArrayList<BookingGamePlayer> players,
-                            ArrayList<Enemy> enemies, String[][] field) {
+    private BookingGameBoard(int width, int height, ArrayList<Point> enemySpawnPoints,
+                             ArrayList<Point> playerInaccessablePoints,
+                             ArrayList<BookingGamePlayer> players,
+                             ArrayList<BookingGameEnemy> enemies, String[][] field) {
         super(width, height, field);
         this.players = players;
         this.enemies = enemies;
+        this.enemySpawnPoints = enemySpawnPoints;
+        this.playerInaccessablePoints = playerInaccessablePoints;
     }
 
     public BookingGameBoard clone() {
@@ -53,88 +58,92 @@ public class BookingGameBoard extends Board {
                 .map(BookingGamePlayer::clone)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<Enemy> clonedEnemies = this.enemies.stream()
-                .map(Enemy::clone)
+        ArrayList<BookingGameEnemy> clonedEnemies = this.enemies.stream()
+                .map(BookingGameEnemy::clone)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        return new BookingGameBoard(this.width, this.height, clonedPlayers,
-                clonedEnemies, clonedField);
+        return new BookingGameBoard(this.width, this.height, this.enemySpawnPoints,
+                this.playerInaccessablePoints, clonedPlayers, clonedEnemies, clonedField);
     }
 
-    public String toRepresentationString() {
+    public String toString() {
         String output = "";
-        int counter = 0;
 
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                String s = this.field[x][y];
+                String cell = "";
 
                 for (BookingGamePlayer player : this.players) {
-                    if (player.getCoordinate().getX() == x && player.getCoordinate().getY() == y) {
-                        s = String.valueOf(player.getId());
+                    if (player.getCoordinate().x == x && player.getCoordinate().y == y) {
+                        cell += player.getId() + "";
                     }
                 }
-                for (Enemy enemy : this.enemies) {
-                    if (enemy.getCoordinate().getX() == x && enemy.getCoordinate().getY() == y) {
-                        s = "E";
+                for (BookingGameEnemy enemy : this.enemies) {
+                    if (enemy.getCoordinate().x == x && enemy.getCoordinate().y == y) {
+                        cell += "E";
                     }
                 }
 
-                if (counter > 0) {
-                    output += ",";
+                if (cell.length() <= 0) {
+                    cell = this.field[x][y];
                 }
-                output += s;
-                counter++;
+                output += cell + ",";
             }
         }
 
-        return output;
+        return output.substring(0, output.length() - 1);
     }
 
-    public void updatePlayerMovements() {
-        for (int y = 0; y < this.height; y++) {
-            for (int x = 0; x < this.width; x++) {
-                for (BookingGamePlayer player : this.players) {
-                    if (this.field[x][y].equals(player.getId() + "")) {
-                        this.field[x][y] = ".";
-                    }
-                    if (player.getCoordinate().getX() == x && player.getCoordinate().getY() == y) {
-                        this.field[x][y] = player.getId() + "";
-                    }
-                }
+    public boolean isCoordinateValid(Point coordinate, boolean isForPlayer) {
+        boolean isValid = isCoordinateValid(coordinate);
+
+        if (!isForPlayer) {
+            return isValid;
+        }
+
+        boolean playerInaccessable = this.playerInaccessablePoints.stream()
+                .anyMatch(p -> p.equals(coordinate));
+
+        return isValid && !playerInaccessable;
+    }
+
+    public boolean isOnSpawnPoint(Point coordinate) {
+        return this.enemySpawnPoints.stream()
+                .anyMatch(point -> point.equals(coordinate));
+    }
+
+    public boolean isOnSpawnGate(Point coordinate) {
+        return this.playerInaccessablePoints.stream()
+                .anyMatch(point -> point.equals(coordinate));
+    }
+
+    public Point getCoordinateAfterMove(Point coordinate, MoveType moveType) {
+        if (moveType != null) {
+            switch(moveType) {
+                case UP:
+                    return new Point(coordinate.x, coordinate.y - 1);
+                case DOWN:
+                    return new Point(coordinate.x, coordinate.y + 1);
+                case RIGHT:
+                    return new Point(coordinate.x + 1, coordinate.y);
+                case LEFT:
+                    return new Point(coordinate.x - 1, coordinate.y);
             }
         }
+        return coordinate;
     }
 
-    public void updateEnemyMovements() {
-        for (int y = 0; y < this.height; y++) {
-            for (int x = 0; x < this.width; x++) {
-                if (this.field[x][y].equals("E")) {
-                    this.field[x][y] = ".";
-                }
-                for (Enemy enemy : this.enemies) {
-                    if (enemy.getCoordinate().getX() == x && enemy.getCoordinate().getY() == y) {
-                        this.field[x][y] = "E";
-                    }
-                }
-            }
-        }
-    }
-
-    public Boolean isEmpty(Point coordinate) {
-        int x = coordinate.x;
-        int y = coordinate.y;
-        String cell = this.field[x][y];
-
-        //noinspection SimplifiableIfStatement
-        if (x < 0 || y < 0 || x >= this.width || y >= this.height) {
+    public boolean isEmptyInDirection(Point coordinate, MoveType moveType) {
+        if (moveType == null) {
             return false;
         }
 
-        return (cell.equals(".") || cell.equals("C") || cell.equals("W"));
+        Point newCoordinate = getCoordinateAfterMove(coordinate, moveType);
+        return isCoordinateValid(newCoordinate);
     }
 
     /* Returns coordinate of empty field furthest away from all players */
+    // not used at the moment
     public Point getLoneliestCoordinate() {
         Point coordinate = new Point(0,0);
         int score = 0;
@@ -164,37 +173,40 @@ public class BookingGameBoard extends Board {
     }
 
     public void addRandomSnippet() {
+        addItem(getRandomEmptyPoint(), "C");
+    }
+
+    public void addRandomWeapon() {
+        addItem(getRandomEmptyPoint(), "W");
+    }
+
+    private Point getRandomEmptyPoint() {
         ArrayList<Point> emptyLocations = getEmptyLocations();
         if (emptyLocations.size() <= 0) {
-            System.err.println("Can't spawn snippets, no empty field available.");
-            return;
+            System.err.println("No empty points on the map.");
+            return null;
         }
 
-        Point spawnLocation = emptyLocations.get(
-                BookingGameEngine.RANDOM.nextInt(emptyLocations.size()));
-        addSnippet(spawnLocation);
+        return emptyLocations.get(BookingGameEngine.RANDOM.nextInt(emptyLocations.size()));
     }
 
-    public boolean addSnippet(Point c) {
-        if (this.field[c.x][c.y].equals(".")) {
-            this.field[c.x][c.y] = "C";
-            return true;
+    private void addItem(Point coordinate, String type) {
+        if (coordinate == null) return;
+
+        int x = coordinate.x;
+        int y = coordinate.y;
+        if (this.field[x][y].equals(".")) {
+            this.field[x][y] = type;
         }
-        return false;
     }
 
-    public Point getEnemyStartField() {
-        Point c = new Point(0, 0);
-        int y = this.height / 2;
+    public void spawnEnemy(EnemyAIInterface enemyAI) {
+        int randomIndex = BookingGameEngine.RANDOM.nextInt(this.enemySpawnPoints.size());
+        Point randomSpawnPoint = this.enemySpawnPoints.get(randomIndex);
 
-        for (int x = this.width / 2 - 1; x < this.width; x++) {
-            if (this.field[x][y].equals(".")) {
-                c = new Point(x, y);
-                return c;
-            }
-        }
-
-        return c;
+        MoveType randomDirection = MoveType.getRandomMovingMoveType();
+        BookingGameEnemy enemy = new BookingGameEnemy(randomSpawnPoint, randomDirection, enemyAI);
+        this.enemies.add(enemy);
     }
 
     public void dump() {
@@ -206,7 +218,7 @@ public class BookingGameBoard extends Board {
         }
     }
 
-    public ArrayList<Enemy> getEnemies() {
+    public ArrayList<BookingGameEnemy> getEnemies() {
         return this.enemies;
     }
 
@@ -214,32 +226,53 @@ public class BookingGameBoard extends Board {
         return this.players;
     }
 
-    public void addEnemy(Enemy enemy) {
-        this.enemies.add(enemy);
-    }
-
-    public void killEnemyAt(Point coordinate) {
-        this.enemies.stream()
-                .filter(enemy -> enemy.getCoordinate().equals(coordinate))
-                .forEach(enemy -> this.enemies.remove(enemy));
+    public void killEnemy(BookingGameEnemy enemy) {
+        this.enemies.remove(enemy);
     }
 
     private ArrayList<Point> getLocationOf(String type) {
-        ArrayList<Point> snippetLocations = new ArrayList<>();
+        ArrayList<Point> itemLocation = new ArrayList<>();
 
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
                 if (this.field[x][y].equals(type)) {
-                    snippetLocations.add(new Point(x, y));
+                    itemLocation.add(new Point(x, y));
                 }
             }
         }
 
-        return snippetLocations;
+        return itemLocation;
     }
 
+    // pretty crappy method, but works
     public ArrayList<Point> getEmptyLocations() {
-        return getLocationOf(".");
+        ArrayList<Point> emptyLocations = getLocationOf(".");
+
+        ArrayList<Point> nonEmptyPoints = this.players.stream()
+                .map(BookingGamePlayer::getCoordinate)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        nonEmptyPoints.addAll(this.enemies.stream()
+                .map(BookingGameEnemy::getCoordinate)
+                .collect(Collectors.toCollection(ArrayList::new)));
+
+        ArrayList<Point> actualEmptyLocations = new ArrayList<>();
+        for (Point p : nonEmptyPoints) {
+            boolean found = false;
+
+            for (Point taken : emptyLocations) {
+                if (p.equals(taken)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                actualEmptyLocations.add(p);
+            }
+        }
+
+        return actualEmptyLocations;
     }
 
     public ArrayList<Point> getSnippetLocations() {

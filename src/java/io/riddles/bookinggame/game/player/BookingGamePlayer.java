@@ -34,7 +34,7 @@ import io.riddles.javainterface.game.player.AbstractPlayer;
 public class BookingGamePlayer extends AbstractPlayer {
 
     private int snippets;
-    private int weapons;
+    private boolean weapon;
     private Point coordinate;
     private int paralysis;
     private boolean hasCollectedSnippet;
@@ -42,16 +42,16 @@ public class BookingGamePlayer extends AbstractPlayer {
     public BookingGamePlayer(int id) {
         super(id);
         this.snippets = 0;
-        this.weapons = 0;
+        this.weapon = false;
         this.paralysis = 0;
         this.coordinate = new Point(0, 0);
     }
 
-    public BookingGamePlayer(int id, int snippets, int weapons,
+    public BookingGamePlayer(int id, int snippets, boolean weapon,
                              int paralysis, boolean hasCollectedSnippet, Point coordinate) {
         super(id);
         this.snippets = snippets;
-        this.weapons = weapons;
+        this.weapon = weapon;
         this.paralysis = paralysis;
         this.coordinate = coordinate;
         this.hasCollectedSnippet = hasCollectedSnippet;
@@ -59,7 +59,7 @@ public class BookingGamePlayer extends AbstractPlayer {
 
     public BookingGamePlayer clone() {
         Point clonedCoordinate = new Point(this.coordinate);
-        return new BookingGamePlayer(this.getId(), this.snippets,this.weapons,
+        return new BookingGamePlayer(this.getId(), this.snippets, this.weapon,
                 this.paralysis, this.hasCollectedSnippet, clonedCoordinate);
     }
 
@@ -74,15 +74,18 @@ public class BookingGamePlayer extends AbstractPlayer {
             this.snippets = 0;
         }
     }
-    public void updateWeapons(int delta) {
-        this.weapons += delta;
+
+    public void setWeapon(boolean weapon) {
+        this.weapon = weapon;
+    }
+
+    public boolean hasWeapon() {
+        return this.weapon;
     }
 
     public int getSnippets() {
         return this.snippets;
     }
-
-    public int getWeapons() { return this.weapons; }
 
     public Point getCoordinate() { return this.coordinate; }
 
@@ -91,7 +94,7 @@ public class BookingGamePlayer extends AbstractPlayer {
     }
 
     public String toString() {
-        return "Player " + this.getId() + " coord " + this.getCoordinate() + " snippets " + this.snippets + " weapons " + weapons + " paralysis " + paralysis;
+        return "Player " + this.getId() + " coord " + this.getCoordinate() + " snippets " + this.snippets + " weapons " + weapon + " paralysis " + paralysis;
     }
 
     public void updateParalysis() {

@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import java.awt.*;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
-import io.riddles.bookinggame.game.enemy.Enemy;
+import io.riddles.bookinggame.game.enemy.BookingGameEnemy;
 import io.riddles.bookinggame.game.move.BookingGameMove;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.game.state.AbstractStateSerializer;
@@ -79,7 +79,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
             players.put(playerObj);
         }
 
-        for (Enemy enemy : board.getEnemies()) {
+        for (BookingGameEnemy enemy : board.getEnemies()) {
             JSONObject enemyObj = new JSONObject();
             enemyObj.put("x", enemy.getCoordinate().x);
             enemyObj.put("y", enemy.getCoordinate().y);
@@ -105,7 +105,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
 
         stateObj.put("round", state.getRoundNumber());
         stateObj.put("players", players);
-        stateObj.put("bugs", enemies);
+        stateObj.put("enemies", enemies);
         stateObj.put("collectibles", collectibles);
         stateObj.put("weapons", weapons);
 
