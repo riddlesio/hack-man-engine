@@ -82,9 +82,10 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             }
         }
 
-        // Update player movements
+        // Send updates and Update player movements
         for (BookingGamePlayer player : this.players) {
-            player.sendUpdate("field", player, nextState.getBoard().toString());
+            sendUpdates(player, nextState);
+
             String response = player.requestMove(ActionType.MOVE.toString());
 
             BookingGamePlayer nextPlayer = nextBoard.getPlayerById(player.getId());
@@ -132,6 +133,17 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         updateScore(nextState);
 
         return nextState;
+    }
+
+    private void sendUpdates(BookingGamePlayer player, BookingGameState state) {
+        player.sendUpdate("round", state.getRoundNumber());
+        player.sendUpdate("field", state.getBoard().toString());
+
+        for (BookingGamePlayer target : state.getBoard().getPlayers()) {
+            player.sendUpdate("snippets", target, target.getSnippets());
+            player.sendUpdate("has_weapon", target, target.hasWeapon() + "");
+            player.sendUpdate("is_paralyzed", target, target.isParalyzed() + "");
+        }
     }
 
     private void pickUpSnippets(BookingGameState state) {

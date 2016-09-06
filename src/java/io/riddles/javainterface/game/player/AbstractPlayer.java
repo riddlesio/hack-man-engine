@@ -105,21 +105,21 @@ public abstract class AbstractPlayer {
     }
 
     /**
-     * Sends one update to the player about the engine in general, like round number
+     * Sends one update to the player about the game in general, like round number
      * @param type Type of update
      * @param value Value of the update
      */
     public void sendUpdate(String type, String value) {
-        this.ioHandler.sendMessage(String.format("update engine %s %s", type, value));
+        this.ioHandler.sendMessage(String.format("update game %s %s", type, value));
     }
 
     /**
-     * Sends one update to the player about the engine in general, like round number
+     * Sends one update to the player about the game in general, like round number
      * @param type Type of update
      * @param value Value of the update
      */
     public void sendUpdate(String type, int value) {
-        this.ioHandler.sendMessage(String.format("update engine %s %d", type, value));
+        this.ioHandler.sendMessage(String.format("update game %s %d", type, value));
     }
 
     /**

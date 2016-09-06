@@ -116,8 +116,10 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
 
     @Override
     protected void sendGameSettings(BookingGamePlayer player) {
+        player.sendSetting("your_botid", player.getId());
         player.sendSetting("field_width", configuration.getInt("fieldWidth"));
         player.sendSetting("field_height", configuration.getInt("fieldHeight"));
+        player.sendSetting("max_rounds", configuration.getInt("maxRounds"));
     }
 
     @Override

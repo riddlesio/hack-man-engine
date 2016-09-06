@@ -84,6 +84,15 @@ public class BookingGameBoard extends Board {
                     }
                 }
 
+                // Show enemy spawn area as blocked
+                ArrayList<Point> inaccessible = new ArrayList<>(this.enemySpawnPoints);
+                inaccessible.addAll(this.playerInaccessablePoints);
+                for (Point p : inaccessible) {
+                    if (p.x == x && p.y == y) {
+                        cell = "x";
+                    }
+                }
+
                 if (cell.length() <= 0) {
                     cell = this.field[x][y];
                 }
@@ -248,27 +257,30 @@ public class BookingGameBoard extends Board {
     public ArrayList<Point> getEmptyLocations() {
         ArrayList<Point> emptyLocations = getLocationOf(".");
 
-        ArrayList<Point> nonEmptyPoints = this.players.stream()
+        ArrayList<Point> occupiedPoints = this.players.stream()
                 .map(BookingGamePlayer::getCoordinate)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        nonEmptyPoints.addAll(this.enemies.stream()
+        occupiedPoints.addAll(this.enemies.stream()
                 .map(BookingGameEnemy::getCoordinate)
                 .collect(Collectors.toCollection(ArrayList::new)));
 
+        occupiedPoints.addAll(this.enemySpawnPoints);
+        occupiedPoints.addAll(this.playerInaccessablePoints);
+
         ArrayList<Point> actualEmptyLocations = new ArrayList<>();
-        for (Point p : nonEmptyPoints) {
+        for (Point empty : emptyLocations) {
             boolean found = false;
 
-            for (Point taken : emptyLocations) {
-                if (p.equals(taken)) {
+            for (Point occupied : occupiedPoints) {
+                if (empty.equals(occupied)) {
                     found = true;
                     break;
                 }
             }
 
             if (!found) {
-                actualEmptyLocations.add(p);
+                actualEmptyLocations.add(empty);
             }
         }
 
