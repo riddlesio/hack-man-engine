@@ -152,7 +152,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         for (BookingGamePlayer player : playersOnSnippet) {
             player.updateSnippets(1);
-            state.setSnippetsEaten(1);
+            state.updateSnippetsEaten(1);
             board.setFieldAt(player.getCoordinate(), ".");
         }
     }
