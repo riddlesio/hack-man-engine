@@ -77,7 +77,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         this.enemySpawnPoints[2] = new Point(10, 7);
         this.enemySpawnPoints[3] = new Point(11, 7);
 
-        configuration.put("maxRounds", 40);
+        configuration.put("maxRounds", 300);
         configuration.put("playerSnippetCount", 0);
         configuration.put("mapSnippetCount", 2);
         configuration.put("snippetSpawnRate", 8);
