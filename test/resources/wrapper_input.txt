@@ -1,5 +1,5 @@
 initialize
-bot_ids 1,2
+bot_ids 0,1
 start
 details
 game

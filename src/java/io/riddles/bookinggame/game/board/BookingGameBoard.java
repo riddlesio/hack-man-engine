@@ -221,9 +221,9 @@ public class BookingGameBoard extends Board {
     public void dump() {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                System.out.print(this.field[x][y]);
+                System.err.print(this.field[x][y]);
             }
-            System.out.println();
+            System.err.println();
         }
     }
 

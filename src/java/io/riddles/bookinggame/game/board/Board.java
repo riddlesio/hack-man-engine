@@ -79,9 +79,9 @@ public class Board {
     public void dump() {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                System.out.print(field[x][y]);
+                System.err.print(field[x][y]);
             }
-            System.out.println();
+            System.err.println();
         }
     }
 

@@ -124,7 +124,6 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
             String line = "";
             while (!line.equals("start")) { // from "start", setup is done
                 line = this.ioHandler.getNextMessage();
-                System.out.println(line);
                 parseSetupInput(line);
             }
         } catch(IOException ex) {

@@ -1,10 +1,13 @@
 group 'io.riddles'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 apply plugin: 'groovy'
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
+
+mainClassName = 'io.riddles.bookinggame.BookingGame'
 
 sourceSets {
     main {
@@ -17,6 +20,18 @@ sourceSets {
         groovy {
             srcDir 'test/groovy'
         }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Riddles.io Booking Game Engine',
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

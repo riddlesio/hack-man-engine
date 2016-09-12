@@ -101,7 +101,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
     @Override
     protected BookingGamePlayer createPlayer(int id) {
         BookingGamePlayer player = new BookingGamePlayer(id);
-        player.setCoordinate(this.startCoordinates[id - 1]);
+        player.setCoordinate(this.startCoordinates[id]);
         return player;
     }
 

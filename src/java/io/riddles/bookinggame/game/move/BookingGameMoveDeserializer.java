@@ -47,8 +47,10 @@ public class BookingGameMoveDeserializer implements Deserializer<BookingGameMove
         try {
             return visitMove(string);
         } catch (InvalidInputException ex) {
+            this.player.sendWarning(ex.getMessage());
             return new BookingGameMove(this.player, ex);
         } catch (Exception ex) {
+            this.player.sendWarning(ex.getMessage());
             return new BookingGameMove(
                 this.player, new InvalidInputException("Failed to parse move"));
         }

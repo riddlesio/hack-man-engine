@@ -19,8 +19,6 @@
 
 package io.riddles.bookinggame;
 
-import java.net.URL;
-
 import io.riddles.bookinggame.engine.BookingGameEngine;
 import io.riddles.javainterface.exception.TerminalException;
 

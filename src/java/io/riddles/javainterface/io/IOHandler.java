@@ -99,7 +99,6 @@ public class IOHandler {
      */
     public void sendMessage(String message) {
         System.out.println(message);
-        System.out.flush();
     }
 
     /**
