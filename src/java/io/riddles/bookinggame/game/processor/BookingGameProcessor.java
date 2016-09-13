@@ -47,7 +47,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private boolean gameOver;
     private EnemyAIInterface enemyAI;
     private BookingGamePlayer winner;
-    private int score;
+//    private int score;
     private int lastEnemySpawnSnippet = -1;
     private int lastWeaponSpawnSnippet = -1;
 
@@ -148,7 +148,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         // Update winner and scores
         updateWinner(nextState);
-        updateScore(nextState);
+//        updateScore(nextState);
 
         return nextState;
     }
@@ -318,17 +318,17 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         }
     }
 
-    private void updateScore(BookingGameState state) {
-        int max = 0;
-
-        for (BookingGamePlayer player : state.getBoard().getPlayers()) {
-            if (player.getSnippets() > max) {
-                max = player.getSnippets();
-            }
-        }
-
-        this.score = max;
-    }
+//    private void updateScore(BookingGameState state) {
+//        int max = 0;
+//
+//        for (BookingGamePlayer player : state.getBoard().getPlayers()) {
+//            if (player.getSnippets() > max) {
+//                max = player.getSnippets();
+//            }
+//        }
+//
+//        this.score = max;
+//    }
 
     @Override
     public boolean hasGameEnded(BookingGameState state) {
@@ -342,7 +342,7 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
     @Override
     public double getScore() {
-        return this.score;
+        return this.roundNumber;
     }
 
     public void setEnemyAI(EnemyAIInterface enemyAI) {
