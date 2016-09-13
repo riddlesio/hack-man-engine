@@ -48,6 +48,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private EnemyAIInterface enemyAI;
     private BookingGamePlayer winner;
     private int score;
+    private int lastEnemySpawnSnippet = -1;
+    private int lastWeaponSpawnSnippet = -1;
 
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players, EnemyAIInterface enemyAI) {
         super(players);
@@ -68,24 +70,35 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         BookingGameState nextState = state.createNextState(roundNumber);
         BookingGameBoard nextBoard = nextState.getBoard();
 
-        // Spawn snippets
+        int snippetsEaten = nextState.getSnippetsEaten();
+
+        // Spawn snippets (based on round)
         if (roundNumber % config.getInt("snippetSpawnRate") == 0) {
             for (int i = 0; i < config.getInt("snippetSpawnCount"); i++) {
                 nextBoard.addRandomSnippet();
             }
         }
-        // Spawn weapons
-        if (roundNumber >= config.getInt("weaponSpawnDelay") &&
-                roundNumber % config.getInt("weaponSpawnRate") == 0) {
+        // Spawn weapons (based on snippets)
+        if (snippetsEaten >= config.getInt("weaponSpawnDelay") &&
+                this.lastWeaponSpawnSnippet != snippetsEaten &&
+                snippetsEaten % config.getInt("weaponSpawnRate") == 0) {
+            this.lastWeaponSpawnSnippet = snippetsEaten;
             for (int i = 0; i < config.getInt("weaponSpawnCount"); i++) {
                 nextBoard.addRandomWeapon();
             }
         }
 
+        // Store collisions so they can't happen twice
+        HashMap<BookingGamePlayer, ArrayList<BookingGameEnemy>> enemyCollisions = new HashMap<>();
+        HashMap<BookingGamePlayer, ArrayList<BookingGamePlayer>> playerCollisions = new HashMap<>();
+        for (BookingGamePlayer nextPlayer : nextBoard.getPlayers()) {
+            enemyCollisions.put(nextPlayer, new ArrayList<>());
+            playerCollisions.put(nextPlayer, new ArrayList<>());
+        }
+
         // Send updates and Update player movements
         for (BookingGamePlayer player : this.players) {
             sendUpdates(player, nextState);
-
             String response = player.requestMove(ActionType.MOVE.toString());
 
             BookingGamePlayer nextPlayer = nextBoard.getPlayerById(player.getId());
@@ -105,6 +118,9 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
                 }
             }
 
+            // Calculate moving object collissions
+            collideWithEnemies(nextState, nextPlayer, enemyCollisions);
+            collideWithPlayers(nextState, nextPlayer, playerCollisions);
             nextPlayer.updateParalysis();
         }
 
@@ -113,10 +129,11 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             enemy.performMovement(nextState);
         }
 
-        // Spawn new enemies
-        int snippetsEaten = nextState.getSnippetsEaten();
+        // Spawn new enemies (based on snippets)
         if (snippetsEaten >= config.getInt("enemySpawnDelay") &&
+                this.lastEnemySpawnSnippet != snippetsEaten &&
                 snippetsEaten % config.getInt("enemySpawnRate") == 0) {
+            this.lastEnemySpawnSnippet = snippetsEaten;
             for (int i = 0; i < config.getInt("enemySpawnCount"); i++) {
                 nextBoard.spawnEnemy(this.enemyAI);
             }
@@ -125,8 +142,9 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         // Calculate changes due to collisions
         pickUpSnippets(nextState);
         pickUpWeapons(nextState);
-        collideWithEnemies(nextState);
-        collideWithPlayers(nextState);
+        for (BookingGamePlayer nextPlayer : nextBoard.getPlayers()) {
+            collideWithEnemies(nextState, nextPlayer, enemyCollisions);
+        }
 
         // Update winner and scores
         updateWinner(nextState);
@@ -201,49 +219,62 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         return playersNotOnSameItem;
     }
 
-    private void collideWithEnemies(BookingGameState state) {
+    private void collideWithEnemies(
+            BookingGameState state,
+            BookingGamePlayer player,
+            HashMap<BookingGamePlayer, ArrayList<BookingGameEnemy>> collisions) {
         BookingGameBoard board = state.getBoard();
         Configuration config = BookingGameEngine.configuration;
 
         ArrayList<BookingGameEnemy> killedEnemies = new ArrayList<>();
 
-        for (BookingGamePlayer player : board.getPlayers()) {
-            for (BookingGameEnemy enemy : board.getEnemies()) {
-                if (enemy.getCoordinate().equals(player.getCoordinate())) {
-                    if (player.hasWeapon()) { // player kills enemy
-                        player.setWeapon(false);
-                    } else { // player loses snippets
-                        player.updateSnippets(-config.getInt("enemySnippetLoss"));
-                    }
-                    killedEnemies.add(enemy);
+        for (BookingGameEnemy enemy : board.getEnemies()) {
+            if (enemy.getCoordinate().equals(player.getCoordinate()) &&
+                    !collisions.get(player).contains(enemy)) {
+
+                if (player.hasWeapon()) { // player kills enemy
+                    player.setWeapon(false);
+                } else { // player loses snippets
+                    player.updateSnippets(-config.getInt("enemySnippetLoss"));
                 }
+
+                collisions.get(player).add(enemy);
+                killedEnemies.add(enemy);
             }
         }
 
         killedEnemies.forEach(board::killEnemy);
     }
 
-    private void collideWithPlayers(BookingGameState state) {
+    private void collideWithPlayers(
+            BookingGameState state,
+            BookingGamePlayer player,
+            HashMap<BookingGamePlayer, ArrayList<BookingGamePlayer>> collisions) {
+
+        if (!player.hasWeapon()) return;
+
         BookingGameBoard board = state.getBoard();
         Configuration config = BookingGameEngine.configuration;
 
-        for (BookingGamePlayer player : board.getPlayers()) {
-            if (!player.hasWeapon()) continue;
+        for (BookingGamePlayer other : board.getPlayers()) {
+            if (player != other &&
+                    player.getCoordinate().equals(other.getCoordinate()) &&
+                    !collisions.get(player).contains(other)) {
 
-            for (BookingGamePlayer other : board.getPlayers()) {
-                if (player != other && player.getCoordinate().equals(other.getCoordinate())) {
-                    player.setWeapon(false);
+                player.setWeapon(false);
 
-                    int snippetLoss = config.getInt("weaponSnippetLoss");
+                int snippetLoss = config.getInt("weaponSnippetLoss");
 
-                    other.paralyse(config.getInt("weaponParalysisDuration"));
-                    other.updateSnippets(-snippetLoss);
+                other.paralyse(config.getInt("weaponParalysisDuration"));
+                other.updateSnippets(-snippetLoss);
 
-                    // lost snippets are spread accross the map
-                    for (int n = 0; n < snippetLoss; n++) {
-                        board.addRandomSnippet();
-                    }
+                // lost snippets are spread accross the map
+                for (int n = 0; n < snippetLoss; n++) {
+                    board.addRandomSnippet();
                 }
+
+                collisions.get(player).add(other);
+                collisions.get(other).add(player);
             }
         }
     }

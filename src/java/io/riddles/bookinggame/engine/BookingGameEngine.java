@@ -51,6 +51,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
     public BookingGameEngine() {
         super();
         setDefaults();
+        setEnemyAI();
     }
 
     public BookingGameEngine(String wrapperFile, String[] botFiles) {
@@ -77,7 +78,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         this.enemySpawnPoints[2] = new Point(10, 7);
         this.enemySpawnPoints[3] = new Point(11, 7);
 
-        configuration.put("maxRounds", 300);
+        configuration.put("maxRounds", 200);
         configuration.put("playerSnippetCount", 0);
         configuration.put("mapSnippetCount", 2);
         configuration.put("snippetSpawnRate", 8);
@@ -88,8 +89,8 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         configuration.put("enemySpawnCount", 1);
         configuration.put("enemySnippetLoss", 4);
         configuration.put("mapWeaponCount", 0);
-        configuration.put("weaponSpawnDelay", 20);
-        configuration.put("weaponSpawnRate", 16);
+        configuration.put("weaponSpawnDelay", 8);
+        configuration.put("weaponSpawnRate", 8);
         configuration.put("weaponSpawnCount", 1);
         configuration.put("weaponSnippetLoss", 4);
         configuration.put("weaponParalysisDuration", 1);

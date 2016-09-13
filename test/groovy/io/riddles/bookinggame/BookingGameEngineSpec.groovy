@@ -198,7 +198,7 @@ class BookingGameEngineSpec extends Specification {
         engine.run()
 
         expect:
-        engine.configuration.getInt("maxRounds") == 40
+        engine.configuration.getInt("maxRounds") == 300
     }
 
 
