@@ -31,6 +31,7 @@ import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.engine.AbstractEngine;
 import io.riddles.bookinggame.game.BookingGameSerializer;
+import io.riddles.javainterface.exception.TerminalException;
 
 /**
  * io.riddles.bookinggame.engine.BookingGameEngine - Created on 6/27/16
@@ -50,6 +51,12 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
 
     public BookingGameEngine() {
         super();
+        setDefaults();
+        setEnemyAI();
+    }
+
+    public BookingGameEngine(String args[]) throws TerminalException {
+        super(args);
         setDefaults();
         setEnemyAI();
     }

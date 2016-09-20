@@ -31,7 +31,7 @@ import java.util.logging.Level;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public class BotIOHandler extends IOHandler {
+public class BotIOHandler extends IOHandler implements BotIOInterface {
 
     private int botId;
 
@@ -50,6 +50,7 @@ public class BotIOHandler extends IOHandler {
      * Send a message to bot, expecting no response
      * @param message Message to send
      */
+    @Override
     public void sendMessage(String message) {
         super.sendMessage(String.format("bot %d send %s", this.botId, message));
     }
@@ -60,6 +61,7 @@ public class BotIOHandler extends IOHandler {
      * @param request Request to send
      * @return Answer from the bot
      */
+    @Override
     public String sendRequest(String request) {
         super.sendMessage(String.format("bot %d ask %s", this.botId, request));
         return getResponse();
@@ -70,6 +72,7 @@ public class BotIOHandler extends IOHandler {
      * by the bot, but will be logged in its dump
      * @param warning Warning to send
      */
+    @Override
     public void sendWarning(String warning) {
         super.sendMessage(String.format("bot %d warning %s", this.botId, warning));
     }

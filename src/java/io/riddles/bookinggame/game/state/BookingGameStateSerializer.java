@@ -68,6 +68,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
             playerObj.put("y", player.getCoordinate().y);
             playerObj.put("score", player.getSnippets());
             playerObj.put("move", move.toString());
+            playerObj.put("hasWeapon", player.hasWeapon());
 
             Exception exception = move.getException();
             if (exception != null) {
@@ -83,6 +84,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
             JSONObject enemyObj = new JSONObject();
             enemyObj.put("x", enemy.getCoordinate().x);
             enemyObj.put("y", enemy.getCoordinate().y);
+            enemyObj.put("move", enemy.getDirection());
 
             enemies.put(enemyObj);
         }

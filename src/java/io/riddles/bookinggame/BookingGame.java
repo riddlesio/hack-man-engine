@@ -20,7 +20,6 @@
 package io.riddles.bookinggame;
 
 import io.riddles.bookinggame.engine.BookingGameEngine;
-import io.riddles.javainterface.exception.TerminalException;
 
 /**
  * io.riddles.bookinggame.BookingGame - Created on 2-6-16
@@ -31,13 +30,15 @@ import io.riddles.javainterface.exception.TerminalException;
  */
 public class BookingGame {
 
-    public static void main(String[] args) {
-        BookingGameEngine engine = new BookingGameEngine();
+    public static void main(String[] args) throws Exception {
+        BookingGameEngine engine;
 
-        try {
-            engine.run();
-        } catch (TerminalException e) {
-            System.exit(e.getStatusCode());
+        if (args.length > 0) { // Create aigames engine
+            engine = new BookingGameEngine(args);
+        } else {
+            engine = new BookingGameEngine();
         }
+
+        engine.run();
     }
 }

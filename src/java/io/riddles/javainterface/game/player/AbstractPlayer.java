@@ -20,6 +20,8 @@
 package io.riddles.javainterface.game.player;
 
 import io.riddles.javainterface.io.BotIOHandler;
+import io.riddles.javainterface.io.BotIOInterface;
+import io.riddles.javainterface.theaigames.io.AIGamesBotIOHandler;
 
 /**
  * io.riddles.javainterface.engine.player.AbstractPlayer - Created on 2-6-16
@@ -36,12 +38,21 @@ public abstract class AbstractPlayer {
 
     private String name;
     private int id;
-    protected BotIOHandler ioHandler;
+    protected BotIOInterface ioHandler;
 
     public AbstractPlayer(int id) {
         this.id = id;
         this.name = "player" + id;
         this.ioHandler = new BotIOHandler(id);
+    }
+
+    /**
+     * Changes the ioHandler to the AIGames io handler
+     * @param process bot process
+     * @param mongoIdString Id string in mongodb
+     */
+    public void setAsAIGamesPlayer(Process process, String mongoIdString) {
+        this.ioHandler = new AIGamesBotIOHandler(process, mongoIdString);
     }
 
     /**
@@ -64,6 +75,10 @@ public abstract class AbstractPlayer {
      */
     public String getName() {
         return this.name;
+    }
+
+    public BotIOInterface getIoHandler() {
+        return this.ioHandler;
     }
 
     /**

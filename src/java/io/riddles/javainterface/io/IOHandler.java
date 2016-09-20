@@ -30,6 +30,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import io.riddles.javainterface.game.player.AbstractPlayer;
+
 /**
  * io.riddles.javainterface.io.IOHandler - Created on 2-6-16
  *
@@ -40,7 +42,8 @@ import java.util.logging.Logger;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public class IOHandler {
+public class IOHandler implements IOInterface {
+
     protected final static Logger LOGGER = Logger.getLogger(IOHandler.class.getName());
     private Scanner scanner;
     protected BufferedReader reader;
@@ -64,8 +67,9 @@ public class IOHandler {
     /**
      * Get next line from one of the two input streams
      * @return The next line
-     * @throws IOException
+     * @throws IOException IOException
      */
+    @Override
     public String getNextMessage() throws IOException {
         if (this.reader != null)
             return getNextMessageFromFile();
@@ -79,6 +83,7 @@ public class IOHandler {
      * are ignored.
      * @param expected Message that is waited on
      */
+    @Override
     public void waitForMessage(String expected) {
         String message = null;
 
@@ -97,6 +102,7 @@ public class IOHandler {
      * Send a message to the game wrapper
      * @param message Message to send
      */
+    @Override
     public void sendMessage(String message) {
         System.out.println(message);
     }
