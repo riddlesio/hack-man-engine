@@ -348,6 +348,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
     private void saveToAIGames(S initialState) {
         int score = (int) this.processor.getScore();
         String playedGame = getPlayedGame(initialState);
+        System.out.println(playedGame);
         AbstractPlayer winner = this.processor.getWinner();
         String gamePath = "games/" + this.aigamesIdString;
 

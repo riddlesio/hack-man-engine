@@ -85,6 +85,26 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         this.enemySpawnPoints[2] = new Point(10, 7);
         this.enemySpawnPoints[3] = new Point(11, 7);
 
+//        configuration.put("maxRounds", 200);
+//        configuration.put("playerSnippetCount", 0);
+//        configuration.put("mapSnippetCount", 2);
+//        configuration.put("snippetSpawnRate", 8);
+//        configuration.put("snippetSpawnCount", 1);
+//        configuration.put("initialEnemyCount", 0);
+//        configuration.put("enemySpawnDelay", 2);
+//        configuration.put("enemySpawnRate", 2);
+//        configuration.put("enemySpawnCount", 1);
+//        configuration.put("enemySnippetLoss", 4);
+//        configuration.put("mapWeaponCount", 2);
+//        configuration.put("weaponSpawnDelay", 0);
+//        configuration.put("weaponSpawnRate", 3);
+//        configuration.put("weaponSpawnCount", 5);
+//        configuration.put("weaponSnippetLoss", 4);
+//        configuration.put("weaponParalysisDuration", 1);
+//        configuration.put("fieldWidth", 20);
+//        configuration.put("fieldHeight", 14);
+//        configuration.put("fieldLayout", getDefaultFieldLayout());
+
         configuration.put("maxRounds", 200);
         configuration.put("playerSnippetCount", 0);
         configuration.put("mapSnippetCount", 2);
@@ -109,7 +129,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
     @Override
     protected BookingGamePlayer createPlayer(int id) {
         BookingGamePlayer player = new BookingGamePlayer(id);
-        player.setCoordinate(this.startCoordinates[id]);
+        player.setCoordinate(this.startCoordinates[id - 1]);
         return player;
     }
 
@@ -141,6 +161,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         setEnemyAI();
 
         BookingGameState state = new BookingGameState();
+        state.setRoundNumber(0);
 
         int fieldWidth = configuration.getInt("fieldWidth");
         int fieldHeight = configuration.getInt("fieldHeight");

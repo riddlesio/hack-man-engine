@@ -44,13 +44,17 @@ public class BookingGameSerializer extends
         game = addDefaultJSON(game, processor);
 
         // put all states
-        JSONArray states = new JSONArray();
-        BookingGameState state = initialState;
         BookingGameStateSerializer serializer = new BookingGameStateSerializer();
+        JSONArray states = new JSONArray();
+
+        states.put(serializer.traverseToJson(initialState));
+
+        BookingGameState state = initialState;
         while (state.hasNextState()) {
             state = (BookingGameState) state.getNextState();
             states.put(serializer.traverseToJson(state));
         }
+
         game.put("states", states);
 
         return game.toString();

@@ -27,6 +27,7 @@ import java.awt.*;
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 import io.riddles.bookinggame.game.enemy.BookingGameEnemy;
 import io.riddles.bookinggame.game.move.BookingGameMove;
+import io.riddles.bookinggame.game.move.MoveType;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.javainterface.game.state.AbstractStateSerializer;
 
@@ -58,26 +59,41 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
         JSONArray collectibles = new JSONArray();
         JSONArray weapons = new JSONArray();
 
-        for (BookingGameMove move : state.getMoves()) {
-            // players on the board are cloned, so we need those
-            BookingGamePlayer player = move.getPlayer();
-
-            JSONObject playerObj = new JSONObject();
-            playerObj.put("id", player.getId());
-            playerObj.put("x", player.getCoordinate().x);
-            playerObj.put("y", player.getCoordinate().y);
-            playerObj.put("score", player.getSnippets());
-            playerObj.put("move", move.toString());
-            playerObj.put("hasWeapon", player.hasWeapon());
-
-            Exception exception = move.getException();
-            if (exception != null) {
-                playerObj.put("exception", move.getException().getMessage());
-            } else {
+        if (!state.hasPreviousState()) { // initial state has no move
+            for (BookingGamePlayer player : state.getBoard().getPlayers()) {
+                JSONObject playerObj = new JSONObject();
+                playerObj.put("id", player.getId());
+                playerObj.put("x", player.getCoordinate().x);
+                playerObj.put("y", player.getCoordinate().y);
+                playerObj.put("move", MoveType.PASS);
+                playerObj.put("score", player.getSnippets());
+                playerObj.put("hasWeapon", player.hasWeapon());
                 playerObj.put("exception", JSONObject.NULL);
-            }
 
-            players.put(playerObj);
+                players.put(playerObj);
+            }
+        } else {
+            for (BookingGameMove move : state.getMoves()) {
+                // players on the board are cloned, so we need those
+                BookingGamePlayer player = move.getPlayer();
+
+                JSONObject playerObj = new JSONObject();
+                playerObj.put("id", player.getId());
+                playerObj.put("x", player.getCoordinate().x);
+                playerObj.put("y", player.getCoordinate().y);
+                playerObj.put("score", player.getSnippets());
+                playerObj.put("move", move.toString());
+                playerObj.put("hasWeapon", player.hasWeapon());
+
+                Exception exception = move.getException();
+                if (exception != null) {
+                    playerObj.put("exception", move.getException().getMessage());
+                } else {
+                    playerObj.put("exception", JSONObject.NULL);
+                }
+
+                players.put(playerObj);
+            }
         }
 
         for (BookingGameEnemy enemy : board.getEnemies()) {

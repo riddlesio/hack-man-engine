@@ -243,7 +243,9 @@ public class BookingGameBoard extends Board {
     }
 
     public void killEnemy(BookingGameEnemy enemy) {
-        this.enemies.remove(enemy);
+        try {
+            this.enemies.remove(enemy);
+        } catch (Exception ignored) {}
     }
 
     private ArrayList<Point> getLocationOf(String type) {
@@ -306,6 +308,15 @@ public class BookingGameBoard extends Board {
         for (BookingGamePlayer player : this.players) {
             if (player.getId() == id) {
                 return player;
+            }
+        }
+        return null;
+    }
+
+    public BookingGameEnemy getEnemyById(int id) {
+        for (BookingGameEnemy enemy : this.getEnemies()) {
+            if (enemy.getId() == id) {
+                return enemy;
             }
         }
         return null;

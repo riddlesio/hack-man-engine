@@ -47,7 +47,7 @@ public class BookingGameState extends AbstractState<BookingGameMove> {
     }
 
     public BookingGameState(BookingGameState previousState,
-                            ArrayList<BookingGameMove> moves,int roundNumber) {
+                            ArrayList<BookingGameMove> moves, int roundNumber) {
         super(previousState, moves, roundNumber);
         this.snippetsEaten = previousState.snippetsEaten;
     }

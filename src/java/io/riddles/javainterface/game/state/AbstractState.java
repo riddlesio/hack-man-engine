@@ -106,4 +106,8 @@ public abstract class AbstractState<M> {
     public boolean hasPreviousState() {
         return this.previousState != null;
     }
+
+    public void setRoundNumber(int roundNumber) {
+        this.roundNumber = roundNumber;
+    }
 }

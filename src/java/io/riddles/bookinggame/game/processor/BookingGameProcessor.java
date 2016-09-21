@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import io.riddles.bookinggame.BookingGame;
 import io.riddles.bookinggame.engine.BookingGameEngine;
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 import io.riddles.bookinggame.game.enemy.EnemyAIInterface;
@@ -88,14 +89,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             }
         }
 
-        // Store collisions so they can't happen twice
-        HashMap<BookingGamePlayer, ArrayList<BookingGameEnemy>> enemyCollisions = new HashMap<>();
-        HashMap<BookingGamePlayer, ArrayList<BookingGamePlayer>> playerCollisions = new HashMap<>();
-        for (BookingGamePlayer nextPlayer : nextBoard.getPlayers()) {
-            enemyCollisions.put(nextPlayer, new ArrayList<>());
-            playerCollisions.put(nextPlayer, new ArrayList<>());
-        }
-
         // Send updates and Update player movements
         for (BookingGamePlayer player : this.players) {
             sendUpdates(player, nextState);
@@ -118,9 +111,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
                 }
             }
 
-            // Calculate moving object collissions
-            collideWithEnemies(nextState, nextPlayer, enemyCollisions);
-            collideWithPlayers(nextState, nextPlayer, playerCollisions);
             nextPlayer.updateParalysis();
         }
 
@@ -142,9 +132,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         // Calculate changes due to collisions
         pickUpSnippets(nextState);
         pickUpWeapons(nextState);
-        for (BookingGamePlayer nextPlayer : nextBoard.getPlayers()) {
-            collideWithEnemies(nextState, nextPlayer, enemyCollisions);
-        }
+        collideWithEnemies(state.getBoard(), nextBoard);
+        collideWithPlayers(state.getBoard(), nextBoard);
 
         // Update winner and scores
         updateWinner(nextState);
@@ -219,63 +208,102 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         return playersNotOnSameItem;
     }
 
-    private void collideWithEnemies(
-            BookingGameState state,
-            BookingGamePlayer player,
-            HashMap<BookingGamePlayer, ArrayList<BookingGameEnemy>> collisions) {
-        BookingGameBoard board = state.getBoard();
-        Configuration config = BookingGameEngine.configuration;
-
+    private void collideWithEnemies(BookingGameBoard currentBoard, BookingGameBoard nextBoard) {
         ArrayList<BookingGameEnemy> killedEnemies = new ArrayList<>();
 
-        for (BookingGameEnemy enemy : board.getEnemies()) {
-            if (enemy.getCoordinate().equals(player.getCoordinate()) &&
-                    !collisions.get(player).contains(enemy)) {
+        // First collide with enemies that collide while moving
+        for (BookingGamePlayer player : nextBoard.getPlayers()) {
+            Point prevPointPlayer = currentBoard.getPlayerById(player.getId()).getCoordinate();
 
-                if (player.hasWeapon()) { // player kills enemy
-                    player.setWeapon(false);
-                } else { // player loses snippets
-                    player.updateSnippets(-config.getInt("enemySnippetLoss"));
+            for (BookingGameEnemy enemy : nextBoard.getEnemies()) {
+                BookingGameEnemy prevEnemy = currentBoard.getEnemyById(enemy.getId());
+                if (prevEnemy == null) continue;
+                Point prevPointEnemy = prevEnemy.getCoordinate();
+
+                if (player.getCoordinate().equals(prevPointEnemy) &&
+                        enemy.getCoordinate().equals(prevPointPlayer)) {
+                    hitPlayerWithEnemy(player, enemy, killedEnemies);
                 }
-
-                collisions.get(player).add(enemy);
-                killedEnemies.add(enemy);
             }
         }
 
-        killedEnemies.forEach(board::killEnemy);
+        killedEnemies.forEach(nextBoard::killEnemy);
+        killedEnemies.clear();
+
+        // Second collide with enemies that are on same position in next state
+        for (BookingGamePlayer player : nextBoard.getPlayers()) {
+            nextBoard.getEnemies().stream()
+                    .filter(enemy -> enemy.getCoordinate().equals(player.getCoordinate()))
+                    .forEach(enemy -> hitPlayerWithEnemy(player, enemy, killedEnemies));
+        }
+
+        killedEnemies.forEach(nextBoard::killEnemy);
     }
 
-    private void collideWithPlayers(
-            BookingGameState state,
-            BookingGamePlayer player,
-            HashMap<BookingGamePlayer, ArrayList<BookingGamePlayer>> collisions) {
-
-        if (!player.hasWeapon()) return;
-
-        BookingGameBoard board = state.getBoard();
+    private void hitPlayerWithEnemy(BookingGamePlayer player, BookingGameEnemy enemy,
+                                    ArrayList<BookingGameEnemy> killedEnemies) {
         Configuration config = BookingGameEngine.configuration;
 
-        for (BookingGamePlayer other : board.getPlayers()) {
-            if (player != other &&
-                    player.getCoordinate().equals(other.getCoordinate()) &&
-                    !collisions.get(player).contains(other)) {
+        if (player.hasWeapon()) { // player kills enemy
+            player.setWeapon(false);
+        } else { // player loses snippets
+            player.updateSnippets(-config.getInt("enemySnippetLoss"));
+        }
 
-                player.setWeapon(false);
+        killedEnemies.add(enemy);
+    }
 
-                int snippetLoss = config.getInt("weaponSnippetLoss");
+    // We don't worry about players colliding twice because the weapon is
+    // lost after first collision
+    private void collideWithPlayers(BookingGameBoard currentBoard, BookingGameBoard nextBoard) {
 
-                other.paralyse(config.getInt("weaponParalysisDuration"));
-                other.updateSnippets(-snippetLoss);
+        // First collisions between states
+        for (BookingGamePlayer player : nextBoard.getPlayers()) {
+            if (!player.hasWeapon()) continue;
 
-                // lost snippets are spread accross the map
-                for (int n = 0; n < snippetLoss; n++) {
-                    board.addRandomSnippet();
+            BookingGamePlayer prevPlayer = currentBoard.getPlayerById(player.getId());
+            if (prevPlayer == null) continue;
+            Point prevPointPlayer = prevPlayer.getCoordinate();
+
+            for (BookingGamePlayer other : nextBoard.getPlayers()) {
+                if (player == other) continue;
+
+                BookingGamePlayer prevOther = currentBoard.getPlayerById(other.getId());
+                if (prevOther == null) continue;
+                Point prevPointOther = prevOther.getCoordinate();
+
+                if (prevPointPlayer.equals(other.getCoordinate()) &&
+                        prevPointOther.equals(player.getCoordinate())) {
+                    hitPlayerWithPlayer(nextBoard, player, other);
                 }
-
-                collisions.get(player).add(other);
-                collisions.get(other).add(player);
             }
+        }
+
+        // second collisions in next state
+        for (BookingGamePlayer player : nextBoard.getPlayers()) {
+            if (!player.hasWeapon()) continue;
+
+            nextBoard.getPlayers().stream()
+                    .filter(other -> other != player)
+                    .filter(other -> other.getCoordinate().equals(player.getCoordinate()))
+                    .forEach(other -> hitPlayerWithPlayer(nextBoard, player, other));
+        }
+    }
+
+    private void hitPlayerWithPlayer(BookingGameBoard board,
+                                     BookingGamePlayer player, BookingGamePlayer other) {
+        Configuration config = BookingGameEngine.configuration;
+
+        player.setWeapon(false);
+
+        int snippetLoss = config.getInt("weaponSnippetLoss");
+
+        other.paralyse(config.getInt("weaponParalysisDuration"));
+        other.updateSnippets(-snippetLoss);
+
+        // lost snippets are spread accross the map
+        for (int n = 0; n < snippetLoss; n++) {
+            board.addRandomSnippet();
         }
     }
 
