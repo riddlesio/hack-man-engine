@@ -187,7 +187,7 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         AbstractPlayer winner = this.processor.getWinner();
         String winnerId = "null";
         if (winner != null) {
-            winnerId = winner.getId() + "";
+            winnerId = winner.getId() - 1 + "";
         }
 
         JSONObject details = new JSONObject();
