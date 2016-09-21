@@ -85,6 +85,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
             enemyObj.put("x", enemy.getCoordinate().x);
             enemyObj.put("y", enemy.getCoordinate().y);
             enemyObj.put("move", enemy.getDirection());
+            enemyObj.put("id", enemy.getId());
 
             enemies.put(enemyObj);
         }

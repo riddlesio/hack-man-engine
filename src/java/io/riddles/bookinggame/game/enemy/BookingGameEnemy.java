@@ -37,19 +37,23 @@ public class BookingGameEnemy {
     private Point prevCoordinate;
     private MoveType direction;
     private EnemyAIInterface enemyAI;
+    private int id;
 
-    public BookingGameEnemy(Point coordinate, MoveType direction, EnemyAIInterface enemyAI) {
+    public BookingGameEnemy(int id, Point coordinate, MoveType direction,
+                            EnemyAIInterface enemyAI) {
         this.coordinate = coordinate;
         this.direction = direction;
         this.enemyAI = enemyAI;
+        this.id = id;
     }
 
-    public BookingGameEnemy(Point coordinate, Point prevCoordinate,
+    public BookingGameEnemy(int id, Point coordinate, Point prevCoordinate,
                             MoveType direction, EnemyAIInterface enemyAI) {
         this.coordinate = coordinate;
         this.prevCoordinate = prevCoordinate;
         this.direction = direction;
         this.enemyAI = enemyAI;
+        this.id = id;
     }
 
     public BookingGameEnemy clone() {
@@ -60,7 +64,7 @@ public class BookingGameEnemy {
             clonedPrevCoordinate = new Point(this.prevCoordinate);
         }
 
-        return new BookingGameEnemy(clonedCoordinate,
+        return new BookingGameEnemy(this.id, clonedCoordinate,
                 clonedPrevCoordinate, this.direction, this.enemyAI);
     }
 
@@ -97,5 +101,9 @@ public class BookingGameEnemy {
 
     public Point getCoordinate() {
         return this.coordinate;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }

@@ -24,6 +24,7 @@ public class BookingGameBoard extends Board {
     private ArrayList<BookingGameEnemy> enemies;
     private ArrayList<Point> enemySpawnPoints;
     private ArrayList<Point> playerInaccessablePoints;
+    private int enemyIdCounter;
 
     public BookingGameBoard(int width, int height, String fieldLayout,
                             Point[] enemySpawnPoints,
@@ -33,17 +34,20 @@ public class BookingGameBoard extends Board {
         this.enemies = new ArrayList<>();
         this.enemySpawnPoints = new ArrayList<>(Arrays.asList(enemySpawnPoints));
         this.playerInaccessablePoints = getValidNeighbors(this.enemySpawnPoints);
+        this.enemyIdCounter = 0;
     }
 
     private BookingGameBoard(int width, int height, ArrayList<Point> enemySpawnPoints,
                              ArrayList<Point> playerInaccessablePoints,
                              ArrayList<BookingGamePlayer> players,
-                             ArrayList<BookingGameEnemy> enemies, String[][] field) {
+                             ArrayList<BookingGameEnemy> enemies, String[][] field,
+                             int enemyIdCounter) {
         super(width, height, field);
         this.players = players;
         this.enemies = enemies;
         this.enemySpawnPoints = enemySpawnPoints;
         this.playerInaccessablePoints = playerInaccessablePoints;
+        this.enemyIdCounter = enemyIdCounter;
     }
 
     public BookingGameBoard clone() {
@@ -63,7 +67,8 @@ public class BookingGameBoard extends Board {
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return new BookingGameBoard(this.width, this.height, this.enemySpawnPoints,
-                this.playerInaccessablePoints, clonedPlayers, clonedEnemies, clonedField);
+                this.playerInaccessablePoints, clonedPlayers, clonedEnemies, clonedField,
+                this.enemyIdCounter);
     }
 
     public String toString() {
@@ -214,8 +219,10 @@ public class BookingGameBoard extends Board {
         Point randomSpawnPoint = this.enemySpawnPoints.get(randomIndex);
 
         MoveType randomDirection = MoveType.getRandomMovingMoveType();
-        BookingGameEnemy enemy = new BookingGameEnemy(randomSpawnPoint, randomDirection, enemyAI);
+        BookingGameEnemy enemy = new BookingGameEnemy(this.enemyIdCounter, randomSpawnPoint,
+                randomDirection, enemyAI);
         this.enemies.add(enemy);
+        this.enemyIdCounter++;
     }
 
     public void dump() {
