@@ -20,8 +20,7 @@
 package io.riddles.javainterface.game.player;
 
 import io.riddles.javainterface.io.BotIOHandler;
-import io.riddles.javainterface.io.BotIOInterface;
-import io.riddles.javainterface.theaigames.io.AIGamesBotIOHandler;
+import io.riddles.javainterface.io.BotIO;
 
 /**
  * io.riddles.javainterface.engine.player.AbstractPlayer - Created on 2-6-16
@@ -38,7 +37,7 @@ public abstract class AbstractPlayer {
 
     private String name;
     private int id;
-    protected BotIOInterface ioHandler;
+    protected BotIO ioHandler;
 
     public AbstractPlayer(int id) {
         this.id = id;
@@ -46,21 +45,8 @@ public abstract class AbstractPlayer {
         this.ioHandler = new BotIOHandler(id);
     }
 
-    /**
-     * Changes the ioHandler to the AIGames io handler
-     * @param process bot process
-     * @param mongoIdString Id string in mongodb
-     */
-    public void setAsAIGamesPlayer(Process process, String mongoIdString) {
-        this.ioHandler = new AIGamesBotIOHandler(process, mongoIdString);
-    }
-
-    /**
-     * The ioHandler will read from given file instead of in stream
-     * @param inputFile File to read from
-     */
-    public void setInputFile(String inputFile) {
-        this.ioHandler = new BotIOHandler(this.id, inputFile);
+    public void setIoHandler(BotIO iohandler) {
+        this.ioHandler = iohandler;
     }
 
     /**
@@ -77,7 +63,7 @@ public abstract class AbstractPlayer {
         return this.name;
     }
 
-    public BotIOInterface getIoHandler() {
+    public BotIO getIoHandler() {
         return this.ioHandler;
     }
 

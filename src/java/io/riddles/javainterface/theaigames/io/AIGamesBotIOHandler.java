@@ -3,7 +3,7 @@ package io.riddles.javainterface.theaigames.io;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import io.riddles.javainterface.io.BotIOInterface;
+import io.riddles.javainterface.io.BotIO;
 
 /**
  * io.riddles.javainterface.theaigames.io.AIGamesBotIOHandler - Created on 15-9-16
@@ -12,7 +12,7 @@ import io.riddles.javainterface.io.BotIOInterface;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public class AIGamesBotIOHandler implements BotIOInterface, Runnable {
+public class AIGamesBotIOHandler implements BotIO, Runnable {
 
     private final int MAX_ERRORS = 2;
     private final String NULL_MOVE1 = "no_moves";

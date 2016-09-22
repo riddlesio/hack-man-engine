@@ -7,7 +7,7 @@ package io.riddles.javainterface.io;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public interface BotIOInterface {
+public interface BotIO {
 
     void sendMessage(String message);
 

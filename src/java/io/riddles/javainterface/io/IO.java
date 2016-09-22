@@ -11,7 +11,7 @@ import io.riddles.javainterface.game.player.AbstractPlayer;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public interface IOInterface {
+public interface IO {
 
     void sendMessage(String message);
     void waitForMessage(String expected);

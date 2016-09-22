@@ -49,12 +49,6 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
     private Point[] startCoordinates;
     private Point[] enemySpawnPoints;
 
-    public BookingGameEngine() {
-        super();
-        setDefaults();
-        setEnemyAI();
-    }
-
     public BookingGameEngine(String args[]) throws TerminalException {
         super(args);
         setDefaults();
@@ -112,7 +106,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         configuration.put("snippetSpawnCount", 1);
         configuration.put("initialEnemyCount", 0);
         configuration.put("enemySpawnDelay", 5);
-        configuration.put("enemySpawnRate", 6);
+        configuration.put("enemySpawnRate", 5);
         configuration.put("enemySpawnCount", 1);
         configuration.put("enemySnippetLoss", 4);
         configuration.put("mapWeaponCount", 0);
@@ -128,7 +122,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
 
     @Override
     protected BookingGamePlayer createPlayer(int id) {
-        BookingGamePlayer player = new BookingGamePlayer(id + 1);
+        BookingGamePlayer player = new BookingGamePlayer(id);
         player.setCoordinate(this.startCoordinates[id]);
         return player;
     }

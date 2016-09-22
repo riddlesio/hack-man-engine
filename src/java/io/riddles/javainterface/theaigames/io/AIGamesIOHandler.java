@@ -19,11 +19,12 @@
 
 package io.riddles.javainterface.theaigames.io;
 
+import org.bson.types.ObjectId;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Stack;
 
-import io.riddles.javainterface.io.IOInterface;
+import io.riddles.javainterface.io.IO;
 
 /**
  * io.riddles.javainterface.theaigames.io.AIGamesIOHandler - Created on 15-9-16
@@ -32,15 +33,23 @@ import io.riddles.javainterface.io.IOInterface;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public class AIGamesIOHandler implements IOInterface {
+public class AIGamesIOHandler implements IO {
 
     private Stack<String> inputMessages;
 
-    public AIGamesIOHandler(int botCount) {
+    public AIGamesIOHandler(String[] args) {
         this.inputMessages = new Stack<>();
+        int botCount;
+
+        try {  // check if actual game for aigames
+            new ObjectId(args[0]);
+            botCount = (args.length - 1) / 2;
+        } catch (IllegalArgumentException ex) {
+            botCount = args.length;
+        }
 
         String botIds = "bot_ids ";
-        for (int i = 1; i <= botCount; i++) botIds += i + ",";
+        for (int i = 0; i < botCount; i++) botIds += i + ",";
         botIds = botIds.substring(0, botIds.length() - 1);
 
         this.inputMessages.push("start");

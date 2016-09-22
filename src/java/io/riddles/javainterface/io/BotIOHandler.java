@@ -31,7 +31,7 @@ import java.util.logging.Level;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public class BotIOHandler extends IOHandler implements BotIOInterface {
+public class BotIOHandler extends IOHandler implements BotIO {
 
     private int botId;
 

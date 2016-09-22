@@ -87,7 +87,6 @@ class BookingGameEngineSpec extends Specification {
             Point[] mockStartCoordinates = new Point[2];
         }
 
-        @Override
         protected void finish(BookingGameState initialState) {
             this.finalBoard = initialState.getBoard().toRepresentationString(players, initialState)
             super.finish(initialState);
@@ -179,8 +178,6 @@ class BookingGameEngineSpec extends Specification {
         engine.configuration.getInt("maxRounds") == 40
         engine.configuration.getInt("weaponParalysisDuration") == 10
     }
-
-
 
 //    @Ignore
     def "test running of standard game"() {

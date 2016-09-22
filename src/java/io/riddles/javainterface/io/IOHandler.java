@@ -30,8 +30,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.riddles.javainterface.game.player.AbstractPlayer;
-
 /**
  * io.riddles.javainterface.io.IOHandler - Created on 2-6-16
  *
@@ -42,7 +40,7 @@ import io.riddles.javainterface.game.player.AbstractPlayer;
  *
  * @author Jim van Eeden - jim@riddles.io
  */
-public class IOHandler implements IOInterface {
+public class IOHandler implements IO {
 
     protected final static Logger LOGGER = Logger.getLogger(IOHandler.class.getName());
     private Scanner scanner;

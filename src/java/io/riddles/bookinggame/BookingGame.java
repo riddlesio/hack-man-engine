@@ -33,11 +33,7 @@ public class BookingGame {
     public static void main(String[] args) throws Exception {
         BookingGameEngine engine;
 
-        if (args.length > 0) { // Create aigames engine
-            engine = new BookingGameEngine(args);
-        } else {
-            engine = new BookingGameEngine();
-        }
+        engine = new BookingGameEngine(args);
 
         engine.run();
     }
