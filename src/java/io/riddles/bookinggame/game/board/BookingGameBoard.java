@@ -76,18 +76,7 @@ public class BookingGameBoard extends Board {
 
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                String cell = "";
-
-                for (BookingGamePlayer player : this.players) {
-                    if (player.getCoordinate().x == x && player.getCoordinate().y == y) {
-                        cell += player.getId() + "";
-                    }
-                }
-                for (BookingGameEnemy enemy : this.enemies) {
-                    if (enemy.getCoordinate().x == x && enemy.getCoordinate().y == y) {
-                        cell += "E";
-                    }
-                }
+                String cell = this.field[x][y];
 
                 // Show enemy spawn area as blocked
                 ArrayList<Point> inaccessible = new ArrayList<>(this.enemySpawnPoints);
@@ -98,9 +87,19 @@ public class BookingGameBoard extends Board {
                     }
                 }
 
-                if (cell.length() <= 0) {
-                    cell = this.field[x][y];
+                if (!cell.equals("x")) {
+                    for (BookingGamePlayer player : this.players) {
+                        if (player.getCoordinate().x == x && player.getCoordinate().y == y) {
+                            cell += player.getId() + "";
+                        }
+                    }
+                    for (BookingGameEnemy enemy : this.enemies) {
+                        if (enemy.getCoordinate().x == x && enemy.getCoordinate().y == y) {
+                            cell += "E";
+                        }
+                    }
                 }
+
                 output += cell + ",";
             }
         }

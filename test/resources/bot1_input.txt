@@ -1,3 +1,6 @@
+
+
+
 down
 down
 right
@@ -227,8 +230,8 @@ down
 down
 up
 up
-down
-up
+
+
 left
 right
 left

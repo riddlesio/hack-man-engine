@@ -73,7 +73,7 @@ public class RiddlesHandler extends AbstractPlatformHandler {
         AbstractPlayer winner = this.processor.getWinner();
         String winnerId = "null";
         if (winner != null) {
-            winnerId = winner.getId() - 1 + "";
+            winnerId = winner.getId() + "";
         }
 
         JSONObject details = new JSONObject();

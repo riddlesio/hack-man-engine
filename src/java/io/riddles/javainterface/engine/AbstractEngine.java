@@ -72,10 +72,10 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.gameLoop = new SimpleGameLoop();
 
 //        if (args.length <= 0) {  // riddles
-        this.ioHandler = new IOHandler();
-        this.platformHandler = new RiddlesHandler(this.ioHandler);
+            this.ioHandler = new IOHandler();
+            this.platformHandler = new RiddlesHandler(this.ioHandler);
 //        } else {  // theaigames
-            // "java -cp /home/jim/workspace/jimbotbooking/out/production/jimbotbooking bot.BotStarter" "java -cp /home/jim/workspace/jimbotbooking/out/production/jimbotbooking bot.BotStarter"
+////             "java -cp /home/jim/workspace/jimbotbooking/out/production/jimbotbooking bot.BotStarter" "java -cp /home/jim/workspace/jimbotbooking/out/production/jimbotbooking bot.BotStarter"
 //            this.ioHandler = new AIGamesIOHandler(args);
 //            this.platformHandler = new TheAIGamesHandler(this.ioHandler);
 //            this.platformHandler.parseArguments(args);
