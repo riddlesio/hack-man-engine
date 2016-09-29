@@ -82,8 +82,14 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
                 playerObj.put("x", player.getCoordinate().x);
                 playerObj.put("y", player.getCoordinate().y);
                 playerObj.put("score", player.getSnippets());
-                playerObj.put("move", move.toString());
                 playerObj.put("hasWeapon", player.hasWeapon());
+
+                String moveString = move.toString();
+                if (moveString != null) {
+                    playerObj.put("move", moveString);
+                } else {
+                    playerObj.put("move", JSONObject.NULL);
+                }
 
                 Exception exception = move.getException();
                 if (exception != null) {

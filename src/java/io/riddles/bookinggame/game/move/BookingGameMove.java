@@ -39,7 +39,7 @@ public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
         this.type = type;
     }
 
-    public BookingGameMove(BookingGamePlayer player, InvalidInputException exception) {
+    public BookingGameMove(BookingGamePlayer player, Exception exception) {
         super(player, exception);
     }
 
@@ -48,6 +48,8 @@ public class BookingGameMove extends AbstractMove<BookingGamePlayer> {
     }
 
     public String toString() {
+        if (this.type == null) return null;
+
         return "" + this.type;
     }
 

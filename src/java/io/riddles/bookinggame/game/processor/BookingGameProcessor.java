@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import io.riddles.bookinggame.BookingGame;
 import io.riddles.bookinggame.engine.BookingGameEngine;
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 import io.riddles.bookinggame.game.enemy.EnemyAIInterface;
@@ -33,6 +32,7 @@ import io.riddles.bookinggame.game.move.*;
 import io.riddles.bookinggame.game.player.BookingGamePlayer;
 import io.riddles.bookinggame.game.state.BookingGameState;
 import io.riddles.javainterface.configuration.Configuration;
+import io.riddles.javainterface.exception.InvalidMoveException;
 import io.riddles.javainterface.game.processor.AbstractProcessor;
 
 /**
@@ -100,16 +100,20 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             BookingGameMoveDeserializer deserializer = new BookingGameMoveDeserializer(nextPlayer);
             BookingGameMove move = deserializer.traverse(response);
 
-            nextState.getMoves().add(move);
-
             // move player to new coordinate
             if (!move.isInvalid()) {
                 Point newCoordinate = nextBoard.getCoordinateAfterMove(
                         nextPlayer.getCoordinate(), move.getMoveType());
                 if (nextBoard.isCoordinateValid(newCoordinate, true)) {
                     nextPlayer.setCoordinate(newCoordinate);
+                } else {
+                    String warning = "Can't move this direction.";
+                    nextPlayer.sendWarning(warning);
+                    move = new BookingGameMove(nextPlayer, new InvalidMoveException(warning));
                 }
             }
+
+            nextState.getMoves().add(move);
 
             nextPlayer.updateParalysis();
         }
