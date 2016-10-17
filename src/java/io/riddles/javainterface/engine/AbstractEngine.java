@@ -36,8 +36,8 @@ import io.riddles.javainterface.game.state.AbstractState;
 import io.riddles.javainterface.io.IOHandler;
 import io.riddles.javainterface.io.IO;
 import io.riddles.javainterface.riddles.RiddlesHandler;
-import io.riddles.javainterface.theaigames.TheAIGamesHandler;
-import io.riddles.javainterface.theaigames.io.AIGamesIOHandler;
+//import io.riddles.javainterface.theaigames.TheAIGamesHandler;
+//import io.riddles.javainterface.theaigames.io.AIGamesIOHandler;
 
 /**
  * io.riddles.javainterface.engine.AbstractEngine - Created on 2-6-16
@@ -71,15 +71,15 @@ public abstract class AbstractEngine<Pr extends AbstractProcessor,
         this.players = new ArrayList<>();
         this.gameLoop = new SimpleGameLoop();
 
-        if (args.length <= 0) {  // riddles
+//        if (args.length <= 0) {  // riddles
             this.ioHandler = new IOHandler();
             this.platformHandler = new RiddlesHandler(this.ioHandler);
-        } else {  // theaigames
+//        } else {  // theaigames
 //             "java -cp /home/jim/workspace/jimbotbooking/out/production/jimbotbooking bot.BotStarter" "java -cp /home/jim/workspace/jimbotbooking/out/production/jimbotbooking bot.BotStarter"
-            this.ioHandler = new AIGamesIOHandler(args);
-            this.platformHandler = new TheAIGamesHandler(this.ioHandler);
-            this.platformHandler.parseArguments(args);
-        }
+//            this.ioHandler = new AIGamesIOHandler(args);
+//            this.platformHandler = new TheAIGamesHandler(this.ioHandler);
+//            this.platformHandler.parseArguments(args);
+//        }
     }
 
     /**
