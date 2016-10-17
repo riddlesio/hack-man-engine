@@ -89,9 +89,10 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             }
         }
 
-        // Send updates and Update player movements
+        sendUpdates(nextState);
+
+        // Update player movements
         for (BookingGamePlayer player : this.players) {
-            sendUpdates(player, nextState);
             String response = player.requestMove(ActionType.MOVE.toString());
 
             BookingGamePlayer nextPlayer = nextBoard.getPlayerById(player.getId());
@@ -146,14 +147,16 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         return nextState;
     }
 
-    private void sendUpdates(BookingGamePlayer player, BookingGameState state) {
-        player.sendUpdate("round", state.getRoundNumber());
-        player.sendUpdate("field", state.getBoard().toString());
+    private void sendUpdates(BookingGameState state) {
+        for (BookingGamePlayer player : this.players) {
+            player.sendUpdate("round", state.getRoundNumber());
+            player.sendUpdate("field", state.getBoard().toString());
 
-        for (BookingGamePlayer target : state.getBoard().getPlayers()) {
-            player.sendUpdate("snippets", target, target.getSnippets());
-            player.sendUpdate("has_weapon", target, target.hasWeapon() + "");
-            player.sendUpdate("is_paralyzed", target, target.isParalyzed() + "");
+            for (BookingGamePlayer target : state.getBoard().getPlayers()) {
+                player.sendUpdate("snippets", target, target.getSnippets());
+                player.sendUpdate("has_weapon", target, target.hasWeapon() + "");
+                player.sendUpdate("is_paralyzed", target, target.isParalyzed() + "");
+            }
         }
     }
 
@@ -314,15 +317,15 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private void updateWinner(BookingGameState state) {
         ArrayList<BookingGamePlayer> players = state.getBoard().getPlayers();
 
-        ArrayList<BookingGamePlayer> playersWithSnippets = players.stream()
-                .filter(player -> !player.hasCollectedSnippet() || player.getSnippets() > 0)
+        ArrayList<BookingGamePlayer> alivePlayers = players.stream()
+                .filter(BookingGamePlayer::isAlive)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        if (playersWithSnippets.size() <= 0) { /* All players lost their snippets, it's a draw */
+        if (alivePlayers.size() <= 0) { /* All players lost their snippets, it's a draw */
             this.gameOver = true;
             return;
-        } else if (playersWithSnippets.size() == 1) { /* Only one player left with snippets, there's a winner */
-            this.winner = playersWithSnippets.get(0);
+        } else if (alivePlayers.size() == 1) { /* Only one player left with snippets, there's a winner */
+            this.winner = alivePlayers.get(0);
             return;
         }
 

@@ -91,11 +91,13 @@ public class BookingGameBoard extends Board {
                     for (BookingGamePlayer player : this.players) {
                         if (player.getCoordinate().x == x && player.getCoordinate().y == y) {
                             cell += player.getId() + "";
+                            cell = cell.replace(".", "");
                         }
                     }
                     for (BookingGameEnemy enemy : this.enemies) {
                         if (enemy.getCoordinate().x == x && enemy.getCoordinate().y == y) {
                             cell += "E";
+                            cell = cell.replace(".", "");
                         }
                     }
                 }
@@ -152,7 +154,7 @@ public class BookingGameBoard extends Board {
         }
 
         Point newCoordinate = getCoordinateAfterMove(coordinate, moveType);
-        return isCoordinateValid(newCoordinate);
+        return isCoordinateValid(newCoordinate) && !isOnSpawnGate(newCoordinate);
     }
 
     /* Returns coordinate of empty field furthest away from all players */
@@ -225,9 +227,12 @@ public class BookingGameBoard extends Board {
     }
 
     public void dump() {
+        String[] split = toString().split(",");
+
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                System.err.print(this.field[x][y]);
+//                System.err.println(x + (y * this.width));
+                System.err.print(split[(x + (y * this.width))] + ",");
             }
             System.err.println();
         }

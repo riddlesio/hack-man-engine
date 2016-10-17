@@ -37,7 +37,7 @@ public class BookingGamePlayer extends AbstractPlayer {
     private boolean weapon;
     private Point coordinate;
     private int paralysis;
-    private boolean hasCollectedSnippet;
+    private boolean isAlive;
 
     public BookingGamePlayer(int id) {
         super(id);
@@ -45,33 +45,31 @@ public class BookingGamePlayer extends AbstractPlayer {
         this.weapon = false;
         this.paralysis = 0;
         this.coordinate = new Point(0, 0);
+        this.isAlive = true;
     }
 
     public BookingGamePlayer(int id, int snippets, boolean weapon,
-                             int paralysis, boolean hasCollectedSnippet, Point coordinate) {
+                             int paralysis, boolean isAlive, Point coordinate) {
         super(id);
         this.snippets = snippets;
         this.weapon = weapon;
         this.paralysis = paralysis;
         this.coordinate = coordinate;
-        this.hasCollectedSnippet = hasCollectedSnippet;
+        this.isAlive = isAlive;
     }
 
     public BookingGamePlayer clone() {
         Point clonedCoordinate = new Point(this.coordinate);
         return new BookingGamePlayer(this.getId(), this.snippets, this.weapon,
-                this.paralysis, this.hasCollectedSnippet, clonedCoordinate);
+                this.paralysis, this.isAlive, clonedCoordinate);
     }
 
     public void updateSnippets(int delta) {
-        if (!this.hasCollectedSnippet && delta > 0) {
-            this.hasCollectedSnippet = true;
-        }
-
         this.snippets += delta;
 
         if (this.snippets < 0) {
             this.snippets = 0;
+            this.isAlive = false;
         }
     }
 
@@ -111,7 +109,7 @@ public class BookingGamePlayer extends AbstractPlayer {
         this.paralysis += p;
     }
 
-    public boolean hasCollectedSnippet() {
-        return this.hasCollectedSnippet;
+    public boolean isAlive() {
+        return this.isAlive;
     }
 }
