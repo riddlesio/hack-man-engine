@@ -128,7 +128,7 @@ public class BookingGameStateSerializer extends AbstractStateSerializer<BookingG
             weapons.put(weapon);
         }
 
-        stateObj.put("round", state.getRoundNumber());
+        stateObj.put("round", state.getRoundNumber() + 1);
         stateObj.put("players", players);
         stateObj.put("enemies", enemies);
         stateObj.put("collectibles", collectibles);

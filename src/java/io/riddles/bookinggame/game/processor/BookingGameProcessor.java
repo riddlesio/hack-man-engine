@@ -71,24 +71,6 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         BookingGameState nextState = state.createNextState(roundNumber);
         BookingGameBoard nextBoard = nextState.getBoard();
 
-        int snippetsEaten = nextState.getSnippetsEaten();
-
-        // Spawn snippets (based on round)
-        if (roundNumber % config.getInt("snippetSpawnRate") == 0) {
-            for (int i = 0; i < config.getInt("snippetSpawnCount"); i++) {
-                nextBoard.addRandomSnippet();
-            }
-        }
-        // Spawn weapons (based on snippets)
-        if (snippetsEaten >= config.getInt("weaponSpawnDelay") &&
-                this.lastWeaponSpawnSnippet != snippetsEaten &&
-                snippetsEaten % config.getInt("weaponSpawnRate") == 0) {
-            this.lastWeaponSpawnSnippet = snippetsEaten;
-            for (int i = 0; i < config.getInt("weaponSpawnCount"); i++) {
-                nextBoard.addRandomWeapon();
-            }
-        }
-
         sendUpdates(nextState);
 
         // Update player movements
@@ -124,6 +106,18 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             enemy.performMovement(nextState);
         }
 
+        // Calculate changes due to collisions
+        pickUpSnippets(nextState);
+        pickUpWeapons(nextState);
+        collideWithEnemies(state.getBoard(), nextBoard);
+        collideWithPlayers(state.getBoard(), nextBoard);
+
+        // Update winner and scores
+        updateWinner(nextState);
+//        updateScore(nextState);
+
+        int snippetsEaten = nextState.getSnippetsEaten();
+
         // Spawn new enemies (based on snippets)
         if (snippetsEaten >= config.getInt("enemySpawnDelay") &&
                 this.lastEnemySpawnSnippet != snippetsEaten &&
@@ -134,15 +128,22 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
             }
         }
 
-        // Calculate changes due to collisions
-        pickUpSnippets(nextState);
-        pickUpWeapons(nextState);
-        collideWithEnemies(state.getBoard(), nextBoard);
-        collideWithPlayers(state.getBoard(), nextBoard);
+        // Spawn snippets (based on round)
+        if (roundNumber % config.getInt("snippetSpawnRate") == 0) {
+            for (int i = 0; i < config.getInt("snippetSpawnCount"); i++) {
+                nextBoard.addRandomSnippet();
+            }
+        }
 
-        // Update winner and scores
-        updateWinner(nextState);
-//        updateScore(nextState);
+        // Spawn weapons (based on snippets)
+        if (snippetsEaten >= config.getInt("weaponSpawnDelay") &&
+                this.lastWeaponSpawnSnippet != snippetsEaten &&
+                snippetsEaten % config.getInt("weaponSpawnRate") == 0) {
+            this.lastWeaponSpawnSnippet = snippetsEaten;
+            for (int i = 0; i < config.getInt("weaponSpawnCount"); i++) {
+                nextBoard.addRandomWeapon();
+            }
+        }
 
         return nextState;
     }
