@@ -74,20 +74,20 @@ public class BookingGameBoard extends Board {
     public String toString() {
         String output = "";
 
+        ArrayList<Point> inaccessible = new ArrayList<>(this.enemySpawnPoints);
+        inaccessible.addAll(this.playerInaccessablePoints);
+
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
                 String cell = this.field[x][y];
 
-                // Show enemy spawn area as blocked
-                ArrayList<Point> inaccessible = new ArrayList<>(this.enemySpawnPoints);
-                inaccessible.addAll(this.playerInaccessablePoints);
-                for (Point p : inaccessible) {
-                    if (p.x == x && p.y == y) {
-                        cell = "x";
-                    }
-                }
-
                 if (!cell.equals("x")) {
+                    // Show enemy spawn area as blocked
+                    for (Point p : inaccessible) {
+                        if (p.x == x && p.y == y) {
+                            cell = "x";
+                        }
+                    }
                     for (BookingGamePlayer player : this.players) {
                         if (player.getCoordinate().x == x && player.getCoordinate().y == y) {
                             cell += player.getId() + "";

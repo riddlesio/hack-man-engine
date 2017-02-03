@@ -49,8 +49,8 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
     private EnemyAIInterface enemyAI;
     private BookingGamePlayer winner;
 //    private int score;
-    private int lastEnemySpawnSnippet = -1;
-    private int lastWeaponSpawnSnippet = -1;
+    private int spawnedEnemies = 0;
+    private int spawnedWeapons = 0;
 
     public BookingGameProcessor(ArrayList<BookingGamePlayer> players, EnemyAIInterface enemyAI) {
         super(players);
@@ -118,12 +118,14 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
 
         int snippetsEaten = nextState.getSnippetsEaten();
 
-        // Spawn new enemies (based on snippets)
-        if (snippetsEaten >= config.getInt("enemySpawnDelay") &&
-                this.lastEnemySpawnSnippet != snippetsEaten &&
-                snippetsEaten % config.getInt("enemySpawnRate") == 0) {
-            this.lastEnemySpawnSnippet = snippetsEaten;
-            for (int i = 0; i < config.getInt("enemySpawnCount"); i++) {
+        // Spawn enemies (based on snippets)
+        int enemiesToSpawn = (
+                (snippetsEaten - config.getInt("enemySpawnDelay")) /
+                config.getInt("enemySpawnRate")
+        ) - this.spawnedEnemies;
+        for (int i = 0; i < enemiesToSpawn; i++) {
+            this.spawnedEnemies++;
+            for (int j = 0; j < config.getInt("enemySpawnCount"); j++) {
                 nextBoard.spawnEnemy(this.enemyAI);
             }
         }
@@ -136,11 +138,13 @@ public class BookingGameProcessor extends AbstractProcessor<BookingGamePlayer, B
         }
 
         // Spawn weapons (based on snippets)
-        if (snippetsEaten >= config.getInt("weaponSpawnDelay") &&
-                this.lastWeaponSpawnSnippet != snippetsEaten &&
-                snippetsEaten % config.getInt("weaponSpawnRate") == 0) {
-            this.lastWeaponSpawnSnippet = snippetsEaten;
-            for (int i = 0; i < config.getInt("weaponSpawnCount"); i++) {
+        int weaponsToSpawn = (
+                (snippetsEaten - config.getInt("weaponSpawnDelay")) /
+                config.getInt("weaponSpawnRate")
+        ) - this.spawnedWeapons;
+        for (int i = 0; i < weaponsToSpawn; i++) {
+            this.spawnedWeapons++;
+            for (int j = 0; j < config.getInt("weaponSpawnCount"); j++) {
                 nextBoard.addRandomWeapon();
             }
         }

@@ -105,12 +105,12 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         configuration.put("snippetSpawnRate", 8);
         configuration.put("snippetSpawnCount", 1);
         configuration.put("initialEnemyCount", 0);
-        configuration.put("enemySpawnDelay", 5);
+        configuration.put("enemySpawnDelay", 0);
         configuration.put("enemySpawnRate", 5);
         configuration.put("enemySpawnCount", 1);
         configuration.put("enemySnippetLoss", 4);
         configuration.put("mapWeaponCount", 0);
-        configuration.put("weaponSpawnDelay", 8);
+        configuration.put("weaponSpawnDelay", 0);
         configuration.put("weaponSpawnRate", 8);
         configuration.put("weaponSpawnCount", 1);
         configuration.put("weaponSnippetLoss", 4);
