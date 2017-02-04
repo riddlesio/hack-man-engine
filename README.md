@@ -22,10 +22,19 @@ accessible:
 
 *Note: for other IDEs, look at online documentation*
 
-## Building the engine
+## Building the engine using IntelliJ IDEA
 
 Use Gradle to build a .jar of the engine. Go to Tasks -> build -> jar.  
 The .jar file can be found at `build/libs/bookinggame-2.0.0.jar`.
+
+## Building the engine using Docker
+
+If you have docker installed on your system you can build the engine using gradle inside
+a docker container. From the repository root directory run:
+```
+docker build -t gradle-hackman ./docker
+docker run -v $(pwd):/gradle-app gradle-hackman:latest gradle build
+```
 
 ## Running 
 
