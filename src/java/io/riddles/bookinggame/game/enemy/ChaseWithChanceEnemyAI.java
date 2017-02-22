@@ -83,7 +83,7 @@ public class ChaseWithChanceEnemyAI extends AbstractEnemyAI {
             ArrayList<Point> toPlayerPath = this.shortestPathHandler.getShortestPath(
                     enemy.getCoordinate(), player.getCoordinate(), blockedMoves);
             if (shortestPath == null ||
-                    (toPlayerPath != null && toPlayerPath.size() > shortestPath.size())) {
+                    (toPlayerPath != null && toPlayerPath.size() < shortestPath.size())) {
                 shortestPath = toPlayerPath;
             }
         }

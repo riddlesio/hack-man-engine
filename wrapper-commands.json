@@ -12,7 +12,7 @@
       "command": "java -cp /home/jim/workspace/bookinggame-starter-bot/out/production/bookinggame-starter-bot bot.BotStarter"
     }],
     "engine": {
-      "command": "java -jar /home/jim/workspace/bookinggame-engine/build/libs/bookinggame-2.0.0.jar"
+      "command": "java -jar /home/jim/workspace/bookinggame-engine/build/libs/bookinggame-2.0.1.jar"
     }
   }
 }
