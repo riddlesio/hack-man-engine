@@ -88,7 +88,8 @@ public class ChaseWithChanceEnemyAI extends AbstractEnemyAI {
             }
         }
 
-        if (shortestPath == null || shortestPath.size() <= 0) return null;
+        // if size = 1, the bug and the player are on the same square
+        if (shortestPath == null || shortestPath.size() <= 1) return null;
 
         return shortestPath.get(0);
     }

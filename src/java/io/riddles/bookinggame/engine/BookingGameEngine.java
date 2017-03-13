@@ -20,6 +20,8 @@
 package io.riddles.bookinggame.engine;
 
 import java.awt.Point;
+import java.nio.ByteBuffer;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
@@ -43,7 +45,7 @@ import io.riddles.javainterface.exception.TerminalException;
 public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         BookingGamePlayer, BookingGameState> {
 
-    public static final SecureRandom RANDOM = new SecureRandom();
+    public static SecureRandom RANDOM;
     private EnemyAIInterface enemyAI;
 
     private Point[] startCoordinates;
@@ -79,25 +81,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         this.enemySpawnPoints[2] = new Point(10, 7);
         this.enemySpawnPoints[3] = new Point(11, 7);
 
-//        configuration.put("maxRounds", 200);
-//        configuration.put("playerSnippetCount", 0);
-//        configuration.put("mapSnippetCount", 2);
-//        configuration.put("snippetSpawnRate", 8);
-//        configuration.put("snippetSpawnCount", 1);
-//        configuration.put("initialEnemyCount", 0);
-//        configuration.put("enemySpawnDelay", 2);
-//        configuration.put("enemySpawnRate", 2);
-//        configuration.put("enemySpawnCount", 1);
-//        configuration.put("enemySnippetLoss", 4);
-//        configuration.put("mapWeaponCount", 2);
-//        configuration.put("weaponSpawnDelay", 0);
-//        configuration.put("weaponSpawnRate", 3);
-//        configuration.put("weaponSpawnCount", 5);
-//        configuration.put("weaponSnippetLoss", 4);
-//        configuration.put("weaponParalysisDuration", 1);
-//        configuration.put("fieldWidth", 20);
-//        configuration.put("fieldHeight", 14);
-//        configuration.put("fieldLayout", getDefaultFieldLayout());
+        SecureRandom random = new SecureRandom();
 
         configuration.put("maxRounds", 200);
         configuration.put("playerSnippetCount", 0);
@@ -118,6 +102,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         configuration.put("fieldWidth", 20);
         configuration.put("fieldHeight", 14);
         configuration.put("fieldLayout", getDefaultFieldLayout());
+        configuration.put("randomSeed", random.nextInt());
     }
 
     @Override
@@ -152,6 +137,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
 
     @Override
     protected BookingGameState getInitialState() {
+        setRandomSeed();
         setEnemyAI();
 
         BookingGameState state = new BookingGameState();
@@ -198,5 +184,17 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
 
     private Point getStartCoordinate(int i) {
         return this.startCoordinates[i];
+    }
+
+    private void setRandomSeed() {
+        try {
+            RANDOM = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException ex) {
+            LOGGER.severe("Not able to use SHA1PRNG, using default algorithm");
+            RANDOM = new SecureRandom();
+        }
+        int randomSeed = configuration.getInt("randomSeed");
+        LOGGER.info("RANDOM SEED IS: " + randomSeed);
+        RANDOM.setSeed(ByteBuffer.allocate(4).putInt(randomSeed).array());
     }
 }
