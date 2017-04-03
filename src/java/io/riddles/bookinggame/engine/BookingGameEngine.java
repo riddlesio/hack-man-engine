@@ -20,9 +20,9 @@
 package io.riddles.bookinggame.engine;
 
 import java.awt.Point;
-import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.UUID;
 
 import io.riddles.bookinggame.game.board.BookingGameBoard;
 
@@ -81,8 +81,6 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         this.enemySpawnPoints[2] = new Point(10, 7);
         this.enemySpawnPoints[3] = new Point(11, 7);
 
-        SecureRandom random = new SecureRandom();
-
         configuration.put("maxRounds", 200);
         configuration.put("playerSnippetCount", 0);
         configuration.put("mapSnippetCount", 2);
@@ -102,7 +100,7 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
         configuration.put("fieldWidth", 20);
         configuration.put("fieldHeight", 14);
         configuration.put("fieldLayout", getDefaultFieldLayout());
-        configuration.put("randomSeed", random.nextInt());
+        configuration.put("seed", UUID.randomUUID().toString());
     }
 
     @Override
@@ -193,8 +191,8 @@ public class BookingGameEngine extends AbstractEngine<BookingGameProcessor,
             LOGGER.severe("Not able to use SHA1PRNG, using default algorithm");
             RANDOM = new SecureRandom();
         }
-        int randomSeed = configuration.getInt("randomSeed");
-        LOGGER.info("RANDOM SEED IS: " + randomSeed);
-        RANDOM.setSeed(ByteBuffer.allocate(4).putInt(randomSeed).array());
+        String seed = configuration.getString("seed");
+        LOGGER.info("RANDOM SEED IS: " + seed);
+        RANDOM.setSeed(seed.getBytes());
     }
 }
