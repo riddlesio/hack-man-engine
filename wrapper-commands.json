@@ -8,12 +8,12 @@
   },
   "match": {
     "bots": [{
-      "command": "java -cp /home/jim/workspace/bookinggame-starter-bot/out/production/bookinggame-starter-bot bot.BotStarter"
+      "command": "java -cp out/production/bookinggame-starter-bot bot.BotStarter"
     }, {
-      "command": "java -cp /home/jim/workspace/bookinggame-starter-bot/out/production/bookinggame-starter-bot bot.BotStarter"
+      "command": "java -cp out/production/bookinggame-starter-bot bot.BotStarter"
     }],
     "engine": {
-      "command": "java -jar /home/jim/workspace/bookinggame-engine/build/libs/bookinggame-2.0.3.jar",
+      "command": "java -jar build/libs/bookinggame-2.0.3.jar",
       "configuration": {
         "seed": {
           "value": "cd48f740-b160-4e25-aee8-7d64768ac3d3",
