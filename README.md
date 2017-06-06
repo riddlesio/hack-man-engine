@@ -30,7 +30,8 @@ The .jar file can be found at `build/libs/bookinggame-2.0.0.jar`.
 ## Building the engine using Docker
 
 If you have docker installed on your system you can build the engine using gradle inside
-a docker container. From the repository root directory run:
+a docker container with your current path mounted inside the container so that the engine
+.jar file is easily accesible. From the repository root directory run:
 ```
 docker build -t gradle-hackman ./docker
 docker run -v $(pwd):/gradle-app gradle-hackman:latest gradle build
