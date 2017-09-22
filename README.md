@@ -1,4 +1,4 @@
-# Booking Game
+# Hack-man
 This repository contains the engine for the Booking.com Hack-man game for the Riddles.io platform.
 
 ## Setting up
